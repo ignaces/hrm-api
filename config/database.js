@@ -13,7 +13,7 @@ module.exports = {
   | interacting with SQL databases.
   |
   */
-  connection: Env.get('DB_CONNECTION', 'sqlite'),
+  connection: Env.get('DB_CONNECTION', 'local'),
 
   /*
   |--------------------------------------------------------------------------
@@ -45,7 +45,7 @@ module.exports = {
   | npm i --save mysql
   |
   */
-  mysql: {
+  local: {
     client: 'mysql',
     connection: {
       host: Env.get('DB_HOST', 'localhost'),
@@ -56,7 +56,17 @@ module.exports = {
     },
     debug: Env.get('DB_DEBUG', false)
   },
-
+  dev: {
+    client: 'mysql',
+    connection: {
+      host: Env.get('DB_HOST', '192.168.3.18'),
+      port: Env.get('DB_PORT', '3306'),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', 'Qwerty123'),
+      database: Env.get('DB_DATABASE', 'KH')
+    },
+    debug: Env.get('DB_DEBUG', false)
+  }
   /*
   |--------------------------------------------------------------------------
   | PostgreSQL
@@ -66,7 +76,7 @@ module.exports = {
   |
   | npm i --save pg
   |
-  */
+  
   pg: {
     client: 'pg',
     connection: {
@@ -78,4 +88,5 @@ module.exports = {
     },
     debug: Env.get('DB_DEBUG', false)
   }
+  */
 }
