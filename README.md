@@ -16,4 +16,7 @@ npm install
 adonis serve --dev
 ```
 
+## API Ejemplo
+    http://localhost:3334/Core/Users/find?nombre=s
+
 
