@@ -5,6 +5,7 @@ class Users {
     async find({request,response}){
     
       const text =request.input('nombre') ;
+      console.log(text)
       const query = `call getUsers('${text}')`;
       
       const usp   = await Database.connection('local').schema.raw(query);
