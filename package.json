@@ -23,6 +23,7 @@
     "@adonisjs/framework": "^4.0.27",
     "@adonisjs/ignitor": "^1.0.14",
     "@adonisjs/lucid": "^4.0.22",
+    "got": "^8.0.1",
     "mysql": "^2.15.0"
   },
   "devDependencies": {},
