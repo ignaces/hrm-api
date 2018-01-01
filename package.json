@@ -24,7 +24,7 @@
     "@adonisjs/ignitor": "^1.0.14",
     "@adonisjs/lucid": "^4.0.22",
     "got": "^8.0.1",
-    "json-query": "^2.2.2",
+    "linq": "^3.0.9",
     "mysql": "^2.15.0"
   },
   "devDependencies": {},
