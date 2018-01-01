@@ -25,12 +25,7 @@ class Instrumento {
         
         const query = `call getPreguntasFacsimil('${id}')`;
         const preguntas   = await Database.connection('local').schema.raw(query);
-        /**
-         * 
-         * Crear facsimil
-         * retornar idFacsimil
-         * 
-         */
+        
         const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
             return{
                 IdPregruntaFacsimil:pregunta.IdPregruntaFacsimil,
