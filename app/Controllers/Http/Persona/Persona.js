@@ -8,7 +8,7 @@ class Persona {
       
       const query = `call getPersonas('${text}')`;
       
-      const usp   = await Database.connection('local').schema.raw(query);
+      const usp   = await Database.connection('dev').schema.raw(query);
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);

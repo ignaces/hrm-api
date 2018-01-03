@@ -25,7 +25,7 @@ class Instrumento {
         var id = request.input("idFacsimil");
         
         const query = `call getPreguntasFacsimil('${id}')`;
-        const preguntas   = await Database.connection('local').schema.raw(query);
+        const preguntas   = await Database.connection('dev').schema.raw(query);
         
         const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
             return{
@@ -33,12 +33,16 @@ class Instrumento {
                 enunciado:pregunta.enunciado,
                 correcto:pregunta.correcto,
                 puntajeObtenido:pregunta.puntajeObtenido,
-                puntajeEsperado:pregunta.puntajeEsperado
+                puntajeEsperado:pregunta.puntajeEsperado,
+                tipoPregunta:pregunta.tipoPregunta
             }
         })
         
 
-        var facsimil = {preguntas:preguntasUnicas.toArray()}
+        var facsimil = {
+            nombre:preguntas[0][0][0].nombre,
+            preguntas:preguntasUnicas.toArray()
+        }
         for(var pregunta in facsimil.preguntas){
             var idPregunta = facsimil.preguntas[pregunta].IdPreguntaFacsimil
             

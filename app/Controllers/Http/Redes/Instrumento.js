@@ -9,7 +9,7 @@ class Instrumento {
     
       const query = `select * from RedesPreguntas order by orden asc`;
       
-      const usp   = await Database.connection('local').schema.raw(query);
+      const usp   = await Database.connection('dev').schema.raw(query);
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);
@@ -28,7 +28,7 @@ class Instrumento {
       
       const query = `select * from Persona where id ='${code}'`;
       
-      const resPersona   = await Database.connection('local').schema.raw(query);
+      const resPersona   = await Database.connection('dev').schema.raw(query);
       const persona = resPersona[0][0]
 
       
@@ -54,14 +54,14 @@ class Instrumento {
       for(var propertyName in data) {
         
             const qPreguntas = `select * from RedesPreguntas where id='${propertyName}'`;
-            const preguntas   = await Database.connection('local').schema.raw(qPreguntas);
+            const preguntas   = await Database.connection('dev').schema.raw(qPreguntas);
 
             var pregunta = preguntas[0][0]
 
             if(data[propertyName].constructor === Array){
             for(var item in data[propertyName]){    
                   var qp = `select * from persona where id ='${data[propertyName][item]}'`
-                  const resp   = await Database.connection('local').schema.raw(qp);    
+                  const resp   = await Database.connection('dev').schema.raw(qp);    
 
                   var pp = resp[0][0]
                   /**
@@ -87,7 +87,7 @@ class Instrumento {
           }
         }else{
             var qp = `select * from persona where id ='${data[propertyName]}'`
-            const resp   = await Database.connection('local').schema.raw(qp);    
+            const resp   = await Database.connection('dev').schema.raw(qp);    
             var pp = resp[0]
             /**
              * Se crea persona a la que se hace mención
