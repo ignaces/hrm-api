@@ -29,7 +29,7 @@ class Instrumento {
         
         const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
             return{
-                IdPregruntaFacsimil:pregunta.IdPregruntaFacsimil,
+                IdPreguntaFacsimil:pregunta.IdPregruntaFacsimil,
                 enunciado:pregunta.enunciado,
                 correcto:pregunta.correcto,
                 puntajeObtenido:pregunta.puntajeObtenido,

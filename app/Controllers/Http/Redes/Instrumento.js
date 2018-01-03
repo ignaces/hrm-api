@@ -1,7 +1,7 @@
 'use strict'
 const Database = use('Database')
 const got = use('got')
-var jq = require('json-query')
+
 class Instrumento {
 
    
