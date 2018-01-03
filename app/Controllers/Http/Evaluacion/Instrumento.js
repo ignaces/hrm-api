@@ -44,7 +44,7 @@ class Instrumento {
             preguntas:preguntasUnicas.toArray()
         }
         for(var pregunta in facsimil.preguntas){
-            var idPregunta = facsimil.preguntas[pregunta].IdPreguntaFacsimil
+            var idPregunta = facsimil.preguntas[pregunta].idPreguntaFacsimil
             
             const alternativas = Enumerable.from(preguntas[0][0]).where(`$.IdPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
                 return{
