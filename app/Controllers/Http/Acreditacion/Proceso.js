@@ -18,7 +18,7 @@ class Proceso {
                 idPersonaProceso:persona.idPersonaProceso,
                 idPersona:persona.id,
                 nombres:persona.nombres,
-                apeliddoPaterno:persona.apeliddoPaterno,
+                apeliddoPaterno:persona.apellidoPaterno,
                 apellidoMaterno:persona.apellidoMaterno,
                 identificador:persona.identificador,
                 tiposInstrumentos:[
