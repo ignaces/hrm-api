@@ -1,0 +1,7 @@
+-#!/bin/sh      
+ cd /home/ubuntu/nodeapps/api
+ git pull       
+ npm install
+ pm2 restart all
+ exit       
+EOF
