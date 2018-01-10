@@ -4,7 +4,30 @@ var Enumerable = require('linq')
 //jTest
 class Proceso {
 
-   
+    async findProcesos({request,response}){
+
+        const idCliente = request.input('idCliente');
+        const pagina = request.input('pagina');
+        const registros = request.input('registros');
+        const nombre = request.input('nombre');
+        const activo = request.input('activo');
+        
+        
+        const query = `call acre_findProcesos(${pagina}, ${registros},'${nombre}', ${activo})`;
+        const result   = await Database.connection('dev').schema.raw(query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: result[0][1][0],
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+    }
     
     async getPersonas({request,response}){
     

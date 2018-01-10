@@ -25,11 +25,25 @@ class Instrumento {
         var idProcesoPersona = request.input("idProcesoPersona");
         var codigoInstrumento = request.input("codigoInstrumento");
         
-        const facsimiles = [
-            {id:'866d2b50-f0f0-11e7-bf12-bc764e100f2b'},
-            {id:'595299cc-ef15-11e7-80ab-a7d2274a0124'}
-        ];
+        const query =`call acre_getFacsimilesPersona('${idProcesoPersona}')`;
+        const rQuery =  await Database.connection('dev').schema.raw(query);
+        const sinCrear = Enumerable.from(rQuery[0][0]).where(`$.IdPregruntaFacsimil==null`).count();
+        const facsimiles = [];
+        const instrumentos = rQuery[0][0];
+        console.log(sinCrear);
+        if(sinCrear>0){
+            for(var facsimil in instrumentos){
 
+                const fQuery = `call creaFacsimil('${instrumentos[facsimil].idEvaluacionInstrumento}','${instrumentos[facsimil].idDndProcesoPersonaPerfil}')`;
+                const rFacsimil   = await Database.connection('dev').schema.raw(fQuery);
+                facsimiles.push(rFacsimil[0][0])
+            }
+        }else{
+            const fQuery = `select idEvaluacionFacsimil as idFacsimil from DndPersonaEvaluacion where idDndProcesoPersonaPerfil='${instrumentos[0].idDndProcesoPersonaPerfil}';`;
+            const rFacsimil   = await Database.connection('dev').schema.raw(fQuery);
+            facsimiles = rFacsimil;
+        }
+        
         response.json(facsimiles);
     }
     async getFacsimil({request,response}){
