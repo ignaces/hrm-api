@@ -122,7 +122,7 @@ class Instrumento {
                         puntaje:alternativa.puntajeAlternativa,
                         orden:alternativa.ordenAlternativa,
                         estaSeleccionada:alternativa.estaSeleccionada,
-                        requiereJustificacion:0
+                        requiereJustificacion:"0"
                     }
                 }).toArray()
                 instrumento.preguntas[pregunta].alternativas = alternativas
