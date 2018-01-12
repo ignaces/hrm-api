@@ -25,6 +25,7 @@ class Instrumento {
         var idOpinante = request.input("idOpinante");
         var tipoInstrumento = request.input("tipoInstrumento");
         var instrumento = [];
+        
         if(tipoInstrumento!="TCO"){
             const query =`call acre_getInstrumento('${idOpinante}')`;
             const rQuery =  await Database.connection('dev').schema.raw(query);
