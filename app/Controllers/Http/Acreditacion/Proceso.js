@@ -29,52 +29,74 @@ class Proceso {
         response.json(body);
     }
     
-    async getPersonas({request,response}){
+    async getPersonasEvaluaciones({request,response}){
     
         var idProceso = request.input("idProceso");
+        var idPersona = request.input("idPersona");
         
-        const query = `call acre_getPersonasProceso('${idProceso}')`;
-        const resultPersonas   = await Database.connection('dev').schema.raw(query);
+        const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
+        const result   = await Database.connection('dev').schema.raw(query);
         
-        const personas = Enumerable.from(resultPersonas[0][0]).select(function(persona){
+        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
             return{
-                idPersonaProceso:persona.idPersonaProceso,
-                idPersona:persona.id,
-                nombres:persona.nombres,
-                apellidoPaterno:persona.apellidoPaterno,
-                apellidoMaterno:persona.apellidoMaterno,
-                identificador:persona.identificador,
-                tiposInstrumentos:[
-                    {id:"340f82f6-f0fa-11e7-bf12-bc764e100f2b",codigoInterno:"EIC",nombre:"Entrevista Insidentes Críticos",idCompetenciaTipo:"87ed8c12-f0e7-11e7-bf12-bc764e100f2b",idPersonaProceso:persona.idPersonaProceso},
-                    {id:"342859c7-f0fa-11e7-bf12-bc764e100f2b",codigoInterno:"SOT",nombre:"Set de Observación en Terreno",idCompetenciaTipo:"87ed8c12-f0e7-11e7-bf12-bc764e100f2b",idPersonaProceso:persona.idPersonaProceso},
-                   
-                ]
-                
+                idTipoOpinante:tipoOpinante.idTipoOpinante,
+                codigo:tipoOpinante.codigoTipoOpinante,
+                orden:tipoOpinante.ordenTipoOpinante
             }
         }).toArray()
-        return(personas);
-    }
 
-    async putRespuesta({request,response}){
+        
 
-        var idOpinante = request.input("idOpinante");
-        var idPregunta = request.input("idPregunta");
-        var idAlternativa = request.input("idAlternativa");
-        var justificacion = request.input("justificacion");
+        for(var tipoOpinante in tipoOpinantes){
+            var idTipoOpinante = tipoOpinantes[tipoOpinante].idTipoOpinante
+            
+            const personas = Enumerable.from(result[0][0]).where(`$.idTipoOpinante == "${idTipoOpinante}"`).distinct("$.idPersona").select(function(persona){
+                return{
+                    id:persona.idPersona,
+                    nombres:persona.nombres,
+                    apellidoPaterno:persona.apellidoPaterno,
+                    apellidoMaterno:persona.apellidoMaterno,
+                    identificador:persona.identificador
+                }
+            }).toArray()
+            tipoOpinantes[tipoOpinante].personas = personas
 
-        const body = 
+            for(var persona in personas){
+                var idPersona = personas[persona].id
+                
+                const instrumentos = Enumerable.from(result[0][0]).where(`$.idPersona == "${idPersona}"`).select(function(instrumento){
+                    return{
+                        idOpinante:instrumento.idOpinante,
+                        idTipoInstrumento:instrumento.idTipoInstrumento,
+                        codigoTipoInstrumento:instrumento.codigoTipoInstrumento,
+                        idEstado:instrumento.idEstado,
+                        nombreEstado:instrumento.nombreEstado,
+                        codigoEstado:instrumento.codigoEstado
+                    }
+                }).toArray()
+                tipoOpinantes[tipoOpinante].personas[persona].instrumentos = instrumentos
+            }
+        }
+
+        
+
+        
+        var body = 
         {
-            estado: {
-            codigo: "OK",
+          estado: {
+            codigo: "",
             mensaje: ""
-            },
-            paginacion: "",
-            data: ""
+          },
+          paginacion: result[0][1][0],
+          data: {tipoOpinante: tipoOpinantes}
           
         }
         response.json(body);
         
+
+        return(body);
     }
+
 
 }
 
