@@ -121,7 +121,8 @@ class Instrumento {
                         texto:alternativa.textoAlternativa,
                         puntaje:alternativa.puntajeAlternativa,
                         orden:alternativa.ordenAlternativa,
-                        estaSeleccionada:alternativa.estaSeleccionada
+                        estaSeleccionada:alternativa.estaSeleccionada,
+                        requiereJustificacion:0
                     }
                 }).toArray()
                 instrumento.preguntas[pregunta].alternativas = alternativas
