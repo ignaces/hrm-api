@@ -41,6 +41,7 @@ class Instrumento {
 
             instrumento = {
                 nombre:"",
+                tipoInstrumento:tipoInstrumento,
                 competencias:competencias.toArray()
             }
             
@@ -106,6 +107,7 @@ class Instrumento {
     
             instrumento = {
                 nombre:preguntas[0][0][0].nombre,
+                tipoInstrumento:tipoInstrumento,
                 preguntas:preguntasUnicas.toArray()
             }
             for(var pregunta in instrumento.preguntas){
