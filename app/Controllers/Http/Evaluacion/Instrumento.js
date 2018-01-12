@@ -88,6 +88,8 @@ class Instrumento {
             }
             
     
+        }else{
+            
         }
         
         
