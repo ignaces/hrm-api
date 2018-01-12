@@ -28,6 +28,19 @@ class Proceso {
         }
         response.json(body);
     }
+
+    async putRespuesta({request,response}){
+        
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": ""
+        });
+    }
     
     async getPersonasEvaluaciones({request,response}){
     
