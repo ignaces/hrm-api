@@ -36,16 +36,18 @@ class Proceso {
         var idAlternativa = request.input("idAlternativa");
         var justificacion = request.input("justificacion");
 
-
+        const query = `call acre_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
+        const result   = await Database.connection('dev').schema.raw(query);
         
-        response.json({
-            "estado": {
-                "codigo": "OK",
-                "mensaje": ""
-            },
-            "paginacion": "",
-            "data": ""
-        });
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
     }
 
     async test({request,response}){
