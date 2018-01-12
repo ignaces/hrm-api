@@ -20,31 +20,78 @@ class Instrumento {
       response.json(facsimil[0][0]);
     }
     
-    async getFacsimilesPersona({request,response}){
-        var id = request.input("idCliente");
-        var idProcesoPersona = request.input("idProcesoPersona");
-        var codigoInstrumento = request.input("codigoInstrumento");
-        
-        const query =`call acre_getFacsimilesPersona('${idProcesoPersona}')`;
-        const rQuery =  await Database.connection('dev').schema.raw(query);
-        const sinCrear = Enumerable.from(rQuery[0][0]).where(`$.IdPregruntaFacsimil==null`).count();
-        const facsimiles = [];
-        const instrumentos = rQuery[0][0];
-        console.log(sinCrear);
-        if(sinCrear>0){
-            for(var facsimil in instrumentos){
+    async getInstrumento({request,response}){
+        var id = request.input("hostname");
+        var idOpinante = request.input("idOpinante");
+        var tipoInstrumento = request.input("tipoInstrumento");
+        var instrumento = [];
+        if(tipoInstrumento!="TCO"){
+            const query =`call acre_getInstrumento('${idOpinante}')`;
+            const rQuery =  await Database.connection('dev').schema.raw(query);
+    
+            const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
+                return{
+                    id:competencia.idCompetencia,
+                    codigo:competencia.competenciaCodigo,
+                    nombre:competencia.competencia,
+                    descripcion:competencia.competenciaDescripcion
 
-                const fQuery = `call creaFacsimil('${instrumentos[facsimil].idEvaluacionInstrumento}','${instrumentos[facsimil].idDndProcesoPersonaPerfil}')`;
-                const rFacsimil   = await Database.connection('dev').schema.raw(fQuery);
-                facsimiles.push(rFacsimil[0][0])
+                }
+            })
+
+            instrumento = {
+                nombre:"",
+                competencias:competencias.toArray()
             }
-        }else{
-            const fQuery = `select idEvaluacionFacsimil as idFacsimil from DndPersonaEvaluacion where idDndProcesoPersonaPerfil='${instrumentos[0].idDndProcesoPersonaPerfil}';`;
-            const rFacsimil   = await Database.connection('dev').schema.raw(fQuery);
-            facsimiles = rFacsimil;
+            
+            for(var competencia in instrumento.competencias){
+                var idCompetencia = instrumento.competencias[competencia].id
+                
+                const actividadesClave = Enumerable.from(rQuery[0][0]).where(`$.idCompetencia == "${idCompetencia}"`).distinct("$.idActividadClave").select(function(ac){
+                    return{
+                        id:ac.idActividadClave,
+                        nombre:ac.actividad,
+                        visible:ac.actividadVisible,
+                        orden:ac.actividadOrden
+                    }
+                }).toArray()
+                instrumento.competencias[competencia].actividadesClave = actividadesClave
+
+                for(var actividadClave in actividadesClave){
+                    var idActividadClave = actividadesClave[actividadClave].id
+                    
+                    const criterios = Enumerable.from(rQuery[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
+                        return{
+                            id:criterio.idCriterio,
+                            nombre:criterio.criterio,
+                            orden:criterio.criterioOrden
+                        }
+                    }).toArray()
+                    instrumento.competencias[competencia].actividadesClave[actividadClave].criterios = criterios
+
+                    for(var criterio in criterios){
+                        var idCriterio = criterios[criterio].id
+                        
+                        const escala = Enumerable.from(rQuery[0][0]).where(`$.idCriterio == "${idCriterio}"`).select(function(e){
+                            return{
+                                id:e.idEscalaNivel,
+                                nombre:e.nivelEscala,
+                                orden:e.ordenEscala,
+                                valor:e.valorEscala,
+                                requiereJustificacion:e.requiereJustificacion,
+                                indicador:e.indicador
+                            }
+                        }).toArray()
+                        instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
+                    }
+                }
+            }
+            
+    
         }
         
-        response.json(facsimiles);
+        
+        response.json(instrumento);
     }
     async getFacsimil({request,response}){
     
