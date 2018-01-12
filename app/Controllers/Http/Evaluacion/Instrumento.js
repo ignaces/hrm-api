@@ -89,7 +89,38 @@ class Instrumento {
             
     
         }else{
+            const query =`call acre_getEvaluacionPersona('${idOpinante}')`;
+            const preguntas =  await Database.connection('dev').schema.raw(query);
+
+            const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
+                return{
+                    idPreguntaFacsimil:pregunta.IdPregruntaFacsimil,
+                    enunciado:pregunta.enunciado,
+                    correcto:pregunta.correcto,
+                    puntajeObtenido:pregunta.puntajeObtenido,
+                    puntajeEsperado:pregunta.puntajeEsperado,
+                    tipoPregunta:pregunta.tipoPregunta
+                }
+            })
             
+    
+            instrumento = {
+                nombre:preguntas[0][0][0].nombre,
+                preguntas:preguntasUnicas.toArray()
+            }
+            for(var pregunta in instrumento.preguntas){
+                var idPregunta = instrumento.preguntas[pregunta].idPreguntaFacsimil
+                
+                const alternativas = Enumerable.from(preguntas[0][0]).where(`$.IdPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
+                    return{
+                        id:alternativa.idAlternativa,
+                        texto:alternativa.textoAlternativa,
+                        puntaje:alternativa.puntajeAlternativa,
+                        orden:alternativa.ordenAlternativa
+                    }
+                }).toArray()
+                instrumento.preguntas[pregunta].alternativas = alternativas
+            }
         }
         
         
