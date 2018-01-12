@@ -82,7 +82,8 @@ class Instrumento {
                                 valor:e.valorEscala,
                                 requiereJustificacion:e.requiereJustificacion,
                                 indicador:e.indicador,
-                                estaSeleccionada:e.estaSeleccionada
+                                estaSeleccionada:e.estaSeleccionada,
+                                idCriterio:idCriterio
                             }
                         }).toArray()
                         instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
