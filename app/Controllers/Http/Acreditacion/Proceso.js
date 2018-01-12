@@ -50,6 +50,25 @@ class Proceso {
         response.json(body);
     }
 
+    async cerrarEvaluacion({request,response}){
+        
+        var idOpinante = request.input("idOpinante");
+       
+
+        const query = `call acre_cerrarEvaluacion('${idOpinante}')`;
+        
+        
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
+    }
+
     async test({request,response}){
         
         var id = request.input("valor");
