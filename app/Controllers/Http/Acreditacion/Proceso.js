@@ -31,6 +31,12 @@ class Proceso {
 
     async putRespuesta({request,response}){
         
+        var idOpinante = request.input("idOpinante");
+        var idPregunta = request.input("idPregunta");
+        var idAlternativa = request.input("idAlternativa");
+        var justificacion = request.input("justificacion");
+
+
         
         response.json({
             "estado": {
@@ -39,6 +45,22 @@ class Proceso {
             },
             "paginacion": "",
             "data": ""
+        });
+    }
+
+    async test({request,response}){
+        
+        var id = request.input("valor");
+       
+        
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": id
         });
     }
     
