@@ -1,17 +1,14 @@
 'use strict'
 const Database = use('Database')
-
+const data = use('App/Utils/Data')
 class Users {
     async find({request,response}){
     
       const text =request.input('nombre') ;
-      console.log(text)
+      console.log(data.connection)
       const query = `call getUsers('${text}')`;
       
-      const usp   = await Database.connection('dev').schema.raw(query);
-      
-      //const usp   = yield Database.schema.raw("SELECT * from users;");
-      //response.json(usp[0]);
+      const usp   = await data.execQuery("enel",query);
       
       response.json(usp[0][0]);
     }
