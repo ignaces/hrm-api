@@ -16,33 +16,27 @@ class Persona {
       response.json(usp[0][0]);
     }
 
-    async getPersona({request,response}){
+    async getIdPersona({request,response}){
       
-        const idCliente = request.input('idCliente');
-        const idPersona = request.input('idPersona');
-        
-        const query = `call pers_getPersona('${idPersona}')`;
-        
-        const result = await Database.connection('dev').schema.raw(query);
+        var idUser = request.input('idUser');
 
-        const body = 
-        {
-          estado: {
-            codigo: "",
-            mensaje: ""
-          },
-          paginacion: {
-            totalRegistros: "",
-            totalPaginas: "",
-            pagina: "",
-            registros: ""
-          },
-          data: {persona: result[0][0]}
-          
-        }
+        var query = `call pers_getIdPersonaByIdUsuario('${idUser}')`;
         
-        response.json(body);
-      }
+        var respuesta = await Database.connection('dev').schema.raw(query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+        
+        //response.json(respuesta[0][0]);
+    }
+
+    
     
 }
 

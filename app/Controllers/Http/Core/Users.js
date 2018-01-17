@@ -15,6 +15,29 @@ class Users {
       
       response.json(usp[0][0]);
     }
+
+    async getIdPersona({request,response}){
+      
+        var idUser = request.input('idUser');
+
+        var query = `call pers_getIdPersonaByIdUsuario('${idUser}')`;
+        
+        var respuesta = await Database.connection('dev').schema.raw(query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+        
+        //response.json(respuesta[0][0]);
+    }
+    
+    
+
     
 }
 
