@@ -5,10 +5,11 @@ class Users {
     async find({request,response}){
     
       const text =request.input('nombre') ;
-      console.log(data.connection)
+      const hostname =request.input('hostname') ;
+      
       const query = `call getUsers('${text}')`;
       
-      const usp   = await data.execQuery("enel",query);
+      const usp   = await data.execQuery(hostname,query);
       
       response.json(usp[0][0]);
     }
