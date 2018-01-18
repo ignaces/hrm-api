@@ -1,12 +1,12 @@
 const Database = use('Database')
 const got = use('got')
 var Enumerable = require('linq')
+const data = use('App/Utils/Data')
 //jTest
 class Proceso {
 
     async findProcesos({request,response}){
 
-        const idCliente = request.input('idCliente');
         const pagina = request.input('pagina');
         const registros = request.input('registros');
         const nombre = request.input('nombre');
@@ -30,7 +30,7 @@ class Proceso {
     }
 
     async putRespuesta({request,response}){
-        
+       
         var idOpinante = request.input("idOpinante");
         var idPregunta = request.input("idPregunta");
         var idAlternativa = request.input("idAlternativa");
@@ -87,11 +87,12 @@ class Proceso {
     
     async getPersonasEvaluaciones({request,response}){
     
+       
         var idProceso = request.input("idProceso");
         var idPersona = request.input("idPersona");
-        
+        const cliente =request.input('cliente') ;
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
-        const result   = await Database.connection('dev').schema.raw(query);
+        const result   = await data.execQuery(cliente,query);
         
         const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
             return{

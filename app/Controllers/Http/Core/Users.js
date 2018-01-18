@@ -5,11 +5,11 @@ class Users {
     async find({request,response}){
     
       const text =request.input('nombre') ;
-      const hostname =request.input('hostname') ;
+      const cliente =request.input('cliente') ;
       
       const query = `call getUsers('${text}')`;
       
-      const usp   = await data.execQuery(hostname,query);
+      const usp   = await data.execQuery(cliente,query);
       
       response.json(usp[0][0]);
     }
@@ -18,9 +18,9 @@ class Users {
       
         var idUser = request.input('idUser');
 
-        var query = `call pers_getIdPersonaByIdUsuario('${idUser}')`;
-        
-        var respuesta = await Database.connection('dev').schema.raw(query);
+        const cliente =request.input('cliente') ;
+        const query =`call pers_getIdPersonaByIdUsuario('${idUser}')`;
+        const respuesta   = await data.execQuery(cliente,query);
         
         response.json({
             "estado": {

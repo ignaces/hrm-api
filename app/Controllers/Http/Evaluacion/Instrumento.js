@@ -1,16 +1,20 @@
 const Database = use('Database')
 const got = use('got')
 var Enumerable = require('linq')
+const data = use('App/Utils/Data')
 //jTest
 class Instrumento {
 
    
     async creaFacsimil({request,response}){
     
-      var id = request.input("idInstrumento");
+        var id = request.input("idInstrumento");
+
+        const cliente =request.input('cliente') ;
+        const query =`call creaFacsimil('${id}')`;
+        const facsimil   = await data.execQuery(cliente,query);
       
-      const query = `call creaFacsimil('${id}')`;
-      const facsimil   = await Database.connection('dev').schema.raw(query);
+      
       /**
        * 
        * Crear facsimil
@@ -25,10 +29,12 @@ class Instrumento {
         var idOpinante = request.input("idOpinante");
         var tipoInstrumento = request.input("tipoInstrumento");
         var instrumento = [];
+        const cliente =request.input('cliente') ;
+        
         
         if(tipoInstrumento!="TCO"){
             const query =`call acre_getInstrumento('${idOpinante}')`;
-            const rQuery =  await Database.connection('dev').schema.raw(query);
+            const rQuery   = await data.execQuery(cliente,query);
     
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
                 return{
@@ -82,9 +88,8 @@ class Instrumento {
                                 valor:e.valorEscala,
                                 requiereJustificacion:e.requiereJustificacion,
                                 indicador:e.indicador,
-                                estaSeleccionada:e.estaSeleccionada,
-                                idCriterio:idCriterio,
-                                justtificacion: ""
+                                estaSeleccionada:e.estaSeleccionada,                                
+                                justificacion: e.justificacion
                             }
                         }).toArray()
                         instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
@@ -95,7 +100,7 @@ class Instrumento {
     
         }else{
             const query =`call acre_getEvaluacionPersona('${idOpinante}')`;
-            const preguntas =  await Database.connection('dev').schema.raw(query);
+            const preguntas   = await data.execQuery(cliente,query);
 
             const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
                 return{
@@ -125,7 +130,7 @@ class Instrumento {
                         orden:alternativa.ordenAlternativa,
                         estaSeleccionada:alternativa.estaSeleccionada,
                         requiereJustificacion:"0",
-                        justtificacion: ""
+                        justificacion: ""
                     }
                 }).toArray()
                 instrumento.preguntas[pregunta].alternativas = alternativas
@@ -138,9 +143,10 @@ class Instrumento {
     async getFacsimil({request,response}){
     
         var id = request.input("idFacsimil");
-        
-        const query = `call getPreguntasFacsimil('${id}')`;
-        const preguntas   = await Database.connection('dev').schema.raw(query);
+
+        const cliente =request.input('cliente') ;
+        const query =  `call getPreguntasFacsimil('${id}')`;
+        const preguntas   = await data.execQuery(cliente,query);
         
         const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
             return{
