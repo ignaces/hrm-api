@@ -29,7 +29,7 @@ module.exports = {
 
 
         const coneccion ={client:'mysql',connection:{
-            host: Env.get('DB_HOST', '192.168.3.13'),
+            host: Env.get('DB_HOST', '192.168.3.18'),
             port: Env.get('DB_PORT', '3306'),
             user: Env.get('DB_USER', 'root'),
             password: Env.get('DB_PASSWORD', 'QazQwerty123_'),
