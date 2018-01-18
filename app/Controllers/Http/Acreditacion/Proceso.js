@@ -30,7 +30,7 @@ class Proceso {
     }
 
     async putRespuesta({request,response}){
-        console.log(request);
+       
         var idOpinante = request.input("idOpinante");
         var idPregunta = request.input("idPregunta");
         var idAlternativa = request.input("idAlternativa");
