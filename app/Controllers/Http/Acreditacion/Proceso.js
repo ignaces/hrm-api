@@ -30,7 +30,7 @@ class Proceso {
     }
 
     async putRespuesta({request,response}){
-        
+        console.log(request);
         var idOpinante = request.input("idOpinante");
         var idPregunta = request.input("idPregunta");
         var idAlternativa = request.input("idAlternativa");
@@ -87,9 +87,10 @@ class Proceso {
     
     async getPersonasEvaluaciones({request,response}){
     
+       
         var idProceso = request.input("idProceso");
         var idPersona = request.input("idPersona");
-        
+       
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
         const result   = await Database.connection('dev').schema.raw(query);
         

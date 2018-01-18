@@ -82,9 +82,8 @@ class Instrumento {
                                 valor:e.valorEscala,
                                 requiereJustificacion:e.requiereJustificacion,
                                 indicador:e.indicador,
-                                estaSeleccionada:e.estaSeleccionada,
-                                idCriterio:idCriterio,
-                                justtificacion: ""
+                                estaSeleccionada:e.estaSeleccionada,                                
+                                justificacion: e.justificacion
                             }
                         }).toArray()
                         instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
@@ -125,7 +124,7 @@ class Instrumento {
                         orden:alternativa.ordenAlternativa,
                         estaSeleccionada:alternativa.estaSeleccionada,
                         requiereJustificacion:"0",
-                        justtificacion: ""
+                        justificacion: ""
                     }
                 }).toArray()
                 instrumento.preguntas[pregunta].alternativas = alternativas
