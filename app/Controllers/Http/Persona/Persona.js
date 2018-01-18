@@ -1,14 +1,16 @@
 'use strict'
 const Database = use('Database')
+const data = use('App/Utils/Data')
 
 class Persona {
     async find({request,response}){
     
-      const text =request.input('nombre') ;
+        const text =request.input('nombre');
+        const cliente =request.input('cliente') ;
+        const query =  `call getPersonas('${text}')`;
+        const usp   = await data.execQuery(cliente,query);
       
-      const query = `call getPersonas('${text}')`;
       
-      const usp   = await Database.connection('dev').schema.raw(query);
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);
@@ -19,10 +21,9 @@ class Persona {
     async getIdPersona({request,response}){
       
         var idUser = request.input('idUser');
-
-        var query = `call pers_getIdPersonaByIdUsuario('${idUser}')`;
-        
-        var respuesta = await Database.connection('dev').schema.raw(query);
+        const cliente =request.input('cliente') ;
+        const query =  `call pers_getIdPersonaByIdUsuario('${idUser}')`;
+        const respuesta   = await data.execQuery(cliente,query);
         
         response.json({
             "estado": {
