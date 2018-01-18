@@ -66,6 +66,39 @@ module.exports = {
       database: Env.get('DB_DATABASE', 'KH')
     },
     debug: Env.get('DB_DEBUG', false)
+  },
+  prod: {
+    client: 'mysql',
+    connection: {
+      host: Env.get('DB_HOST', '192.168.3.13'),
+      port: Env.get('DB_PORT', '3306'),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', 'Qwerty123'),
+      database: Env.get('DB_DATABASE', 'KH')
+    },
+    debug: Env.get('DB_DEBUG', false)
+  },
+  app: {
+    client: 'mysql',
+    connection: {
+      host: Env.get('DB_HOST', '192.168.3.18'),
+      port: Env.get('DB_PORT', '3306'),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', 'Qwerty123'),
+      database: Env.get('DB_DATABASE', 'hrmapp')
+    },
+    debug: Env.get('DB_DEBUG', false)
+  },
+  default: {
+    client: 'mysql',
+    connection: {
+      host: Env.get('DB_HOST', '192.168.3.18'),
+      port: Env.get('DB_PORT', '8'),
+      user: Env.get('DB_USER', 'root'),
+      password: Env.get('DB_PASSWORD', 'Qwerty123'),
+      database: Env.get('DB_DATABASE', 'KH')
+    },
+    debug: Env.get('DB_DEBUG', false)
   }
   /*
   |--------------------------------------------------------------------------
