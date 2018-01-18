@@ -13,7 +13,7 @@ class Persona {
       
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
-      //response.json(usp[0]);
+      //response.json(usp[0]);--
       
       response.json(usp[0][0]);
     }
