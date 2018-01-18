@@ -1,14 +1,16 @@
 'use strict'
 const Database = use('Database')
+const data = use('App/Utils/Data')
 
 class Persona {
     async find({request,response}){
     
-      const text =request.input('nombre') ;
+        const text =request.input('nombre');
+        const cliente =request.input('cliente') ;
+        const query =  `call getPersonas('${text}')`;
+        const usp   = await data.execQuery(cliente,query);
       
-      const query = `call getPersonas('${text}')`;
       
-      const usp   = await Database.connection('dev').schema.raw(query);
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);
@@ -16,33 +18,26 @@ class Persona {
       response.json(usp[0][0]);
     }
 
-    async getPersona({request,response}){
+    async getIdPersona({request,response}){
       
-        const idCliente = request.input('idCliente');
-        const idPersona = request.input('idPersona');
+        var idUser = request.input('idUser');
+        const cliente =request.input('cliente') ;
+        const query =  `call pers_getIdPersonaByIdUsuario('${idUser}')`;
+        const respuesta   = await data.execQuery(cliente,query);
         
-        const query = `call pers_getPersona('${idPersona}')`;
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
         
-        const result = await Database.connection('dev').schema.raw(query);
+        //response.json(respuesta[0][0]);
+    }
 
-        const body = 
-        {
-          estado: {
-            codigo: "",
-            mensaje: ""
-          },
-          paginacion: {
-            totalRegistros: "",
-            totalPaginas: "",
-            pagina: "",
-            registros: ""
-          },
-          data: {persona: result[0][0]}
-          
-        }
-        
-        response.json(body);
-      }
+    
     
 }
 

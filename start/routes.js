@@ -37,4 +37,4 @@ Route.any('/:module/:controller/:action',  ({view ,request, response,params}) =>
     
     return controllerInstance.method.apply(controllerInstance.instance,[{view,request,response}])
     
-})
+}).middleware(['logging'])
