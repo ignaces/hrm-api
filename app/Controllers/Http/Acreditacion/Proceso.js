@@ -11,10 +11,9 @@ class Proceso {
         const registros = request.input('registros');
         const nombre = request.input('nombre');
         const activo = request.input('activo');
-        
-        
+        const cliente =request.input('cliente') ;
         const query = `call acre_findProcesos(${pagina}, ${registros},'${nombre}', ${activo})`;
-        const result   = await Database.connection('dev').schema.raw(query);
+        const result   = await data.execQuery(cliente,query);
         
         const body = 
         {
@@ -35,9 +34,9 @@ class Proceso {
         var idPregunta = request.input("idPregunta");
         var idAlternativa = request.input("idAlternativa");
         var justificacion = request.input("justificacion");
-
+        const cliente =request.input('cliente') ;
         const query = `call acre_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
-        const result   = await Database.connection('dev').schema.raw(query);
+        const result   = await data.execQuery(cliente,query);
         
         const body = 
         {
@@ -53,9 +52,9 @@ class Proceso {
     async cerrarEvaluacion({request,response}){
         
         var idOpinante = request.input("idOpinante");
-       
-
+        const cliente =request.input('cliente') ;
         const query = `call acre_cerrarEvaluacion('${idOpinante}')`;
+        const result   = await data.execQuery(cliente,query);
         
         
         const body = 
@@ -67,6 +66,12 @@ class Proceso {
           
         }
         response.json(body);
+    }
+
+    async testGet({request,response}){
+        const query = `call test_getPersonas()`;
+        const result   = await Database.connection('dev').schema.raw(query);
+        response.json(result[0][0]);
     }
 
     async test({request,response}){
