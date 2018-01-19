@@ -13,7 +13,7 @@ module.exports = {
         
         Database.Config._config.database.default=coneccion;
  
-
+        
         const result = await Database.connection('default').schema.raw(query);
         
         Database.close(['default'])
@@ -25,7 +25,7 @@ module.exports = {
         }
 
         /**Vamos a la BD de la aplicación para rescatar el nombre de la bd del cliente */
-        var query =`select * from cliente where domain = '${client}'`;
+        var query =`select * from Cliente where domain = '${client}'`;
         const result = await Database.connection('app').schema.raw(query);
           
         var bd = result[0][0].bd;

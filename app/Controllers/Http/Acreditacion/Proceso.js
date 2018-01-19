@@ -2,6 +2,7 @@ const Database = use('Database')
 const got = use('got')
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
+const permisos = use('App/Controllers/Http/Core/Permisos')
 //jTest
 class Proceso {
 
@@ -91,9 +92,12 @@ class Proceso {
         var idProceso = request.input("idProceso");
         var idPersona = request.input("idPersona");
         const cliente =request.input('cliente') ;
-        const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
-        const result   = await data.execQuery(cliente,query);
         
+        const qRoles =`call core_getRolPersona('${idPersona}')`;
+        const rRoles   = await data.execQuery(cliente,qRoles);
+
+        
+       
         const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
             return{
                 idTipoOpinante:tipoOpinante.idTipoOpinante,
@@ -102,10 +106,20 @@ class Proceso {
             }
         }).toArray()
 
-        
+        const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+        var todo= true;
+        if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
+            todo=false; 
+        }
 
         for(var tipoOpinante in tipoOpinantes){
             var idTipoOpinante = tipoOpinantes[tipoOpinante].idTipoOpinante
+            if(!todo && tipoOpinantes[tipoOpinante].codigo=="DES"){
+                tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
+                continue;
+            }
+
             
             const personas = Enumerable.from(result[0][0]).where(`$.idTipoOpinante == "${idTipoOpinante}"`).distinct("$.idPersona").select(function(persona){
                 return{
