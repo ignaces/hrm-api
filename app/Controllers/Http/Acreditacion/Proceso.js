@@ -147,7 +147,8 @@ class Proceso {
                         codigoTipoInstrumento:instrumento.codigoTipoInstrumento,
                         idEstado:instrumento.idEstado,
                         nombreEstado:instrumento.nombreEstado,
-                        codigoEstado:instrumento.codigoEstado
+                        codigoEstado:instrumento.codigoEstado,
+                        accesible:instrumento.accesible
                     }
                 }).toArray()
                 tipoOpinantes[tipoOpinante].personas[persona].instrumentos = instrumentos
