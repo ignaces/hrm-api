@@ -97,7 +97,8 @@ class Proceso {
         const rRoles   = await data.execQuery(cliente,qRoles);
 
         
-       
+        const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
         const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
             return{
                 idTipoOpinante:tipoOpinante.idTipoOpinante,
@@ -106,8 +107,7 @@ class Proceso {
             }
         }).toArray()
 
-        const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
-        const result   = await data.execQuery(cliente,query);
+        
         var todo= true;
         if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
             todo=false; 
