@@ -13,7 +13,7 @@ module.exports = {
         
         Database.Config._config.database.default=coneccion;
  
-
+        
         const result = await Database.connection('default').schema.raw(query);
         
         Database.close(['default'])
