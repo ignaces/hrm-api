@@ -101,10 +101,15 @@ class Proceso {
         const qRoles =`call core_getRolPersona('${idPersona}')`;
         const rRoles   = await data.execQuery(cliente,qRoles);
 
-        
+        var tipo= "";
+        if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
+            tipo="AUTO";
+        }else{
+            tipo="DES";
+        }
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
         const result   = await data.execQuery(cliente,query);
-        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
+        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").where(`$.codigoTipoOpinante == "${tipo}"`).select(function(tipoOpinante){
             return{
                 idTipoOpinante:tipoOpinante.idTipoOpinante,
                 codigo:tipoOpinante.codigoTipoOpinante,
@@ -113,17 +118,19 @@ class Proceso {
         }).toArray()
 
         
-        var todo= true;
-        if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
-            todo=false; 
-        }
-
+        
+        
         for(var tipoOpinante in tipoOpinantes){
             var idTipoOpinante = tipoOpinantes[tipoOpinante].idTipoOpinante
-            if(!todo && tipoOpinantes[tipoOpinante].codigo=="DES"){
+           
+            /*if(!todo && tipoOpinantes[tipoOpinante].codigo=="DES"){
                 tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
                 continue;
             }
+            if(todo && tipoOpinantes[tipoOpinante].codigo=="AUTO"){
+                tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
+                continue;
+            }*/
 
             
             const personas = Enumerable.from(result[0][0]).where(`$.idTipoOpinante == "${idTipoOpinante}"`).distinct("$.idPersona").select(function(persona){
@@ -135,6 +142,7 @@ class Proceso {
                     identificador:persona.identificador
                 }
             }).toArray()
+            
             tipoOpinantes[tipoOpinante].personas = personas
 
             for(var persona in personas){
