@@ -2,6 +2,7 @@ const Database = use('Database')
 const got = use('got')
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
+const permisos = use('App/Controllers/Http/Core/Permisos')
 //jTest
 class Proceso {
 
@@ -11,10 +12,9 @@ class Proceso {
         const registros = request.input('registros');
         const nombre = request.input('nombre');
         const activo = request.input('activo');
-        
-        
+        const cliente =request.input('cliente') ;
         const query = `call acre_findProcesos(${pagina}, ${registros},'${nombre}', ${activo})`;
-        const result   = await Database.connection('dev').schema.raw(query);
+        const result   = await data.execQuery(cliente,query);
         
         const body = 
         {
@@ -35,9 +35,9 @@ class Proceso {
         var idPregunta = request.input("idPregunta");
         var idAlternativa = request.input("idAlternativa");
         var justificacion = request.input("justificacion");
-
+        const cliente =request.input('cliente') ;
         const query = `call acre_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
-        const result   = await Database.connection('dev').schema.raw(query);
+        const result   = await data.execQuery(cliente,query);
         
         const body = 
         {
@@ -53,9 +53,9 @@ class Proceso {
     async cerrarEvaluacion({request,response}){
         
         var idOpinante = request.input("idOpinante");
-       
-
+        const cliente =request.input('cliente') ;
         const query = `call acre_cerrarEvaluacion('${idOpinante}')`;
+        const result   = await data.execQuery(cliente,query);
         
         
         const body = 
@@ -67,6 +67,12 @@ class Proceso {
           
         }
         response.json(body);
+    }
+
+    async testGet({request,response}){
+        const query = `call test_getPersonas()`;
+        const result   = await Database.connection('dev').schema.raw(query);
+        response.json(result[0][0]);
     }
 
     async test({request,response}){
@@ -91,10 +97,19 @@ class Proceso {
         var idProceso = request.input("idProceso");
         var idPersona = request.input("idPersona");
         const cliente =request.input('cliente') ;
+        
+        const qRoles =`call core_getRolPersona('${idPersona}')`;
+        const rRoles   = await data.execQuery(cliente,qRoles);
+
+        var tipo= "";
+        if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
+            tipo="AUTO";
+        }else{
+            tipo="DES";
+        }
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
         const result   = await data.execQuery(cliente,query);
-        
-        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
+        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").where(`$.codigoTipoOpinante == "${tipo}"`).select(function(tipoOpinante){
             return{
                 idTipoOpinante:tipoOpinante.idTipoOpinante,
                 codigo:tipoOpinante.codigoTipoOpinante,
@@ -103,9 +118,20 @@ class Proceso {
         }).toArray()
 
         
-
+        
+        
         for(var tipoOpinante in tipoOpinantes){
             var idTipoOpinante = tipoOpinantes[tipoOpinante].idTipoOpinante
+           
+            /*if(!todo && tipoOpinantes[tipoOpinante].codigo=="DES"){
+                tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
+                continue;
+            }
+            if(todo && tipoOpinantes[tipoOpinante].codigo=="AUTO"){
+                tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
+                continue;
+            }*/
+
             
             const personas = Enumerable.from(result[0][0]).where(`$.idTipoOpinante == "${idTipoOpinante}"`).distinct("$.idPersona").select(function(persona){
                 return{
@@ -116,6 +142,7 @@ class Proceso {
                     identificador:persona.identificador
                 }
             }).toArray()
+            
             tipoOpinantes[tipoOpinante].personas = personas
 
             for(var persona in personas){
@@ -128,7 +155,8 @@ class Proceso {
                         codigoTipoInstrumento:instrumento.codigoTipoInstrumento,
                         idEstado:instrumento.idEstado,
                         nombreEstado:instrumento.nombreEstado,
-                        codigoEstado:instrumento.codigoEstado
+                        codigoEstado:instrumento.codigoEstado,
+                        accesible:instrumento.accesible
                     }
                 }).toArray()
                 tipoOpinantes[tipoOpinante].personas[persona].instrumentos = instrumentos
