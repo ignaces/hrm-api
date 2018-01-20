@@ -1,15 +1,15 @@
 'use strict'
 const Database = use('Database')
 const got = use('got')
-
+const data = use('App/Utils/Data')
 class Instrumento {
 
    
     async preguntas({request,response}){
     
       const query = `select * from RedesPreguntas order by orden asc`;
-      
-      const usp   = await Database.connection('dev').schema.raw(query);
+      const cliente =request.input('cliente') ;
+      const usp   = await data.execQuery(cliente,query);
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);
@@ -18,17 +18,20 @@ class Instrumento {
     }
     
     async save ({request,response}){
+      const cliente =request.input('cliente');
       
-      var options_auth = new Buffer("neo4j:ASmn1008").toString("base64")
-      var data = request.all()
-      var code = request.input("_code")
+      var options_auth = new Buffer("neo4j:Qwerty123").toString("base64")
+      var data = request.all();
+      
+      var code = data._code;
       
       delete data['_code']
       delete data['_csrf']
       
-      const query = `select * from Persona where id ='${code}'`;
+      const query = `select * from Persona where id ='${code}';`;
       
-      const resPersona   = await Database.connection('dev').schema.raw(query);
+      const resPersona   = await data.execQuery(cliente,query);
+      console.log()
       const persona = resPersona[0][0]
 
       
@@ -37,7 +40,7 @@ class Instrumento {
        */
       var idPersonas=""
       var instrucciones ={statements:[]}
-
+      console.log(resPersona)
       /**
        * Se crea persona que está contestando
        */
@@ -116,7 +119,7 @@ class Instrumento {
       
       
       
-      const rPersonas = await got.post(`http://localhost:7474/db/data/transaction/commit`,
+      const rPersonas = await got.post(`http://192.168.3.18:7474/db/data/transaction/commit`,
         {
           
           json:true,
