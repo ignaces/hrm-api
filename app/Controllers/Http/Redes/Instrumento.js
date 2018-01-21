@@ -21,17 +21,18 @@ class Instrumento {
       const cliente =request.input('cliente');
       
       var options_auth = new Buffer("neo4j:Qwerty123").toString("base64")
-      var data = request.all();
+      var rData = request.all();
       
-      var code = data._code;
+      var code = rData._code;
       
-      delete data['_code']
-      delete data['_csrf']
+      delete rData['_code']
+      delete rData['_csrf']
+      delete rData['cliente']
       
       const query = `select * from Persona where id ='${code}';`;
       
       const resPersona   = await data.execQuery(cliente,query);
-      console.log()
+      
       const persona = resPersona[0][0]
 
       
@@ -40,7 +41,7 @@ class Instrumento {
        */
       var idPersonas=""
       var instrucciones ={statements:[]}
-      console.log(resPersona)
+      
       /**
        * Se crea persona que está contestando
        */
@@ -54,22 +55,22 @@ class Instrumento {
                     p.apellidoMaterno = '${persona.apellidoMaterno}'`                      
      })
    
-      for(var propertyName in data) {
+      for(var propertyName in rData) {
         
-            const qPreguntas = `select * from RedesPreguntas where id='${propertyName}'`;
-            const preguntas   = await Database.connection('dev').schema.raw(qPreguntas);
+            const qPreguntas = `select * from RedesPreguntas where id='${propertyName}';`;
+            const preguntas   = await data.execQuery(cliente,qPreguntas);
 
             var pregunta = preguntas[0][0]
-
-            if(data[propertyName].constructor === Array){
-            for(var item in data[propertyName]){    
-                  var qp = `select * from persona where id ='${data[propertyName][item]}'`
-                  const resp   = await Database.connection('dev').schema.raw(qp);    
+            if(rData[propertyName].constructor === Array){
+            for(var item in rData[propertyName]){    
+                  var qp = `select * from Persona where id ='${rData[propertyName][item]}'`
+                  const resp   = await data.execQuery(cliente,qp);  
 
                   var pp = resp[0][0]
                   /**
                    * Se crea persona a la que se hace mención
                    */
+                  
                   instrucciones.statements.push({
                   statement : `MERGE (p:Persona { codigo:'${pp.id}' }) \
                           ON CREATE SET p.nombre = '${pp.nombres}', \
@@ -89,8 +90,8 @@ class Instrumento {
                   })
           }
         }else{
-            var qp = `select * from persona where id ='${data[propertyName]}'`
-            const resp   = await Database.connection('dev').schema.raw(qp);    
+            var qp = `select * from Persona where id ='${rData[propertyName]}'`
+            const resp   = await data.execQuery(cliente,qp);
             var pp = resp[0]
             /**
              * Se crea persona a la que se hace mención
