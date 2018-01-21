@@ -8,7 +8,7 @@ const permisos = use('App/Controllers/Http/Core/Permisos')
  */
 class Proceso {
     /**
-     * @param   pagina pagina
+     * @param  {string} pagina pagina
      * @param  registros
      * @param  nombre
      * @param  activo
