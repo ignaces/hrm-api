@@ -4,10 +4,12 @@ var Enumerable = require('linq')
 const data = use('App/Utils/Data')
 const permisos = use('App/Controllers/Http/Core/Permisos')
 /**
+ *Esta clase ....
  * @constructor
  */
 class Proceso {
     /**
+     * Esta funcion blah blah
      * @param  {string} pagina pagina
      * @param  registros
      * @param  nombre
