@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                 ],
               jsdoc: './node_modules/.bin/jsdoc',
               options: {
-                  destination: 'doc',
+                  destination: 'public/doc',
                   configure: './jsdocconf.json',
                   template: './node_modules/ink-docstrap/template'
               }
