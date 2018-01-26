@@ -4,7 +4,10 @@ module.exports = function(grunt) {
     grunt.initConfig({
       jsdoc : {
           dist : {
-              src: ['./app/Controllers/Http/*/*.js'],
+              src: [
+                  './app/Controllers/Http/*/*.js',
+                  './app/*/*.js'
+                ],
               jsdoc: './node_modules/.bin/jsdoc',
               options: {
                   destination: 'doc',

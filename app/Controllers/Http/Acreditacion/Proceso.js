@@ -40,7 +40,13 @@ class Proceso {
         }
         response.json(body);
     }
-
+    /**
+     * @param  {string} cliente
+     * @param  {} idOpinante 
+     * @param  {} idPregunta
+     * @param  {} idAlternativa
+     * @param  {} justificacion
+     */
     async putRespuesta({request,response}){
        
         var idOpinante = request.input("idOpinante");

@@ -3,8 +3,8 @@ const Database = use('Database')
 const got = use('got')
 const data = use('App/Utils/Data')
 /**
- * Instrumento
- * @constructor
+ * asdasdadasdadasda
+ * @class
  */
 class Instrumento {
 

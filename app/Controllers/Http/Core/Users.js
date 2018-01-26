@@ -8,7 +8,7 @@ class Users {
       const cliente =request.input('cliente') ;
       
       const query = `call getUsers('${text}')`;
-      
+      console.log(data)
       const usp   = await data.execQuery(cliente,query);
       
       response.json(usp[0][0]);
@@ -33,7 +33,7 @@ class Users {
         
         //response.json(respuesta[0][0]);
     }
-    
+
     
     
 

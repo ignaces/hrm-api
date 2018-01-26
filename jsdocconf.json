@@ -13,11 +13,11 @@
         "default": {
             "outputSourceFiles": true
         },
-        "systemName"      : "DocStrap",
+        "systemName"      : "HRM API",
         "footer"          : "",
-        "copyright"       : "DocStrap Copyright © 2012-2013 The contributors to the JSDoc3 and DocStrap projects.",
+        "copyright"       : "... a la grande le puse Cuca",
         "navType"         : "vertical",
-        "theme"           : "cerulean",
+        "theme"           : "superhero",
         "linenums"        : true,
         "collapseSymbols" : false,
         "inverseNav"      : true
