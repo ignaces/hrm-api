@@ -12,12 +12,20 @@ module.exports = {
         
         
         Database.Config._config.database.default=coneccion;
- 
+        try{
+            const result = await Database.connection('default').schema.raw(query);
         
-        const result = await Database.connection('default').schema.raw(query);
+            Database.close(['default'])
+            return result;
+        }catch(ex){
+            Database.close(['default'])
+            return ex;
+        }
         
-        Database.close(['default'])
-        return result;
+        
+        
+        
+        
     },
     getConeccionCliente : async (client) =>{ 
         if(client == "localhost"){
