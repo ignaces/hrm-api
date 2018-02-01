@@ -4,16 +4,21 @@ const Env = use('Env')
 const Helpers = use('Helpers')
 
 /**
- * Esta clase está encargada de manejar las llamada s ala base de datos
+ * Esta clase está encargada de manejar las llamadas a la base de datos
  * @name Data
  * @class
  * 
  */
 class Data  {
     /**
-     * 
-     * @param  {string} client Es el nombre de dominio el cliente
-     * @param  {string} query Consolta a la base de datoss
+     * extrae la cosa
+     * @version 1.0.0
+     * @deprecated since version 2.0
+     * @example
+     * // returns 2
+     * globalNS.method1(5, 10);
+     * @param  {string} client Es el nombre de dominio del cliente
+     * @param  {string} query Consulta a la base de datoss
      */
     async execQuery(client,query){
         
@@ -39,7 +44,7 @@ class Data  {
     }
     /**
      * 
-     * @param  {string} client Es el nombre de dominio el cliente
+     * @param  {string} client Es el nombre de dominio del cliente
      */
     async getConeccionCliente (client){ 
         if(client == "localhost"){
