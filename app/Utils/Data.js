@@ -57,7 +57,6 @@ class Data  {
           
         var bd = result[0][0].bd;
 
-
         const coneccion ={client:'mysql',connection:{
             host: Env.get('DB_HOST', '192.168.3.18'),
             port: Env.get('DB_PORT', '3306'),
