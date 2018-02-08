@@ -3,23 +3,50 @@ const Database = use('Database')
 const Env = use('Env')
 const Helpers = use('Helpers')
 
-
-module.exports = {
-    execQuery: async (client,query)=>{
+/**
+ * Esta clase está encargada de manejar las llamadas a la base de datos
+ * @name Data
+ * @class
+ * 
+ */
+class Data  {
+    /**
+     * extrae la cosa
+     * @version 1.0.0
+     * @deprecated since version 2.0
+     * @example
+     * // returns 2
+     * globalNS.method1(5, 10);
+     * @param  {string} client Es el nombre de dominio del cliente
+     * @param  {string} query Consulta a la base de datoss
+     */
+    async execQuery(client,query){
         
 
-        const coneccion = await module.exports.getConeccionCliente(client);
+        const coneccion = await this.getConeccionCliente(client);
         
         
         Database.Config._config.database.default=coneccion;
- 
+        try{
+            const result = await Database.connection('default').schema.raw(query);
         
-        const result = await Database.connection('default').schema.raw(query);
+            Database.close(['default'])
+            return result;
+        }catch(ex){
+            Database.close(['default'])
+            return ex;
+        }
         
-        Database.close(['default'])
-        return result;
-    },
-    getConeccionCliente : async (client) =>{ 
+        
+        
+        
+        
+    }
+    /**
+     * 
+     * @param  {string} client Es el nombre de dominio del cliente
+     */
+    async getConeccionCliente (client){ 
         if(client == "localhost"){
             client = "hrm";
         }
@@ -41,5 +68,5 @@ module.exports = {
         }};
         return coneccion;
     }
-
 }
+module.exports = new Data

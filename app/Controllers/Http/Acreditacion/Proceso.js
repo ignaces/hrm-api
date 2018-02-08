@@ -3,9 +3,19 @@ const got = use('got')
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
 const permisos = use('App/Controllers/Http/Core/Permisos')
-//jTest
+/**
+ *Esta clase ....
+ * @constructor
+ */
 class Proceso {
-
+    /**
+     * Esta funcion blah blah
+     * @param  {string} pagina pagina
+     * @param  registros
+     * @param  nombre
+     * @param  activo
+     * @param  cliente
+     */
     async findProcesos({request,response}){
 
         const pagina = request.input('pagina');
@@ -23,12 +33,20 @@ class Proceso {
             mensaje: ""
           },
           paginacion: result[0][1][0],
-          data: {procesos: result[0][0]}
+          data: {
+              procesos: result[0][0]
+          }
           
         }
         response.json(body);
     }
-
+    /**
+     * @param  {string} cliente
+     * @param  {} idOpinante 
+     * @param  {} idPregunta
+     * @param  {} idAlternativa
+     * @param  {} justificacion
+     */
     async putRespuesta({request,response}){
        
         var idOpinante = request.input("idOpinante");
