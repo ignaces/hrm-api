@@ -108,7 +108,27 @@ class Proceso {
             "data": id
         });
     }
-    
+    async getProcesos({request,response}){
+        var idProceso = request.input("idProceso");
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_getProcesos('${idProceso}', 1)`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
     async getPersonasEvaluaciones({request,response}){
     
        
