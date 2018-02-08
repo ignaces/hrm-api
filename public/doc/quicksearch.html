@@ -1,0 +1,31 @@
+<html>
+<head>
+</head>
+<body style="background: transparent;">
+    <script src="scripts/docstrap.lib.js"></script>
+    <script src="scripts/lunr.min.js"></script>
+    <script src="scripts/fulltext-search.js"></script>
+
+    <script type="text/x-docstrap-searchdb">
+    {"global.html":{"id":"global.html","title":"Global","body":" HRM API Classes DataInstrumentoProceso Global tokens Global Methods tokens() A relationship on tokens is required for auth to work. Since features like `refreshTokens` or `rememberToken` will be saved inside the tokens table. Returns: Type Object × Search results Close "},"classes.list.html":{"id":"classes.list.html","title":"Classes","body":" HRM API Classes DataInstrumentoProceso Global tokens Classes Classes Data Instrumento Proceso × Search results Close "},"index.html":{"id":"index.html","title":"Index","body":" HRM API Classes DataInstrumentoProceso Global tokens × Search results Close "},"Data.html":{"id":"Data.html","title":"Class: Data","body":" HRM API Classes DataInstrumentoProceso Global tokens Class: Data Data new Data() Esta clase está encargada de manejar las llamadas a la base de datos Methods &lt;async&gt; execQuery(client, query) extrae la cosa Parameters: Name Type Description client string Es el nombre de dominio del cliente query string Consulta a la base de datoss Version: 1.0.0 Deprecated: since version 2.0 Example // returns 2 globalNS.method1(5, 10); &lt;async&gt; getConeccionCliente(client) Parameters: Name Type Description client string Es el nombre de dominio del cliente × Search results Close "},"Instrumento.html":{"id":"Instrumento.html","title":"Class: Instrumento","body":" HRM API Classes DataInstrumentoProceso Global tokens Class: Instrumento Instrumento asdasdadasdadasda new Instrumento() Methods &lt;async&gt; preguntas(cliente) Parameters: Name Type Description cliente × Search results Close "},"Proceso.html":{"id":"Proceso.html","title":"Class: Proceso","body":" HRM API Classes DataInstrumentoProceso Global tokens Class: Proceso Proceso Esta clase .... new Proceso() Methods &lt;async&gt; findProcesos(pagina, registros, nombre, activo, cliente) Esta funcion blah blah Parameters: Name Type Description pagina string pagina registros nombre activo cliente &lt;async&gt; putRespuesta(cliente, idOpinante, idPregunta, idAlternativa, justificacion) Parameters: Name Type Description cliente string idOpinante idPregunta idAlternativa justificacion × Search results Close "}}
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            Searcher.init();
+        });
+
+        $(window).on("message", function(msg) {
+            var msgData = msg.originalEvent.data;
+
+            if (msgData.msgid != "docstrap.quicksearch.start") {
+                return;
+            }
+
+            var results = Searcher.search(msgData.searchTerms);
+
+            window.parent.postMessage({"results": results, "msgid": "docstrap.quicksearch.done"}, "*");
+        });
+    </script>
+</body>
+</html>

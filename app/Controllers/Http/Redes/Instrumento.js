@@ -2,9 +2,16 @@
 const Database = use('Database')
 const got = use('got')
 const data = use('App/Utils/Data')
+/**
+ * asdasdadasdadasda
+ * @class
+ */
 class Instrumento {
 
    
+    /**
+     * @param  cliente
+     */
     async preguntas({request,response}){
     
       const query = `select * from RedesPreguntas order by orden asc`;

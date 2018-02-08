@@ -8,6 +8,7 @@ Clonar repositorio y ejecutar
 
 ```bash
 npm install
+npm install -g grunt
 ```
 
 ## Iniciar
