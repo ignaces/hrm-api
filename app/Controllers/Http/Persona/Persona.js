@@ -36,7 +36,36 @@ class Persona {
         
         //response.json(respuesta[0][0]);
     }
+    async getPersona({request,response}){
+    
+        var idPersona = request.input('idPersona');
+        const cliente = request.input('cliente') ;
+        const query =  `call pers_getPersona('${idPersona}')`;
+        //const query =  `call pers_getClasificacion('${idPersona}')`;
+        const usp   = await data.execQuery(cliente,query);
+       
+        
+      
+        const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
+            return{
+               nombre:Clasificacion.Clasificacion,
+               valor:Clasificacion.Valor
 
+            }
+        })
+        var persona = {
+            identificador:usp[0][0][0].identificador,
+            nombres:usp[0][0][0].nombres,
+            apellidoPaterno:usp[0][0][0].apellidoPaterno,
+            apellidoMaterno:usp[0][0][0].apellidoMaterno,
+            email:usp[0][0][0].email,
+            clasificaciones:Clasificaciones.toArray()      
+        };
+       
+      
+      response.json(persona);
+      
+    }
     
     
 }
