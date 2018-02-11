@@ -1,7 +1,7 @@
 'use strict'
 const Database = use('Database')
 const data = use('App/Utils/Data')
-
+var Enumerable = require('linq')
 class Persona {
     async find({request,response}){
     
@@ -62,7 +62,9 @@ class Persona {
         const usp   = await data.execQuery(cliente,query);
        
         
-      
+       if(usp[0]==undefined){
+           return response.json({})
+       }
         const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
             return{
                nombre:Clasificacion.Clasificacion,
