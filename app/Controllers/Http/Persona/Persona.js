@@ -36,6 +36,23 @@ class Persona {
         
         //response.json(respuesta[0][0]);
     }
+    async getPersonaByIdUser ({request,response}){
+        var idUser = request.input('idUser');
+        const cliente =request.input('cliente') ;
+        console.log(idUser)
+        const query = `call pers_getPersonaByIdUsuario('${idUser}')`;
+
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0][0]
+        });
+    }
     async getPersona({request,response}){
     
         var idPersona = request.input('idPersona');
