@@ -65,6 +65,9 @@ class Persona {
        if(usp[0]==undefined){
            return response.json({})
        }
+       if (usp[0][0][0]==undefined){
+        return response.json({})
+       }
         const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
             return{
                nombre:Clasificacion.Clasificacion,
@@ -72,6 +75,7 @@ class Persona {
 
             }
         })
+        
         var persona = {
             identificador:usp[0][0][0].identificador,
             nombres:usp[0][0][0].nombres,
