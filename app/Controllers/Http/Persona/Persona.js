@@ -2,7 +2,6 @@
 const Database = use('Database')
 const data = use('App/Utils/Data')
 var Enumerable = require('linq')
-
 class Persona {
     async find({request,response}){
     
@@ -37,6 +36,23 @@ class Persona {
         
         //response.json(respuesta[0][0]);
     }
+    async getPersonaByIdUser ({request,response}){
+        var idUser = request.input('idUser');
+        const cliente =request.input('cliente') ;
+        console.log(idUser)
+        const query = `call pers_getPersonaByIdUsuario('${idUser}')`;
+
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0][0]
+        });
+    }
     async getPersona({request,response}){
     
         var idPersona = request.input('idPersona');
@@ -46,7 +62,12 @@ class Persona {
         const usp   = await data.execQuery(cliente,query);
        
         
-      
+       if(usp[0]==undefined){
+           return response.json({})
+       }
+       if (usp[0][0][0]==undefined){
+        return response.json({})
+       }
         const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
             return{
                nombre:Clasificacion.Clasificacion,
@@ -54,6 +75,7 @@ class Persona {
 
             }
         })
+        
         var persona = {
             identificador:usp[0][0][0].identificador,
             nombres:usp[0][0][0].nombres,
