@@ -39,7 +39,7 @@ class Persona {
     async getPersonaByIdUser ({request,response}){
         var idUser = request.input('idUser');
         const cliente =request.input('cliente') ;
-        console.log(idUser)
+        
         const query = `call pers_getPersonaByIdUsuario('${idUser}')`;
 
         const respuesta   = await data.execQuery(cliente,query);
@@ -65,6 +65,9 @@ class Persona {
        if(usp[0]==undefined){
            return response.json({})
        }
+       if (usp[0][0][0]==undefined){
+        return response.json({})
+       }
         const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
             return{
                nombre:Clasificacion.Clasificacion,
@@ -72,6 +75,7 @@ class Persona {
 
             }
         })
+        
         var persona = {
             identificador:usp[0][0][0].identificador,
             nombres:usp[0][0][0].nombres,
