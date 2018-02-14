@@ -215,7 +215,7 @@ class Proceso {
           
         }
         response.json(body);
-        
+       
 
         return(body);
     }
@@ -239,6 +239,7 @@ class Proceso {
         }
         //response.json(result[0][0]);
         response.json(result[0][0][0])
+        
         //console.log(result[0][0][0]);
         //[0][0][0]="sin arreglos";
        // [0][0]="como arreglo el json";
@@ -258,6 +259,22 @@ class Proceso {
         
         response.json(result[0][0]);
         
+        //console.log(result[0][0]);
+    }
+
+
+    async getFindTalentoProceso({request,response}){
+
+        //var idProceso = request.input("idProceso");
+        var idOpinante = request.input("idOpinante");
+        var idTalentoProceso = request.input("idTalentoProceso");
+        const cliente = request.input('cliente');
+
+        const query = `call acre_findProcesoTalento('${idTalentoProceso}','${idOpinante}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        response.json(result[0][0][0]);
+        console.log(result[0][0][0]);
         //console.log(result[0][0]);
     }
 
