@@ -222,10 +222,10 @@ class Proceso {
 
 
     async getTalentos({request,response}){
-        var idTalento = request.input("idTalento");
+        var idOpinante = request.input("idOpinante");
         const cliente = request.input('cliente');
         
-        const query = `call acre_getTalentos('${idTalento}', 1)`;
+        const query = `call acre_getTalentos('${idOpinante}')`;
         const result   = await data.execQuery(cliente,query);
         
         var body = 
@@ -237,7 +237,12 @@ class Proceso {
           data: {talentos: result[0][0]}
           
         }
-        response.json(result[0][0]);
+        //response.json(result[0][0]);
+        response.json(result[0][0][0])
+        //console.log(result[0][0][0]);
+        //[0][0][0]="sin arreglos";
+       // [0][0]="como arreglo el json";
+        //response.json(result[0][0]);
        //console.log(result[0][0]);
     }
 
@@ -245,13 +250,14 @@ class Proceso {
     async getPersonaTalentos({request,response}){
 
         //var idProceso = request.input("idProceso");
-        var idPersona = request.input("idPersona");
-        const cliente =request.input('cliente');
+        var idOpinante = request.input("idOpinante");
+        const cliente = request.input('cliente');
 
-        const query = `call acre_getPersonasTalentos('${idPersona}')`;
+        const query = `call acre_getPersonasTalentos('${idOpinante}')`;
         const result   = await data.execQuery(cliente,query);
         
         response.json(result[0][0]);
+        
         //console.log(result[0][0]);
     }
 
