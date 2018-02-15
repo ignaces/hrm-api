@@ -39,7 +39,7 @@ class Persona {
     async getPersonaByIdUser ({request,response}){
         var idUser = request.input('idUser');
         const cliente =request.input('cliente') ;
-        console.log(idUser)
+        
         const query = `call pers_getPersonaByIdUsuario('${idUser}')`;
 
         const respuesta   = await data.execQuery(cliente,query);
