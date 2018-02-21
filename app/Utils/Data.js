@@ -50,13 +50,17 @@ class Data  {
         if(client == "localhost"){
             client = "hrm";
         }
-        console.log(client);
+        var bd = "";
         /**Vamos a la BD de la aplicación para rescatar el nombre de la bd del cliente */
         var query =`select * from Cliente where domain = '${client}'`;
         const result = await Database.connection('app').schema.raw(query);
-          
-        var bd = result[0][0].bd;
-
+        if(client=='app'){
+            bd="hrmapp";
+        }else{
+            bd = result[0][0].bd;
+        }
+        
+        
         const coneccion ={client:'mysql',connection:{
             host: Env.get('DB_HOST', '192.168.3.18'),
             port: Env.get('DB_PORT', '3306'),
