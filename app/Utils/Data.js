@@ -11,7 +11,7 @@ const Helpers = use('Helpers')
  */
 class Data  {
     /**
-     * extrae la cosa
+     * Ejecuta consulta en BD
      * @version 1.0.0
      * @deprecated since version 2.0
      * @example
@@ -22,9 +22,9 @@ class Data  {
      */
     async execQuery(client,query){
         
-
-        const coneccion = await this.getConeccionCliente(client);
         
+        const coneccion = await this.getConeccionCliente(client);
+      
         
         Database.Config._config.database.default=coneccion;
         try{
@@ -54,6 +54,7 @@ class Data  {
         /**Vamos a la BD de la aplicación para rescatar el nombre de la bd del cliente */
         var query =`select * from Cliente where domain = '${client}'`;
         const result = await Database.connection('app').schema.raw(query);
+        
         if(client=='app'){
             bd="hrmapp";
         }else{
