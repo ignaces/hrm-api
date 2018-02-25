@@ -1,6 +1,7 @@
 'use strict'
 const got = use('got')
 const data = use('App/Utils/Data')
+var Enumerable = require('linq');
 /**
  * Notificaciones
  * @class
@@ -54,6 +55,33 @@ class Notificaciones {
      }
       
 
+    }
+
+    async sendNotificacion({request,response}){
+      var idNotificacion = request.input("idNotificacion")
+      var correos = request.input("correos")
+      const cliente = "app";
+      const query = `call notificacion_getNotificacion('${idNotificacion}')`;
+  
+      const rs   = await data.execQuery(cliente,query);
+
+      var notificacion = rs[0][0][0];
+      
+      for(item in correos){
+        var correo = correos[item];
+        var body = correo.body.replace(new RegExp("#{Nombres}",'g'),correo.nombres);
+         body = correo.body.replace(new RegExp("#{ApellidoPaterno}",'g'),correo.apellidoPaterno);
+         body = correo.body.replace(new RegExp("#{ApellidoMaterno}",'g'),correo.apellidoMaterno);
+         body = correo.body.replace(new RegExp("#{Usuario}",'g'),correo.usuario);
+         body = correo.body.replace(new RegExp("#{Password}",'g'),correo.password);
+        try{
+
+        }catch(err){
+          console.log(err)
+        }
+      }
+      
+      return {mensaje:"ok"}
     }
     
 
