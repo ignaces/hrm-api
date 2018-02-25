@@ -76,6 +76,8 @@ class Notificaciones {
       var recipients = {};
       var to = "";
       
+      var blocks = [];
+      
       for(var item in correos){
         to = to + correos[item].email +",";
         recipients[correos[item].email] = {
@@ -85,15 +87,33 @@ class Notificaciones {
           usuario:correos[item].usuario,
           password:correos[item].password,
         }
+        var finBloque = (item+1)%1000;
+        if(finBloque==0){
+          blocks.put({to:to,recipients:recipients});
+          to="";
+          recipients={};
+        }
+        
         // recipients.put(`{"${correos[item].email}": {"nombres":"${correos[item].nombres}"},}`)
       }
       
+      if(to!=""){
+        
+        blocks.push({
+          to:to,
+          recipients:recipients
+        });
+      }
+      
+      for(var block in blocks){
         try{
-          //console.log(item)
-          const email = await mailgun.sendEmailBulk(to,recipients,notificacion.subject,body,notificacion.tag)
+          
+          const email = await mailgun.sendEmailBulk(blocks[block].to,blocks[block].recipients,notificacion.subject,body,notificacion.tag)
         }catch(err){
           console.log(err)
-        }
+        }     
+      }
+       
      
       
       return {mensaje:"ok"}
