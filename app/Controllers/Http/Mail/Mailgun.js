@@ -59,6 +59,7 @@ class Mailgun {
     return rStats.body;
 
   }
+  
 
 
     

@@ -1,6 +1,7 @@
 'use strict'
 const got = use('got')
 const data = use('App/Utils/Data')
+const mailgun = use('App/Utils/Mail') 
 var Enumerable = require('linq');
 /**
  * Notificaciones
@@ -43,7 +44,7 @@ class Notificaciones {
       body = body.replace(/'/g,"''");
       const cliente = "app";
       //_idCliente,_nombre,_body,_subject,_mask,_tag
-      console.log(body)
+      
      try{
       const query = `call notificacion_addNotificacion('${idCliente}','${nombre}','${body}','${subject}','${mask}','${tag}')`;
   
@@ -60,26 +61,40 @@ class Notificaciones {
     async sendNotificacion({request,response}){
       var idNotificacion = request.input("idNotificacion")
       var correos = request.input("correos")
+      
       const cliente = "app";
       const query = `call notificacion_getNotificacion('${idNotificacion}')`;
-  
+      
       const rs   = await data.execQuery(cliente,query);
 
       var notificacion = rs[0][0][0];
+      var body = notificacion.body.replace(new RegExp("#{Nombres}",'g'),'%recipient.nombres%');
+         body = body.replace(new RegExp("#{ApellidoPaterno}",'g'),'%recipient.apellidoPaterno%');
+         body = body.replace(new RegExp("#{ApellidoMaterno}",'g'),'%recipient.apellidoMaterno%');
+         body = body.replace(new RegExp("#{UserName}",'g'),'%recipient.usuario%');
+         body = body.replace(new RegExp("#{Password}",'g'),'%recipient.password%');
+      var recipients = {};
+      var to = "";
       
-      for(item in correos){
-        var correo = correos[item];
-        var body = correo.body.replace(new RegExp("#{Nombres}",'g'),correo.nombres);
-         body = correo.body.replace(new RegExp("#{ApellidoPaterno}",'g'),correo.apellidoPaterno);
-         body = correo.body.replace(new RegExp("#{ApellidoMaterno}",'g'),correo.apellidoMaterno);
-         body = correo.body.replace(new RegExp("#{Usuario}",'g'),correo.usuario);
-         body = correo.body.replace(new RegExp("#{Password}",'g'),correo.password);
+      for(var item in correos){
+        to = to + correos[item].email +",";
+        recipients[correos[item].email] = {
+          nombres:correos[item].nombres,
+          apellidoPaterno:correos[item].apellidoPaterno,
+          apellidoMaterno:correos[item].apellidoMaterno,
+          usuario:correos[item].usuario,
+          password:correos[item].password,
+        }
+        // recipients.put(`{"${correos[item].email}": {"nombres":"${correos[item].nombres}"},}`)
+      }
+      
         try{
-
+          //console.log(item)
+          const email = await mailgun.sendEmailBulk(to,recipients,notificacion.subject,body,notificacion.tag)
         }catch(err){
           console.log(err)
         }
-      }
+     
       
       return {mensaje:"ok"}
     }
