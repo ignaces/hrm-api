@@ -16,13 +16,14 @@ class Logging {
       var type = 'CALL';
 
       const query =`call core_addLogApi('${codigo}', '${cliente}', '${idusers}',  '${type}', '${module}', '${controller}', '${action}', '${params}')`;
-      const respuesta   = await data.execQuery(cliente,query);
+      //const respuesta   = await data.execQuery(cliente,query);
 
-      // console.log("module=>",request.params.module);
-      // console.log("controller=>",request.params.controller);
-      // console.log("action=>",request.params.action);
-      // console.log("cliente=>",request.input("cliente"));
-      // console.log("params=>",request.all()); 
+       /*console.log("module=>",request.params.module);
+       console.log("controller=>",request.params.controller);
+       console.log("action=>",request.params.action);
+       console.log("cliente=>",request.input("cliente"));
+       console.log("params=>",request.all()); 
+       */
       
     } catch (error) {
       console.log(error);
