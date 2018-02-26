@@ -58,6 +58,35 @@ class Notificaciones {
 
     }
 
+    async save({request,response}){
+      const nombre =request.input('nombre');
+      const to =request.input('to') ;
+      const subject =request.input('subject') ;
+      var body =request.input('body');
+      const mask =request.input('mask');
+      const tag =request.input('tag') ;
+      
+      const idNotificacion= request.input('idNotificacion') ;
+      body = body.replace(/'/g,"''");
+      const cliente = "app";
+      
+      
+     try{
+      const query = `call notificacion_editNotificacion('${idNotificacion}','${nombre}','${body}','${subject}','${mask}','${tag}')`;
+      
+      const usp   = await data.execQuery(cliente,query);
+     
+      response.json({mensaje:"OK"});
+
+     }catch(err){
+      
+      response.json({mensaje:err});
+     
+    }
+      
+
+    }
+
     async sendNotificacion({request,response}){
       var idNotificacion = request.input("idNotificacion")
       var correos = request.input("correos")
