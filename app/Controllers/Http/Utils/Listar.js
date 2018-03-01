@@ -7,13 +7,13 @@ class Listar {
     async getCombo({request,response}){
     
         const cliente =request.input('cliente') ;
-        const genero =request.input('tabla');
+        const tabla =request.input('tabla');
         
-        const query =  `call util_getCombo('${genero}')`;
+        const query =  `call util_getCombo('${tabla}')`;
         const usp   = await data.execQuery(cliente,query);
       
       const respuesta   = await data.execQuery(cliente,query);
-        console.log(respuesta);
+        
         response.json({
             "estado": respuesta[0][0],
             "paginacion": "",
