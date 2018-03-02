@@ -79,7 +79,8 @@ class Medicion {
                         tipoPregunta:pregunta.tipoPregunta,
                         tipoDespliegue:pregunta.despliegue,
                         codigoDespliegue:pregunta.codigoDespliegue,
-                        orden:pregunta.ordenPregunta
+                        orden:pregunta.ordenPregunta,
+                        respuestaTexto:pregunta.respuestaTexto
                     }
                 }).toArray();
                 
