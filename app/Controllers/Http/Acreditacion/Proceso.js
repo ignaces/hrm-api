@@ -110,9 +110,17 @@ class Proceso {
     }
     async getProcesos({request,response}){
         var idProceso = request.input("idProceso");
+
+        var activo = 1;
+
+        if(request.input("activo"))
+        {
+            activo = request.input("activo");
+        }
+        //console.log(activo);
         const cliente =request.input('cliente') ;
         
-        const query = `call acre_getProcesos('${idProceso}', 1)`;
+        const query = `call acre_getProcesos('${idProceso}', ${activo})`;
         const result   = await data.execQuery(cliente,query);
         
         var body = 
@@ -129,6 +137,7 @@ class Proceso {
 
        // return(body);
     }
+
     async getPersonasEvaluaciones({request,response}){
     
        
@@ -220,7 +229,103 @@ class Proceso {
         return(body);
     }
 
+    async getPersonas({request,response}){
+        var idProceso = request.input("idProceso");
 
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_getPersonasProceso('${idProceso}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    async getPersonasFueraDelProceso({request,response}){
+        var idProceso = request.input("idProceso");
+
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_getPersonasFueraDelProceso('${idProceso}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    //VA AQUI O EN UN CONTROLLER DE COMPETENCIAS?
+    async getPerfilesProceso({request,response}){
+        var idProceso = request.input("idProceso");
+
+        const cliente =request.input('cliente') ;
+        
+        const query     = `call acre_getPerfilesProceso('${idProceso}')`;
+        const result    = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {perfiles: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    async addPersonaProceso({request,response}){
+        console.log(request.all());
+        var idProceso = request.input("idProceso");
+        var personas = request.input("personas");
+        var idPerfil = request.input("idPerfil");
+
+        const cliente =request.input('cliente') ;
+        
+        for(var i=0; i<personas.length; i++){
+            
+            var idPersona   = personas[i].idPersona;
+        
+            const query     = `call acre_addPersonaProceso('${idPersona}', '${idProceso}', '${idPerfil}')`;
+            const result    = await data.execQuery(cliente,query);
+        }
+
+        var body = 
+            {
+            estado: {
+                codigo: "",
+                mensaje: ""
+            },
+            data: {}
+            
+            }
+            response.json(body);
+    }
 
 }
 
