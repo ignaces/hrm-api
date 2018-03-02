@@ -116,9 +116,11 @@ class Notificaciones {
           usuario:correos[item].usuario,
           password:correos[item].password,
         }
-        var finBloque = (item+1)%1000;
+        
+        var finBloque = (item*1+1)%1000;
         if(finBloque==0){
-          blocks.put({to:to,recipients:recipients});
+          
+          blocks.push({to:to,recipients:recipients});
           to="";
           recipients={};
         }
