@@ -12,6 +12,7 @@ class Medicion {
     
 
     async validarCodigo({request,response}){
+        
         var idEncuestaAplicacion = request.input("idEncuestaAplicacion")  ;
         var codigo = request.input("codigo");
         const cliente =request.input('cliente') ;
@@ -19,12 +20,15 @@ class Medicion {
 
         const result   = await data.execQuery(cliente,query);
         var validacion ={};
-        if(!result[0]){
+        
+        validacion.mensaje="";
+        if(!result[0][0][0]){
             validacion.continua = false;
             validacion.mensaje="No existe el código ingresado"
         }else{
             validacion.encuestaPersona= result[0][0][0];
             if(validacion.encuestaPersona.codigo=="FINALIZADO"){
+                validacion.mensaje="La encuesta para este código ya fue contestada.o"
                 validacion.continua=false;
             }else{
                 validacion.continua=true;

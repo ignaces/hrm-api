@@ -61,7 +61,10 @@ class Data  {
             bd = result[0][0].bd;
         }
         
-        
+        var bdDefault = Env.get('BD_DEFAULT', '');
+        if(bdDefault!=''){
+            bd=bdDefault;
+        }
         const coneccion ={client:'mysql',connection:{
             host: Env.get('DB_HOST', '192.168.3.18'),
             port: Env.get('DB_PORT', '3306'),
