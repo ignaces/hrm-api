@@ -149,12 +149,16 @@ class Proceso {
         const rRoles   = await data.execQuery(cliente,qRoles);
 
         var tipo= "";
+        
         if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
             tipo="AUTO";
         }else{
             tipo="DES";
         }
+
+
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
+        
         const result   = await data.execQuery(cliente,query);
         const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").where(`$.codigoTipoOpinante == "${tipo}"`).select(function(tipoOpinante){
             return{
@@ -210,9 +214,6 @@ class Proceso {
             }
         }
 
-        
-
-        
         var body = 
         {
           estado: {
@@ -330,6 +331,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         
         const query     = `call acre_getPerfilesProceso('${idProceso}')`;
+
         const result    = await data.execQuery(cliente,query);
         
         var body = 
@@ -361,6 +363,7 @@ class Proceso {
         
             const query     = `call acre_addPersonaProceso('${idPersona}', '${idProceso}', '${idPerfil}')`;
             const result    = await data.execQuery(cliente,query);
+            
         }
 
         var body = 
@@ -372,6 +375,7 @@ class Proceso {
             data: {}
             
             }
+
             response.json(body);
     }
 

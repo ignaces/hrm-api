@@ -31,7 +31,7 @@ class Instrumento {
         var instrumento = [];
         const cliente =request.input('cliente') ;
         
-        
+        console.log(idOpinante)
         if(tipoInstrumento!="TCO"){
             const query =`call acre_getInstrumento('${idOpinante}')`;
             const rQuery   = await data.execQuery(cliente,query);
@@ -101,7 +101,7 @@ class Instrumento {
         }else{
             const query =`call acre_getEvaluacionPersona('${idOpinante}')`;
             const preguntas   = await data.execQuery(cliente,query);
-
+console.log(query)
             const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
                 return{
                     idPreguntaFacsimil:pregunta.IdPregruntaFacsimil,
