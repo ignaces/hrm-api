@@ -16,7 +16,7 @@ class Logging {
       var type = 'CALL';
 
       const query =`call core_addLogApi('${codigo}', '${cliente}', '${idusers}',  '${type}', '${module}', '${controller}', '${action}', '${params}')`;
-      //const respuesta   = await data.execQuery(cliente,query);
+      const respuesta   = await data.execQuery(cliente,query);
 
        /*console.log("module=>",request.params.module);
        console.log("controller=>",request.params.controller);

@@ -2,6 +2,7 @@
 const Database = use('Database')
 const got = use('got')
 const data = use('App/Utils/Data')
+const Env = use('Env')
 /**
  * asdasdadasdadasda
  * @class
@@ -13,23 +14,25 @@ class Instrumento {
      * @param  cliente
      */
     async preguntas({request,response}){
-    
-      const query = `select * from RedesPreguntas order by orden asc`;
+      const idAplicacion = request.input("idAplicacion");
+      const query = `call redes_getPreguntas('${idAplicacion}')`;
       const cliente =request.input('cliente') ;
       const usp   = await data.execQuery(cliente,query);
       
       //const usp   = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);
       
-      response.json(usp[0]);
+      response.json(usp[0][0]);
     }
     
     async save ({request,response}){
-      const cliente =request.input('cliente');
-      
-      var options_auth = new Buffer("neo4j:Qwerty123").toString("base64")
-      var rData = request.all();
-      
+      const cliente =request.input('req').cliente;
+      var neo4j = Env.get('NEO4J', '192.168.3.18:7474');
+      var neo4jUser = Env.get('NEO4J_USER', 'neo4j');
+      var neo4jPassword = Env.get('NEO4J_PASSWORD', 'Qwerty123');
+      var options_auth = new Buffer(`${neo4jUser}:${neo4jPassword}`).toString("base64")
+      var rData = request.input("req");
+      console.log(rData)
       var code = rData._code;
       
       delete rData['_code']
@@ -60,7 +63,7 @@ class Instrumento {
                     ON MATCH SET p.nombre = '${persona.nombres}', \
                     p.apellidoPaterno = '${persona.apellidoPaterno}' , \
                     p.apellidoMaterno = '${persona.apellidoMaterno}'`                      
-     })
+      })
    
       for(var propertyName in rData) {
         
@@ -127,7 +130,7 @@ class Instrumento {
       
       
       
-      const rPersonas = await got.post(`http://192.168.3.18:7474/db/data/transaction/commit`,
+      const rPersonas = await got.post(`http://${neo4j}/db/data/transaction/commit`,
         {
           
           json:true,

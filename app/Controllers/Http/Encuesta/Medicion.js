@@ -27,7 +27,7 @@ class Medicion {
             validacion.mensaje="No existe el código ingresado"
         }else{
             validacion.encuestaPersona= result[0][0][0];
-            if(validacion.encuestaPersona.codigo=="FINALIZADO"){
+            if(validacion.encuestaPersona.codigo == "FINALIZADO"){
                 validacion.mensaje="La encuesta para este código ya fue contestada"
                 validacion.continua=false;
             }else{
