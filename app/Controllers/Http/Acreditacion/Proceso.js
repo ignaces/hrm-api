@@ -300,7 +300,7 @@ class Proceso {
     }
 
     async addPersonaProceso({request,response}){
-        console.log(request.all());
+        //console.log(request.all());
         var idProceso = request.input("idProceso");
         var personas = request.input("personas");
         var idPerfil = request.input("idPerfil");
