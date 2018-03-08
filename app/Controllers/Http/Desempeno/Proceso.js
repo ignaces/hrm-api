@@ -2,6 +2,7 @@
 const Database = use('Database')
 const data = use('App/Utils/Data')
 var Enumerable = require('linq')
+
 class Proceso {
 
     async getProcesos({request,response}){
@@ -23,11 +24,13 @@ class Proceso {
     }
 
     async getEtapasProceso({request,response}){
+       
         var idProceso=request.input('idProceso')
+        var idProcesoEtapa=request.input('idProcesoEtapa')
         const cliente =request.input('cliente') ;
-        const query =  `call ede_getEtapasProceso('${idProceso}')`;
+        const query =  `call ede_getEtapasProceso('${idProceso}','${idProcesoEtapa}')`;
         const respuesta   = await data.execQuery(cliente,query);
-        
+        console.log(respuesta)
         response.json({
             "estado": {
                 "codigo": "OK",
@@ -59,6 +62,41 @@ class Proceso {
         var idPersona=request.input('idPersona')
         const cliente =request.input('cliente') ;
         const query =  `call ede_getProcesoPersona('${idProceso}','${idPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async getDataPersonasCreacionMetas({request,response}){
+        var idProcesoEtapa=request.input('idProcesoEtapa')
+        var idPersona=request.input('idPersona')
+        var idPersonaSuperior=request.input('idPersonaSuperior')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getDataPersonasCreacionMetas('${idProcesoEtapa}','${idPersona}','${idPersonaSuperior}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async getCuentaEstados({request,response}){
+        var idProcesoEtapa=request.input('idProcesoEtapa')
+        var idPersonaSuperior=request.input('idPersonaSuperior')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getCuentaEstados('${idProcesoEtapa}','${idPersonaSuperior}')`;
         const respuesta   = await data.execQuery(cliente,query);
         
         response.json({
