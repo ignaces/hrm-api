@@ -252,10 +252,58 @@ class Proceso {
        // return(body);
     }
 
+    async getPersonaProceso({request,response}){
+        var idPersonaProceso = request.input("idPersonaProceso");
+
+        const cliente =request.input('cliente') ;
+        
+        var query = `call acre_getPersonaProceso('${idPersonaProceso}')`;
+        const resultPersona   = await data.execQuery(cliente,query);
+        
+        query = `call acre_getInstrumentosProceso('${idPersonaProceso}')`;
+        const resultInstrumentos   = await data.execQuery(cliente,query);
+        
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {personaProceso: resultPersona[0][0], instrumentosProceso: resultInstrumentos[0][0], instrumentosProcesoEvaluado: resultInstrumentos[0][1]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    async setOpinanteEvaluado({request, response})
+    {
+        var idDndOpinante = request.input("idDndOpinante");
+        var idPersona = request.input("idPersona");
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_setOpinanteEvaluado('${idDndOpinante}', '${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+    }
+
     async getPersonasFueraDelProceso({request,response}){
         var idProceso = request.input("idProceso");
 
-        const cliente =request.input('cliente') ;
+        const cliente =request.input('cliente');
         
         const query = `call acre_getPersonasFueraDelProceso('${idProceso}')`;
         const result   = await data.execQuery(cliente,query);
@@ -300,7 +348,7 @@ class Proceso {
     }
 
     async addPersonaProceso({request,response}){
-        console.log(request.all());
+        //console.log(request.all());
         var idProceso = request.input("idProceso");
         var personas = request.input("personas");
         var idPerfil = request.input("idPerfil");
