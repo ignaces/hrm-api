@@ -65,7 +65,8 @@ class Medicion {
                 nombre:preguntas[0][0][0].nombre,
                 preguntasPagina:preguntas[0][0][0].preguntasPagina,
                 tipoInstrumento:"ENC",
-                dimensiones:dimensiones.toArray()
+                dimensiones:dimensiones.toArray(),
+                idFacsimil:preguntas[0][0][0].idFacsimil
             }
 
             for(var dimension in instrumento.dimensiones){
