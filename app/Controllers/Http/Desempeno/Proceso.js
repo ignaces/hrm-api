@@ -30,7 +30,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         const query =  `call ede_getEtapasProceso('${idProceso}','${idProcesoEtapa}')`;
         const respuesta   = await data.execQuery(cliente,query);
-        console.log(respuesta)
+        
         response.json({
             "estado": {
                 "codigo": "OK",
