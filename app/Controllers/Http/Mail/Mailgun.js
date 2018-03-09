@@ -1,5 +1,6 @@
 'use strict'
 const got = use('got')
+var Enumerable = require('linq');
 /**
  * Mailgun
  * @class
@@ -58,6 +59,7 @@ class Mailgun {
     return rStats.body;
 
   }
+  
 
 
     

@@ -23,7 +23,35 @@ class Instrumento {
        */
       response.json(facsimil[0][0]);
     }
-    
+    async getAvanceFacsimil({request,response}){
+        const cliente =request.input('cliente') ;
+        const idFacsimil =request.input('idFacsimil') ;
+       
+        const query =`call evaluacion_getAvanceFacsimil('${idFacsimil}')`;
+        const rQuery   = await data.execQuery(cliente,query);
+
+        var resultados = rQuery[0][0][0];
+
+        if (!resultados.Contestadas){
+            resultados.Contestadas = 0;
+        }
+        if (!resultados.noContestadas){
+            resultados.noContestadas = 0;
+        }
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {avance: resultados}
+          
+        }
+        response.json(body);
+
+
+    }
     async getInstrumento({request,response}){
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");

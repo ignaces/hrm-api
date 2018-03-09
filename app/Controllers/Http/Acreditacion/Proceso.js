@@ -110,9 +110,17 @@ class Proceso {
     }
     async getProcesos({request,response}){
         var idProceso = request.input("idProceso");
+
+        var activo = 1;
+
+        if(request.input("activo"))
+        {
+            activo = request.input("activo");
+        }
+        //console.log(activo);
         const cliente =request.input('cliente') ;
         
-        const query = `call acre_getProcesos('${idProceso}', 1)`;
+        const query = `call acre_getProcesos('${idProceso}', ${activo})`;
         const result   = await data.execQuery(cliente,query);
         
         var body = 
@@ -129,6 +137,7 @@ class Proceso {
 
        // return(body);
     }
+
     async getPersonasEvaluaciones({request,response}){
     
        
@@ -140,12 +149,16 @@ class Proceso {
         const rRoles   = await data.execQuery(cliente,qRoles);
 
         var tipo= "";
+        
         if(rRoles[0][0].length==1 && rRoles[0][0][0].codigo=="USER"){
             tipo="AUTO";
         }else{
             tipo="DES";
         }
+
+
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
+        
         const result   = await data.execQuery(cliente,query);
         const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").where(`$.codigoTipoOpinante == "${tipo}"`).select(function(tipoOpinante){
             return{
@@ -160,16 +173,6 @@ class Proceso {
         
         for(var tipoOpinante in tipoOpinantes){
             var idTipoOpinante = tipoOpinantes[tipoOpinante].idTipoOpinante
-           
-            /*if(!todo && tipoOpinantes[tipoOpinante].codigo=="DES"){
-                tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
-                continue;
-            }
-            if(todo && tipoOpinantes[tipoOpinante].codigo=="AUTO"){
-                tipoOpinantes.pop(tipoOpinantes[tipoOpinante])
-                continue;
-            }*/
-
             
             const personas = Enumerable.from(result[0][0]).where(`$.idTipoOpinante == "${idTipoOpinante}"`).distinct("$.idPersona").select(function(persona){
                 return{
@@ -194,16 +197,14 @@ class Proceso {
                         idEstado:instrumento.idEstado,
                         nombreEstado:instrumento.nombreEstado,
                         codigoEstado:instrumento.codigoEstado,
-                        accesible:instrumento.accesible
+                        accesible:instrumento.accesible,
+                        nombreInstrumento:instrumento.nombreInstrumento
                     }
                 }).toArray()
                 tipoOpinantes[tipoOpinante].personas[persona].instrumentos = instrumentos
             }
         }
 
-        
-
-        
         var body = 
         {
           estado: {
@@ -220,7 +221,154 @@ class Proceso {
         return(body);
     }
 
+    async getPersonas({request,response}){
+        var idProceso = request.input("idProceso");
 
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_getPersonasProceso('${idProceso}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    async getPersonaProceso({request,response}){
+        var idPersonaProceso = request.input("idPersonaProceso");
+
+        const cliente =request.input('cliente') ;
+        
+        var query = `call acre_getPersonaProceso('${idPersonaProceso}')`;
+        const resultPersona   = await data.execQuery(cliente,query);
+        
+        query = `call acre_getInstrumentosProceso('${idPersonaProceso}')`;
+        const resultInstrumentos   = await data.execQuery(cliente,query);
+        
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {personaProceso: resultPersona[0][0], instrumentosProceso: resultInstrumentos[0][0], instrumentosProcesoEvaluado: resultInstrumentos[0][1]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    async setOpinanteEvaluado({request, response})
+    {
+        var idDndOpinante = request.input("idDndOpinante");
+        var idPersona = request.input("idPersona");
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_setOpinanteEvaluado('${idDndOpinante}', '${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+    }
+
+    async getPersonasFueraDelProceso({request,response}){
+        var idProceso = request.input("idProceso");
+
+        const cliente =request.input('cliente');
+        
+        const query = `call acre_getPersonasFueraDelProceso('${idProceso}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    //VA AQUI O EN UN CONTROLLER DE COMPETENCIAS?
+    async getPerfilesProceso({request,response}){
+        var idProceso = request.input("idProceso");
+
+        const cliente =request.input('cliente') ;
+        
+        const query     = `call acre_getPerfilesProceso('${idProceso}')`;
+
+        const result    = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {perfiles: result[0][0]}
+          
+        }
+        response.json(body);
+        
+
+       // return(body);
+    }
+
+    async addPersonaProceso({request,response}){
+        //console.log(request.all());
+        var idProceso = request.input("idProceso");
+        var personas = request.input("personas");
+        var idPerfil = request.input("idPerfil");
+
+        const cliente =request.input('cliente') ;
+        
+        for(var i=0; i<personas.length; i++){
+            
+            var idPersona   = personas[i].idPersona;
+        
+            const query     = `call acre_addPersonaProceso('${idPersona}', '${idProceso}', '${idPerfil}')`;
+            const result    = await data.execQuery(cliente,query);
+            
+        }
+
+        var body = 
+            {
+            estado: {
+                codigo: "",
+                mensaje: ""
+            },
+            data: {}
+            
+            }
+
+            response.json(body);
+    }
 
 }
 
