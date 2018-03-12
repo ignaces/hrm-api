@@ -132,7 +132,7 @@ class Persona {
         
         
         const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}',${idUsuario})`;
-
+        console.log(query)
         const respuesta   = await data.execQuery(cliente,query);
         //console.log(respuesta);
         response.json({
