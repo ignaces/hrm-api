@@ -38,16 +38,13 @@ class Medicion {
         /**
          * Se crea persona que está contestando
          */
+        //`MATCH(p:Persona{idAplicacion:'4771dc31-2621-11e8-80db-bc764e10787e'}) return p`
+        
         instrucciones.statements.push({
-          statement : `MERGE (p:Persona { codigo:'${code}' }) \
-                      ON CREATE SET p.nombre = '${persona.nombres}', \
-                      p.apellidoPaterno = '${persona.apellidoPaterno}' , \
-                      p.apellidoMaterno = '${persona.apellidoMaterno}' \
-                      ON MATCH SET p.nombre = '${persona.nombres}', \
-                      p.apellidoPaterno = '${persona.apellidoPaterno}' , \
-                      p.apellidoMaterno = '${persona.apellidoMaterno}'`                      
+          statement : `MATCH path = (p:Persona{idAplicacion:'4771dc31-2621-11e8-80db-bc764e10787e'})-[r]->(m) RETURN path`,
+          resultDataContents:["graph"]
         })
-     
+       
         const rPersonas = await got.post(`http://${neo4j}/db/data/transaction/commit`,
           {
             
@@ -57,7 +54,7 @@ class Medicion {
               'Authorization': "Basic "+options_auth
             }      
           })
-          //console.log(rPersonas.body.results)
+          
           return rPersonas.body
   
       }
