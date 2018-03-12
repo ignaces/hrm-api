@@ -39,12 +39,13 @@ class Users {
 
         const cliente ="app";
         const query =`call user_getMenu('${idUser}')`;
+        
         const respuesta   = await data.execQuery(cliente,query);
         var usuario = {
             roles:[],
             menu:{}
         }
-
+        
         const roles = Enumerable.from(respuesta[0][0]).distinct("$.idRol").select(function(rol){
             return{
                 id:rol.idRol,
