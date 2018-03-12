@@ -62,7 +62,7 @@ class Data  {
         }
         
         var bdDefault = Env.get('BD_DEFAULT', '');
-        if(bdDefault!=''){
+        if(bdDefault!=''&& client!="app"){
             bd=bdDefault;
         }
         const coneccion ={client:'mysql',connection:{

@@ -144,7 +144,7 @@ class Proceso {
         var idProceso = request.input("idProceso");
         var idPersona = request.input("idPersona");
         const cliente =request.input('cliente') ;
-        
+        /*
         const qRoles =`call core_getRolPersona('${idPersona}')`;
         const rRoles   = await data.execQuery(cliente,qRoles);
 
@@ -154,13 +154,13 @@ class Proceso {
             tipo="AUTO";
         }else{
             tipo="DES";
-        }
+        }*/
 
-
+        
         const query = `call acre_getPersonasEvaluaciones('${idProceso}', '${idPersona}')`;
         
         const result   = await data.execQuery(cliente,query);
-        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").where(`$.codigoTipoOpinante == "${tipo}"`).select(function(tipoOpinante){
+        const tipoOpinantes = Enumerable.from(result[0][0]).distinct("$.idTipoOpinante").select(function(tipoOpinante){
             return{
                 idTipoOpinante:tipoOpinante.idTipoOpinante,
                 codigo:tipoOpinante.codigoTipoOpinante,

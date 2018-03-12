@@ -85,7 +85,7 @@ class Persona {
         {
             var identificador = request.input('identificador');
         }
-        console.log(identificador);
+        
         const query =  `call pers_getPersona('${idPersona}')`;
         //const query =  `call pers_getClasificacion('${idPersona}')`;
         const usp   = await data.execQuery(cliente,query);
@@ -127,10 +127,11 @@ class Persona {
         const apellidoMaterno =request.input('apellidoMaterno') ;
         const genero =request.input('genero') ;
         const email =request.input('email') ;
+        const idUsuario =request.input('idUsuario') ;
         
-        //console.log(idUser)
         
-        const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}')`;
+        
+        const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}'),${idUsuario}`;
 
         const respuesta   = await data.execQuery(cliente,query);
         //console.log(respuesta);
