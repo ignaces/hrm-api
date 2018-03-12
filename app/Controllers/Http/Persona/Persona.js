@@ -131,7 +131,7 @@ class Persona {
         
         
         
-        const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}'),${idUsuario}`;
+        const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}',${idUsuario})`;
 
         const respuesta   = await data.execQuery(cliente,query);
         //console.log(respuesta);
