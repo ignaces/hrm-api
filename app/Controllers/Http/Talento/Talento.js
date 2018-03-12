@@ -347,7 +347,7 @@ class Talento {
         //const kk = `set @variable = ('${nombreFiltro}')`;
         //console.log("estooo "+ kk);
         const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${nombreFiltro}','${cargosFiltro}','${rut}','${nombres}','${paterno}','${materno}')`;
-        console.log(query);
+        //console.log(query);
         const result   = await data.execQuery(cliente,query);
         
 
@@ -365,7 +365,7 @@ class Talento {
         }
 
         response.json(body);
-        console.log(result[0][0]);
+        //console.log(result[0][0]);
         
     }
 
