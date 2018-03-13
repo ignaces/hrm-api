@@ -3,6 +3,7 @@ const Database = use('Database')
 const got = use('got')
 const data = use('App/Utils/Data')
 const Env = use('Env')
+var Enumerable = require('linq')
 /**
  * asdasdadasdadasda
  * @class
@@ -38,17 +39,14 @@ class Medicion {
         /**
          * Se crea persona que está contestando
          */
+        //`MATCH(p:Persona{idAplicacion:'4771dc31-2621-11e8-80db-bc764e10787e'}) return p`
+        
         instrucciones.statements.push({
-          statement : `MERGE (p:Persona { codigo:'${code}' }) \
-                      ON CREATE SET p.nombre = '${persona.nombres}', \
-                      p.apellidoPaterno = '${persona.apellidoPaterno}' , \
-                      p.apellidoMaterno = '${persona.apellidoMaterno}' \
-                      ON MATCH SET p.nombre = '${persona.nombres}', \
-                      p.apellidoPaterno = '${persona.apellidoPaterno}' , \
-                      p.apellidoMaterno = '${persona.apellidoMaterno}'`                      
+          statement : `MATCH path = (p:Persona{idAplicacion:'4771dc31-2621-11e8-80db-bc764e10787e'})-[r]->(m) RETURN path`,
+          resultDataContents:["graph"]
         })
-     
-        const rPersonas = await got.post(`http://${neo4j}/db/data/transaction/commit`,
+       
+        const apiExec = await got.post(`http://${neo4j}/db/data/transaction/commit`,
           {
             
             json:true,
@@ -57,8 +55,30 @@ class Medicion {
               'Authorization': "Basic "+options_auth
             }      
           })
-          //console.log(rPersonas.body.results)
-          return rPersonas.body
+          
+          var neoResponse = apiExec.body.results[0].data;
+
+          var graph = {nodes:[],edges:[]};
+          var nodos = [];
+          var relaciones = [];
+          for(var item in neoResponse){
+              for(var nodo in neoResponse[item].graph.nodes){
+                nodos.push(neoResponse[item].graph.nodes[nodo])      
+              }
+              for(var relacion in neoResponse[item].graph.relationships){
+                relaciones.push(neoResponse[item].graph.relationships[relacion])      
+              }
+          }
+          graph.nodes=Enumerable.from(nodos).distinct("$.id").select(function(nodo){
+            return{
+                id:nodo.id,
+                tipo:nodo.labels,
+                properties:nodo.properties
+            }
+            }).toArray();
+
+          graph.edges=relaciones;
+          response.json(graph)
   
       }
 }

@@ -26,18 +26,23 @@ class Instrumento {
     }
     
     async save ({request,response}){
-      const cliente =request.input('req').cliente;
+      
+      const cliente =request.input('cliente');
+      
       var neo4j = Env.get('NEO4J', '192.168.3.18:7474');
       var neo4jUser = Env.get('NEO4J_USER', 'neo4j');
       var neo4jPassword = Env.get('NEO4J_PASSWORD', 'Qwerty123');
-      var options_auth = new Buffer(`${neo4jUser}:${neo4jPassword}`).toString("base64")
-      var rData = request.input("req");
-      console.log(rData)
-      var code = rData._code;
       
+      var options_auth = new Buffer(`${neo4jUser}:${neo4jPassword}`).toString("base64")
+      
+      var rData = request.all();//("req");
+      
+      var code = rData._code;
+      var idAplicacion = rData.idAplicacion;
       delete rData['_code']
       delete rData['_csrf']
       delete rData['cliente']
+      delete rData['idAplicacion']
       
       const query = `select * from Persona where id ='${code}';`;
       
@@ -56,7 +61,7 @@ class Instrumento {
        * Se crea persona que está contestando
        */
       instrucciones.statements.push({
-        statement : `MERGE (p:Persona { codigo:'${code}' }) \
+        statement : `MERGE (p:Persona { codigo:'${code}',idAplicacion:'${idAplicacion}' }) \
                     ON CREATE SET p.nombre = '${persona.nombres}', \
                     p.apellidoPaterno = '${persona.apellidoPaterno}' , \
                     p.apellidoMaterno = '${persona.apellidoMaterno}' \
@@ -82,7 +87,7 @@ class Instrumento {
                    */
                   
                   instrucciones.statements.push({
-                  statement : `MERGE (p:Persona { codigo:'${pp.id}' }) \
+                  statement : `MERGE (p:Persona { codigo:'${pp.id}',idAplicacion:'${idAplicacion}' }) \
                           ON CREATE SET p.nombre = '${pp.nombres}', \
                           p.apellidoPaterno = '${pp.apellidoPaterno}' , \
                           p.apellidoMaterno = '${pp.apellidoMaterno}' \
@@ -96,7 +101,7 @@ class Instrumento {
                    */
                   instrucciones.statements.push({
 
-                  statement : `MATCH(pr:Persona {codigo:'${code}'}), (p:Persona {codigo:'${pp.id}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`
+                  statement : `MATCH(pr:Persona {codigo:'${code}',idAplicacion:'${idAplicacion}'}), (p:Persona {codigo:'${pp.id}',idAplicacion:'${idAplicacion}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`
                   })
           }
         }else{
@@ -108,7 +113,7 @@ class Instrumento {
              */
 
             instrucciones.statements.push({
-            statement : `MERGE (p:Persona { codigo:'${pp.id}' }) \
+            statement : `MERGE (p:Persona { codigo:'${pp.id}' ,idAplicacion:'${idAplicacion}'}) \
                       ON CREATE SET p.nombre = '${pp.nombres}', \
                       p.apellidoPaterno = '${pp.apellidoPaterno}' , \
                       p.apellidoMaterno = '${pp.apellidoMaterno}' \
@@ -122,7 +127,7 @@ class Instrumento {
              */
             instrucciones.statements.push({
 
-              statement : `MATCH(pr:Persona {codigo:'${code}'}), (p:Persona {codigo:'${pp.id}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`
+              statement : `MATCH(pr:Persona {codigo:'${code}',idAplicacion:'${idAplicacion}'}), (p:Persona {codigo:'${pp.id}',idAplicacion:'${idAplicacion}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`
             })
         }
 
