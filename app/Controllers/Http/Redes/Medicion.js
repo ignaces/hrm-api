@@ -3,6 +3,7 @@ const Database = use('Database')
 const got = use('got')
 const data = use('App/Utils/Data')
 const Env = use('Env')
+var Enumerable = require('linq')
 /**
  * asdasdadasdadasda
  * @class
@@ -45,7 +46,7 @@ class Medicion {
           resultDataContents:["graph"]
         })
        
-        const rPersonas = await got.post(`http://${neo4j}/db/data/transaction/commit`,
+        const apiExec = await got.post(`http://${neo4j}/db/data/transaction/commit`,
           {
             
             json:true,
@@ -55,7 +56,29 @@ class Medicion {
             }      
           })
           
-          return rPersonas.body
+          var neoResponse = apiExec.body.results[0].data;
+
+          var graph = {nodes:[],edges:[]};
+          var nodos = [];
+          var relaciones = [];
+          for(var item in neoResponse){
+              for(var nodo in neoResponse[item].graph.nodes){
+                nodos.push(neoResponse[item].graph.nodes[nodo])      
+              }
+              for(var relacion in neoResponse[item].graph.relationships){
+                relaciones.push(neoResponse[item].graph.relationships[relacion])      
+              }
+          }
+          graph.nodes=Enumerable.from(nodos).distinct("$.id").select(function(nodo){
+            return{
+                id:nodo.id,
+                tipo:nodo.labels,
+                properties:nodo.properties
+            }
+            }).toArray();
+
+          graph.edges=relaciones;
+          response.json(graph)
   
       }
 }
