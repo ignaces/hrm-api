@@ -11,9 +11,11 @@ var Enumerable = require('linq')
 class Medicion {
 
     async getPersonas({request,response}){
-        const idAplicacion = request.input("idAplicacion");
-        const query = `call redes_getPersonas('${idAplicacion}')`;
-        const cliente =request.input('cliente') ;
+        const idRedesPersona = request.input("idRedesPersona");
+        const query = `call redes_getPersonas('${idRedesPersona}')`;
+        
+        const cliente =request.input('cliente');
+        
         const usp   = await data.execQuery(cliente,query);
         
         //const usp   = yield Database.schema.raw("SELECT * from users;");
@@ -40,9 +42,9 @@ class Medicion {
          * Se crea persona que está contestando
          */
         //`MATCH(p:Persona{idAplicacion:'4771dc31-2621-11e8-80db-bc764e10787e'}) return p`
-        
+        var idAplicacion = request.input("idAplicacion")
         instrucciones.statements.push({
-          statement : `MATCH path = (p:Persona{idAplicacion:'4771dc31-2621-11e8-80db-bc764e10787e'})-[r]->(m) RETURN path`,
+          statement : `MATCH path = (p:Persona{idAplicacion:'${idAplicacion}'})-[r]->(m) RETURN path`,
           resultDataContents:["graph"]
         })
        

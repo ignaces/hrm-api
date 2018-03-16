@@ -31,7 +31,7 @@ class Talento {
         
     }
 
-    //
+    
     async getPersonaTalentos({request,response}){
 
         //var idProceso = request.input("idProceso");
@@ -99,7 +99,8 @@ class Talento {
                 apellidoPaterno:clasificacion.apellidoPaterno,
                 apellidoMaterno:clasificacion.apellidoMaterno,
                 Cargo:clasificacion.Cargo,
-                procesoOpinante:clasificacion.procesoOpinante
+                procesoOpinante:clasificacion.procesoOpinante,
+                foto:clasificacion.foto
                 
                 //idHijo:clasificacion.idHijo
                 //nombreHijo:clasificacion.nombreHijo
@@ -196,7 +197,8 @@ class Talento {
                Cargo:clasificacion.Cargo,
                idTalentoCuadrante:clasificacion.idTalentoCuadrante,
                color:clasificacion.color,
-               idOpinante:clasificacion.idOpinante
+               idOpinante:clasificacion.idOpinante,
+               foto:clasificacion.foto
                
                //idHijo:clasificacion.idHijo
                //nombreHijo:clasificacion.nombreHijo
@@ -367,6 +369,22 @@ class Talento {
         response.json(body);
         //console.log(result[0][0]);
         
+    }
+
+
+
+    async organigrama({request,response}){
+
+        var procesoOrganigrama = request.input("procesoOrganigrama");
+        const cliente = request.input('cliente');
+        
+
+        const query = `call tale_organigrama('${procesoOrganigrama}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        response.json(result[0][0]);
+        
+     
     }
 
 }

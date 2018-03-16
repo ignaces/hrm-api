@@ -14,8 +14,8 @@ class Instrumento {
      * @param  cliente
      */
     async preguntas({request,response}){
-      const idAplicacion = request.input("idAplicacion");
-      const query = `call redes_getPreguntas('${idAplicacion}')`;
+      const idRedesPersona = request.input("idRedesPersona");
+      const query = `call redes_getPreguntas('${idRedesPersona}')`;
       const cliente =request.input('cliente') ;
       const usp   = await data.execQuery(cliente,query);
       
@@ -38,19 +38,21 @@ class Instrumento {
       var rData = request.all();//("req");
       
       var code = rData._code;
-      var idAplicacion = rData.idAplicacion;
+      
       delete rData['_code']
       delete rData['_csrf']
       delete rData['cliente']
       delete rData['idAplicacion']
       
-      const query = `select * from Persona where id ='${code}';`;
+      const query = `select p.*,idRedesAplicacion as idAplicacion from RedesPersonas e 
+      inner join Persona p on e.idPersona = p.id
+      where e.id='${code}';`;
       
       const resPersona   = await data.execQuery(cliente,query);
       
       const persona = resPersona[0][0]
-
-      
+      var idAplicacion = persona.idAplicacion;
+      code= persona.id;
       /**
        * Get Preguntas
        */
