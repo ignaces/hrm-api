@@ -23,6 +23,18 @@ class Medicion {
         
         response.json(usp[0][0]);
     }
+
+    async getAplicaciones({request,response}){
+      const query = `call redes_getAplicaciones()`;
+      
+      const cliente =request.input('cliente');
+      
+      const usp   = await data.execQuery(cliente,query);
+      var aplicaciones = {};
+      aplicaciones.apps = usp[0][0];
+
+      response.json(aplicaciones);
+  }
     
     async getGraph ({request,response}){
         const cliente =request.input('cliente');
@@ -170,7 +182,7 @@ class Medicion {
             }
           }
 
-          console.log(neoResponse);
+          //console.log(neoResponse);
 
           graph.nodes=Enumerable.from(nodos).distinct("$.id").select(function(nodo){
             return{
