@@ -1,13 +1,14 @@
 'use strict'
 const data = use('App/Utils/Data')
 const uuidv1 = require('uuid/v1');
-var kafka = require('kafka-node');
+const kafka = require('kafka-node');
 
 
 class Logging {
   async handle ({request,response}, next) {
     
     try {
+      
       var codigo = uuidv1();
 
       var cliente = request.input('cliente');
@@ -19,11 +20,11 @@ class Logging {
       var type = 'CALL';
 
 
-      Producer = kafka.Producer;
-      KeyedMessage = kafka.KeyedMessage;
-      client = new kafka.Client('192.168.3.23:2181');
-      producer = new Producer(client);
-      km = new KeyedMessage('key', 'message');
+      var Producer = kafka.Producer;
+      var KeyedMessage = kafka.KeyedMessage;
+      var client = new kafka.Client('192.168.3.23:2181');
+      var producer = new Producer(client);
+      var km = new KeyedMessage('key', 'message');
     
       var obj = [{Log:{codigo:codigo,
                         cliente:cliente,
@@ -35,10 +36,10 @@ class Logging {
             params:params}}];
       var jObj = JSON.stringify(obj);
 
-      payloads = [
+      var payloads = [
               { topic: 'API_REQUEST', messages: [jObj],key:"API"}
           ];
-      producer.on('ready', function () {
+     producer.on('ready', function () {
           producer.send(payloads, function (err, data) {
               console.log(data);
           });
