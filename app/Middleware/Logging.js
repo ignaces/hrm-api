@@ -41,7 +41,8 @@ class Logging {
           ];
      producer.on('ready', function () {
           producer.send(payloads, function (err, data) {
-              console.log(data);
+            producer.close();
+            client.close();
           });
       });
       
