@@ -25,10 +25,7 @@ class Informe {
             mensaje: ""
           },
           paginacion: "",
-          data: {
-              procesos: result[0][0]
-          }
-          
+          data: result[0][0]
         }
         response.json(body);
     }
@@ -59,4 +56,4 @@ class Informe {
     
 }
 
-module.exports = Proceso
+module.exports = Informe
