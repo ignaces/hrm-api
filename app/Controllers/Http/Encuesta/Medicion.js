@@ -27,12 +27,23 @@ class Medicion {
             validacion.mensaje="No existe el código ingresado"
         }else{
             validacion.encuestaPersona= result[0][0][0];
-            if(validacion.encuestaPersona.codigo == "FINALIZADO"){
-                validacion.mensaje="La encuesta para este código ya fue contestada"
+            var inicio = new Date(validacion.encuestaPersona.fechaInicio)
+            var fin = new Date(validacion.encuestaPersona.fechaTermino)
+            var hoy = Date.now();
+            var activo = hoy > inicio && hoy < fin;
+            console.log(activo)
+            if(!activo){
+                validacion.mensaje="La encuesta no está activa para ser contestada"
                 validacion.continua=false;
             }else{
-                validacion.continua=true;
+                if(validacion.encuestaPersona.codigo == "FINALIZADO"){
+                    validacion.mensaje="La encuesta para este código ya fue contestada"
+                    validacion.continua=false;
+                }else{
+                    validacion.continua=true;
+                }
             }
+            
             
             
            
