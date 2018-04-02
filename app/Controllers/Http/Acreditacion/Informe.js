@@ -15,7 +15,7 @@ class Informe {
         const proceso = request.input('proceso');
         const procesoPersona = request.input('procesoPersona');
         const cliente =request.input('cliente') ;
-        const query = `call acre_getResultadoSintesis(${proceso}, ${procesoPersona})`;
+        const query = `call acre_getResultadoSintesis("${proceso}", "${procesoPersona}")`;
         const result   = await data.execQuery(cliente,query);
         
         const body = 
@@ -36,7 +36,7 @@ class Informe {
         const proceso = request.input('proceso');
         const procesoPersona = request.input('procesoPersona');
         const cliente =request.input('cliente') ;
-        const query = `call acre_getResultadoTCO(${proceso}, ${procesoPersona})`;
+        const query = `call acre_getResultadoTCO("${proceso}", "${procesoPersona}")`;
         const result   = await data.execQuery(cliente,query);
         
         const body = 
