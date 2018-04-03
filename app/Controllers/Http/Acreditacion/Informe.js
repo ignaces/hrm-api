@@ -61,7 +61,7 @@ class Informe {
         const query =`call acre_getInformeEvaluacionesTCO('${procesoPersona}')`;
         const preguntas   = await data.execQuery(cliente,query);
 
-        const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
+        const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.idPregruntaFacsimil").select(function(pregunta){
             return{
                 idPreguntaFacsimil:pregunta.IdPregruntaFacsimil,
                 enunciado:pregunta.enunciado,
@@ -79,7 +79,7 @@ class Informe {
         for(var pregunta in instrumento.preguntas){
             var idPregunta = instrumento.preguntas[pregunta].idPreguntaFacsimil
             
-            const alternativas = Enumerable.from(preguntas[0][0]).where(`$.IdPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
+            const alternativas = Enumerable.from(preguntas[0][0]).where(`$.idPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
                 return{
                     id:alternativa.idAlternativa,
                     texto:alternativa.textoAlternativa,
