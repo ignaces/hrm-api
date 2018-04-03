@@ -53,6 +53,54 @@ class Informe {
         }
         response.json(body);
     }
+
+
+    async getResultadosProceso({request,response}){
+        const proceso = request.input('proceso');
+        const procesoPersona = request.input('procesoPersona');
+        const cliente =request.input('cliente') ;
+        const query = `call getReporteAcreditacion('${proceso}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              procesos: result[0][0]
+          }
+          
+        }
+        response.json(body);
+    }
+
+    async getPersonasProcesoResultados({request,response}){
+      
+
+        const proceso = request.input('proceso');
+        const cliente =request.input('cliente') ;
+        const query = `call acre_getResultadosPersonasProceso('${proceso}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              personas: result[0][0]
+          }
+          
+        }
+        response.json(body);
+    }
     
 }
 
