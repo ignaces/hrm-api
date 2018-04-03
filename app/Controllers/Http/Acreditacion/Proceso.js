@@ -75,6 +75,9 @@ class Proceso {
         const query = `call acre_cerrarEvaluacion('${idOpinante}')`;
         const result   = await data.execQuery(cliente,query);
         
+        const query2 = `call acre_calculaResultado('${idOpinante}')`;
+        const result2   = await data.execQuery(cliente,query2);
+        
         
         const body = 
         {
@@ -368,6 +371,45 @@ class Proceso {
             }
 
             response.json(body);
+    }
+
+    async getPersona({request,response}){
+    
+        var procesoPersona = request.input('procesoPersona');
+        var identificador = "";
+        
+        const cliente = request.input('cliente');
+
+        if(request.input('identificador'))
+        {
+            var identificador = request.input('identificador');
+        }
+        
+        const query =  `call acre_getPersona('${procesoPersona}')`;
+        //const query =  `call pers_getClasificacion('${idPersona}')`;
+        const usp   = await data.execQuery(cliente,query);
+       
+        
+       if(usp[0]==undefined){
+           return response.json({})
+       }
+       if (usp[0][0][0]==undefined){
+        return response.json({})
+       }
+        
+        
+        var persona = {
+            identificador:usp[0][0][0].identificador,
+            nombres:usp[0][0][0].nombres,
+            apellidoPaterno:usp[0][0][0].apellidoPaterno,
+            apellidoMaterno:usp[0][0][0].apellidoMaterno,
+            email: usp[0][0][0].email,
+            clasificaciones:""    
+        };
+       
+      
+      response.json(persona);
+      
     }
 
 }
