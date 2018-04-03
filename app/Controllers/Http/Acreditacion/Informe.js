@@ -106,41 +106,69 @@ class Informe {
         const cliente =request.input('cliente') ;
         
         const query =`call acre_getInformeEvaluacionesTCO('${procesoPersona}')`;
-        const preguntas   = await data.execQuery(cliente,query);
+        const result   = await data.execQuery(cliente,query);
 
-        const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.idPregruntaFacsimil").select(function(pregunta){
+
+
+        const instrumentos = Enumerable.from(result[0][0]).distinct("$.codigoInstrumento").select(function(instrumento){
             return{
-                idPreguntaFacsimil:pregunta.IdPregruntaFacsimil,
-                enunciado:pregunta.enunciado,
-                correcto:pregunta.correcto,
-                puntajeObtenido:pregunta.puntajeObtenido,
-                puntajeEsperado:pregunta.puntajeEsperado,
-                tipoPregunta:pregunta.tipoPregunta
+                nombre:instrumento.nombreInstrumento,
+                codigo:instrumento.codigoInstrumento
             }
-        })
+        }).toArray()
     
-        instrumento = {
-            nombre:preguntas[0][0][0].nombre,
-            preguntas:preguntasUnicas.toArray()
-        }
-        for(var pregunta in instrumento.preguntas){
-            var idPregunta = instrumento.preguntas[pregunta].idPreguntaFacsimil
+
+        
+        for(var instrumento in instrumentos){
+            var codigoInstrumento = instrumentos[instrumento].codigo
             
-            const alternativas = Enumerable.from(preguntas[0][0]).where(`$.idPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
+            const preguntas = Enumerable.from(result[0][0]).where(`$.codigoInstrumento == "${codigoInstrumento}"`).distinct("$.idPreguntaFacsimil").select(function(pregunta){
                 return{
-                    id:alternativa.idAlternativa,
-                    texto:alternativa.textoAlternativa,
-                    puntaje:alternativa.puntajeAlternativa,
-                    orden:alternativa.ordenAlternativa,
-                    estaSeleccionada:alternativa.estaSeleccionada,
-                    requiereJustificacion:"0",
-                    justificacion: ""
+                    idPreguntaFacsimil:pregunta.idPreguntaFacsimil,
+                    enunciado:pregunta.enunciado,
+                    correcto:pregunta.correcto,
+                    puntajeObtenido:pregunta.puntajeObtenido,
+                    puntajeEsperado:pregunta.puntajeEsperado,
+                    tipoPregunta:pregunta.tipoPregunta
                 }
             }).toArray()
-            instrumento.preguntas[pregunta].alternativas = alternativas
+            instrumentos[instrumento].preguntas = preguntas
+
+            for(var pregunta in preguntas)
+            {
+                var idPregunta = preguntas[pregunta].idPreguntaFacsimil
+
+                const alternativas = Enumerable.from(result[0][0]).where(`$.idPreguntaFacsimil == "${idPregunta}"`).select(function(alternativa){
+                    return{
+                        id:alternativa.idAlternativa,
+                        texto:alternativa.textoAlternativa,
+                        puntaje:alternativa.puntajeAlternativa,
+                        orden:alternativa.ordenAlternativa,
+                        estaSeleccionada:alternativa.estaSeleccionada,
+                        requiereJustificacion:"0",
+                        justificacion: ""
+                    }
+                }).toArray()
+                instrumentos[instrumento].preguntas[pregunta].alternativas = alternativas
+            }
+
+        }
+
+
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              instrumento: instrumentos
+          }
+          
         }
     
-        response.json(instrumento);
+        response.json(body);
     }
     
 }
