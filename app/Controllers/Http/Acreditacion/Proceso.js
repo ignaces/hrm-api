@@ -349,7 +349,7 @@ class Proceso {
         var personas = request.input("personas");
         var idPerfil = request.input("idPerfil");
 
-        const cliente =request.input('cliente') ;
+        const cliente =request.input('cliente');
         
         for(var i=0; i<personas.length; i++){
             
@@ -375,17 +375,22 @@ class Proceso {
 
     async getPersona({request,response}){
     
-        var procesoPersona = request.input('procesoPersona');
-        var identificador = "";
+        var procesoPersona = "";
+        var proceso = "";
+        var persona = "";
         
         const cliente = request.input('cliente');
 
-        if(request.input('identificador'))
+        if(request.input('procesoPersona'))
         {
-            var identificador = request.input('identificador');
+            procesoPersona = request.input('procesoPersona');
+        }
+        else{
+            proceso = request.input('idProceso');
+            persona = request.input('idPersona');
         }
         
-        const query =  `call acre_getPersona('${procesoPersona}')`;
+        const query =  `call acre_getPersona('${procesoPersona}','${proceso}','${persona}')`;
         //const query =  `call pers_getClasificacion('${idPersona}')`;
         const usp   = await data.execQuery(cliente,query);
        
