@@ -53,6 +53,53 @@ class Informe {
         response.json(body);
     }
 
+
+    async getResultadosProceso({request,response}){
+        const proceso = request.input('proceso');
+        const procesoPersona = request.input('procesoPersona');
+        const cliente =request.input('cliente') ;
+        const query = `call getReporteAcreditacion('${proceso}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              procesos: result[0][0]
+          }
+          
+        }
+        response.json(body);
+    }
+
+    async getPersonasProcesoResultados({request,response}){
+      
+
+        const proceso = request.input('proceso');
+        const cliente =request.input('cliente') ;
+        const query = `call acre_getResultadosPersonasProceso('${proceso}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              personas: result[0][0]
+          }
+          
+        }
+        response.json(body);
+    }
     async getInstrumentosTCO({request,response}){
         var procesoPersona = request.input("procesoPersona");
         var instrumento = [];
@@ -61,7 +108,7 @@ class Informe {
         const query =`call acre_getInformeEvaluacionesTCO('${procesoPersona}')`;
         const preguntas   = await data.execQuery(cliente,query);
 
-        const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.IdPregruntaFacsimil").select(function(pregunta){
+        const preguntasUnicas = Enumerable.from(preguntas[0][0]).distinct("$.idPregruntaFacsimil").select(function(pregunta){
             return{
                 idPreguntaFacsimil:pregunta.IdPregruntaFacsimil,
                 enunciado:pregunta.enunciado,
@@ -79,7 +126,7 @@ class Informe {
         for(var pregunta in instrumento.preguntas){
             var idPregunta = instrumento.preguntas[pregunta].idPreguntaFacsimil
             
-            const alternativas = Enumerable.from(preguntas[0][0]).where(`$.IdPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
+            const alternativas = Enumerable.from(preguntas[0][0]).where(`$.idPregruntaFacsimil == "${idPregunta}"`).select(function(alternativa){
                 return{
                     id:alternativa.idAlternativa,
                     texto:alternativa.textoAlternativa,
