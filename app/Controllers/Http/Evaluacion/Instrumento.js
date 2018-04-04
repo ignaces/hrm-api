@@ -25,7 +25,7 @@ class Instrumento {
     }
     async getAvanceFacsimil({request,response}){
         const cliente =request.input('cliente') ;
-        const idFacsimil =request.input('idFacsimil') ;
+        const idFacsimil =request.input('idFacsimil');
        
         const query =`call evaluacion_getAvanceFacsimil('${idFacsimil}')`;
         const rQuery   = await data.execQuery(cliente,query);
