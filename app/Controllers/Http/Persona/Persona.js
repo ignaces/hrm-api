@@ -113,10 +113,7 @@ class Persona {
             email:usp[0][0][0].email,
             clasificaciones:Clasificaciones.toArray()      
         };
-       
-      
       response.json(persona);
-      
     }
 
     async addPersona ({request,response}){
