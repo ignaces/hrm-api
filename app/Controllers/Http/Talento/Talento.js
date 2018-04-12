@@ -40,6 +40,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_gestionTalentos('${idOpinante}','${idTalentoProceso}')`;
+        console.log(query)
         const result = await data.execQuery(cliente,query);
         
         response.json(result[0][0]);
@@ -88,7 +89,6 @@ class Talento {
         const query = `call tale_colaboradoresSinCuadranteCla('${idOpinante}','${idTalentoProceso}')`;
         const result   = await data.execQuery(cliente,query);
         
-        
         var clasificacionTale = [];
          //.distinct("$.idPadre")
         const clasificaciones = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(clasificacion){
@@ -100,7 +100,8 @@ class Talento {
                 apellidoMaterno:clasificacion.apellidoMaterno,
                 Cargo:clasificacion.Cargo,
                 procesoOpinante:clasificacion.procesoOpinante,
-                foto:clasificacion.foto
+                foto:clasificacion.foto,
+                genero:clasificacion.genero
                 
                 //idHijo:clasificacion.idHijo
                 //nombreHijo:clasificacion.nombreHijo
@@ -198,10 +199,9 @@ class Talento {
                idTalentoCuadrante:clasificacion.idTalentoCuadrante,
                color:clasificacion.color,
                idOpinante:clasificacion.idOpinante,
-               foto:clasificacion.foto
+               foto:clasificacion.foto,
+               genero:clasificacion.genero
                
-               //idHijo:clasificacion.idHijo
-               //nombreHijo:clasificacion.nombreHijo
 
            }
        })
@@ -301,6 +301,7 @@ class Talento {
 
             const clasificacionHijo = Enumerable.from(result[0][0]).where(`$.idPadre == "${conjuntoPadre}"`).select(function(ac){
                 return{
+                    id:ac.idHijo,
                     nombreHijo:ac.nombreHijo
 
                    /* idPadre:ac.idPadre,
@@ -342,14 +343,8 @@ class Talento {
         var paterno = request.input("paterno");
         var materno = request.input("materno");
 
-        //var nombreFiltroString = JSON.stringify(nombreFiltro);
-        //console.log(nombreFiltro);
-        //console.log(nombreFiltroString);
-
-        //const kk = `set @variable = ('${nombreFiltro}')`;
-        //console.log("estooo "+ kk);
         const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${nombreFiltro}','${cargosFiltro}','${rut}','${nombres}','${paterno}','${materno}')`;
-        //console.log(query);
+        
         const result   = await data.execQuery(cliente,query);
         
 
