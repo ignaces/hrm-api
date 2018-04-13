@@ -127,6 +127,16 @@ class Talento {
                 }
             }).toArray()
             clasificacionTale.clasificaciones[clasificacion].clasificacionHijo = clasificacionHijo
+
+            const atributos = Enumerable.from(result[0][0]).where(`$.idPersona == "${conjuntoPadre}"`).select(function(ac){
+                return{
+                    nombre:ac.atributo,
+                    color:ac.colorAtributo,
+                    icono:ac.iconoAtributo,
+                    tooltip:ac.tooltipAtributo
+                }
+            }).toArray()
+            clasificacionTale.clasificaciones[clasificacion].atributos = atributos
         }
         
         
@@ -184,6 +194,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_colaboradoresEvaluados('${idOpinante}','${idTalentoProceso}')`;
+        
         const result = await data.execQuery(cliente,query);
         var clasificacionTale = [];
         //.distinct("$.idPadre")
@@ -223,11 +234,22 @@ class Talento {
                    */
                }
            }).toArray()
+           
            clasificacionTale.clasificaciones[clasificacion].clasificacionHijo = clasificacionHijo
+
+
+           const atributos = Enumerable.from(result[0][0]).where(`$.idPersona == "${conjuntoPadre}"`).select(function(ac){
+                return{
+                    nombre:ac.atributo,
+                    color:ac.colorAtributo,
+                    icono:ac.iconoAtributo,
+                    tooltip:ac.tooltipAtributo
+                }
+            }).toArray()
+            clasificacionTale.clasificaciones[clasificacion].atributos = atributos
        }
        
        
-       //console.log(clasificacionTale);
        response.json(clasificacionTale);
  
 
