@@ -120,7 +120,7 @@ class Medicion {
                     }).toArray()
                     preguntasUnicas[pregunta].alternativas = alternativas
 
-                    if(preguntasPagina.length<10){
+                    if(preguntasPagina.length<instrumento.preguntasPagina){
                         preguntasPagina.push(preguntasUnicas[pregunta])
                     }else{
                         instrumento.dimensiones[dimension].paginas.push({idPagina:`${instrumento.dimensiones[dimension].id}_${numpagina}`,preguntas:preguntasPagina})
