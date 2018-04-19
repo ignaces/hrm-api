@@ -47,7 +47,7 @@ class Data  {
      * @param  {string} client Es el nombre de dominio del cliente
      */
     async getConeccionCliente (client){ 
-        if(client == "localhost"){
+        if(client == "localhost" || client=="hrmdev"){
             client = "hrm";
         }
         var bd = "";
