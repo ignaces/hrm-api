@@ -258,6 +258,7 @@ class Proceso {
         query = `call acre_getInstrumentosProceso('${idPersonaProceso}')`;
         const resultInstrumentos   = await data.execQuery(cliente,query);
         
+       
 
         var body = 
         {
@@ -351,6 +352,17 @@ class Proceso {
 
         const cliente =request.input('cliente');
         
+
+
+        for(var i=0; i<personas.length; i++){
+            
+            var idPersona   = personas[i].idPersona;
+        
+            const query     = `call acre_addPersonaProceso('${idPersona}', '${idProceso}', '${idPerfil}')`;
+            const result    = await data.execQuery(cliente,query);
+            
+        }
+
         for(var i=0; i<personas.length; i++){
             
             var idPersona   = personas[i].idPersona;
