@@ -41,7 +41,7 @@ class Medicion {
     const cliente =request.input('cliente');
     var idAplicacion = request.input("idAplicacion");
 
-    const query = `call redes_getPreguntas('`+idAplicacion+`')`;
+    const query = `call redes_getFiltroPreguntas('`+idAplicacion+`')`;
 
     const usp   = await data.execQuery(cliente,query);
     var preguntas = {};
