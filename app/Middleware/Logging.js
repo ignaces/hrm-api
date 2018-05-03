@@ -65,7 +65,7 @@ class Logging {
     }
    
 
-    await next()
+    await next();
   }
 }
 
