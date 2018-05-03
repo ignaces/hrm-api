@@ -72,10 +72,10 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_seleccionTalento('${idTalentoMatriz}','${idTalentoOpinante}')`;
+
         const result   = await data.execQuery(cliente,query);
         
-       response.json(result[0][0][0]);
-       //console.log(result[0][0][0]);
+       response.json(result[0]);
         
     }
 
