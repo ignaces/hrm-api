@@ -128,9 +128,9 @@ class Instrumento {
              * Se crea relación entre las personass
              */
             instrucciones.statements.push({
-
               statement : `MATCH(pr:Persona {codigo:'${code}',idAplicacion:'${idAplicacion}'}), (p:Persona {codigo:'${pp.id}',idAplicacion:'${idAplicacion}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`
             })
+            
         }
 
       }
