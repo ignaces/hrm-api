@@ -404,6 +404,43 @@ class Talento {
      
     }
 
+    async getCurriculumCategoria({request,response}){
+        var idPersona = request.input("idPersona");
+        const cliente = request.input('cliente');
+
+        const query = `call tale_getCurriculumCategoria()`;
+        const result   = await data.execQuery(cliente,query);
+        response.json(result[0][0]);
+
+    }
+
+
+    async getCurriculumPersona({request,response}){
+
+        var idPersona = request.input("idPersona");
+        const cliente = request.input('cliente');
+
+        const query = `call tale_getCurriculumPersona('${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+        response.json(result[0][0]);
+    }
+
+    async addCurriculumPersona({request,response}){
+        
+        var titulo = request.input("titulo");
+        var bajada = request.input("bajada");
+        var desde = request.input("desde");
+        var hasta = request.input("hasta");
+        var descripcion = request.input("descripcion");
+        var idPersona = request.input("idPersona");
+        var idPersonaCurriculumCategoria = request.input("idPersonaCurriculumCategoria");
+
+        const cliente = request.input('cliente');
+
+        const query = `call tale_addPersonaCurriculumItem('${titulo}', '${bajada}', '${desde}', '${hasta}', '${descripcion}', '${idPersona}', '${idPersonaCurriculumCategoria}')`;
+        const result   = await data.execQuery(cliente,query);
+        response.json(result[0][0]);
+    }
 }
 
 module.exports = Talento
