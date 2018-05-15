@@ -87,6 +87,7 @@ class Persona {
         }
         
         const query =  `call pers_getPersona('${idPersona}')`;
+        console.log(query)
         //const query =  `call pers_getClasificacion('${idPersona}')`;
         const usp   = await data.execQuery(cliente,query);
        
@@ -113,6 +114,7 @@ class Persona {
             email:usp[0][0][0].email,
             clasificaciones:Clasificaciones.toArray()      
         };
+        
       response.json(persona);
     }
 
