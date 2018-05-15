@@ -473,12 +473,11 @@ class Talento {
         var desde = request.input("desde");
         var hasta = request.input("hasta");
         var descripcion = request.input("descripcion");
-        var idPersona = request.input("idPersona");
         var idPersonaCurriculumCategoria = request.input("idPersonaCurriculumCategoria");
+        var idPersonaFicha = request.input("idPersonaFicha");
 
         const cliente = request.input('cliente');
-
-        const query = `call tale_addPersonaCurriculumItem('${titulo}', '${bajada}', '${desde}', '${hasta}', '${descripcion}', '${idPersona}', '${idPersonaCurriculumCategoria}')`;
+        const query = `call tale_addPersonaCurriculumItem('${titulo}', '${bajada}', '${desde}', '${hasta}', '${descripcion}', '${idPersonaFicha}', '${idPersonaCurriculumCategoria}')`;
         const result   = await data.execQuery(cliente,query);
         response.json(result[0][0]);
     }
