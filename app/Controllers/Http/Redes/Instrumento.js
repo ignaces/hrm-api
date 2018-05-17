@@ -132,7 +132,10 @@ class Instrumento {
             })
             
         }
+        //Actualizacion estado
 
+        const query = `call redes_updateEstadoRedesPersonas('${code}')`;
+        const resp   = await data.execQuery(cliente,query);
       }
       
       
