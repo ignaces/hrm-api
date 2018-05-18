@@ -132,14 +132,7 @@ class Medicion {
                 instrumento.dimensiones[dimension].paginas.push({idPagina:`${instrumento.dimensiones[dimension].id}_${numpagina}`,preguntas:preguntasPagina})
 
             }
-            
-            
-    
-           
-            
-        
-        
-        
+         
         response.json(instrumento);
     }
 }
