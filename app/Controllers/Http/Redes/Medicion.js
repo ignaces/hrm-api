@@ -20,7 +20,6 @@ class Medicion {
         
         //const usp   = yield Database.schema.raw("SELECT * from users;");
         //response.json(usp[0]);
-        
         response.json(usp[0][0]);
     }
 
@@ -249,6 +248,21 @@ class Medicion {
 
           response.json(graph)
   
+      }
+
+      async validaEstado({request,response}){
+        //console.log(request)
+        const idRedesPersona = request.input("idRedesPersona");
+        
+        const cliente =request.input('cliente');
+        
+        const query = `call redes_validaEstadoRedesPersonas('${idRedesPersona}')`;
+    
+        const result   = await data.execQuery(cliente,query);
+        var salida = {};
+        salida = result[0][0];
+
+        response.json(salida[0].estado);
       }
 }
 module.exports = Medicion
