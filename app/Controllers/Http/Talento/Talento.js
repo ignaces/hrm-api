@@ -439,7 +439,7 @@ class Talento {
         const query = `call tale_getPosiciones('${procesoOrganigrama}')`;
         const result   = await data.execQuery(cliente,query);
         
-        
+        console.log(result[0][0])
         response.json(result[0][0]);
         
      
