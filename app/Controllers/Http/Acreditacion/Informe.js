@@ -62,10 +62,10 @@ class Informe {
         const query = `call acre_getResultadoSOT("${proceso}", "${procesoPersona}")`;
         const result   = await data.execQuery(cliente,query);
         
-        var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(instrumento){
+        var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(competencia){
             return{
-                nombre:competencias.nombre,
-                codigo:competencias.codigo
+                nombre:competencia.nombre,
+                codigo:competencia.codigo
             }
         }).toArray()
     
@@ -82,7 +82,7 @@ class Informe {
                     totalMalas:instrumento.totalMalas
                 }
             }).toArray()
-            competencias[competencia].instrumentos = instrumento
+            competencias[competencia].instrumentos = instrumentos
         }
 
 
