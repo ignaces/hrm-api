@@ -435,12 +435,43 @@ class Talento {
         var procesoOrganigrama = request.input("idProceso");
         const cliente = request.input('cliente');
         
-
+      
         const query = `call tale_getPosiciones('${procesoOrganigrama}')`;
+        
         const result   = await data.execQuery(cliente,query);
+        const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function(posicion){
+            return{
+                idPosicion:posicion.idPosicion,
+                nombre:posicion.nombre,
+                codigo:posicion.codigo,
+                critico:posicion.critico,
+                nivel:posicion.nivel,
+                idPadre:posicion.idPadre,
+                idPersona:posicion.idPersona,
+                nombresPersona:posicion.nombresPersona,
+                apellidoPaterno:posicion.apellidoPaterno,
+                apellidoMaterno:posicion.apellidoMaterno,
+                fotoPersona:posicion.fotoPersona,
+                colorPosicion:posicion.colorPosicion,
+                nombreCuadrante:posicion.nombreCuadrante,
+                valor:posicion.valor,
+                edd:posicion.edd,
+                idCuadranteEq:posicion.idCuadranteEq,
+                valorEdeEq:posicion.valorEdeEq,
+                idCuadrante:posicion.idCuadrante,
+                atributos:Enumerable.from(result[0][0]).where(`$.idPosicion == "${posicion.idPosicion}"`).select(function(atributo){
+                    return {
+                        atributo:atributo.atributo,
+                        colorAtributo:atributo.colorAtributo,
+                        iconoAtributo:atributo.iconoAtributo,
+                        tooltipAtributo:atributo.tooltipAtributo,
+                    }
+                }).toArray()
+
+            }
+        }).toArray()
         
-        
-        response.json(result[0][0]);
+        response.json(posiciones);
         
      
     }

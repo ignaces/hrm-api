@@ -102,6 +102,7 @@ class Notificaciones {
          body = body.replace(new RegExp("#{ApellidoMaterno}",'g'),'%recipient.apellidoMaterno%');
          body = body.replace(new RegExp("#{UserName}",'g'),'%recipient.usuario%');
          body = body.replace(new RegExp("#{Password}",'g'),'%recipient.password%');
+         body = body.replace(new RegExp("#{Empresa}",'g'),'%recipient.empresa%');
       var recipients = {};
       var to = "";
       
@@ -115,6 +116,7 @@ class Notificaciones {
           apellidoMaterno:correos[item].apellidoMaterno,
           usuario:correos[item].usuario,
           password:correos[item].password,
+          empresa:correos[item].empresa
         }
         
         var finBloque = (item*1+1)%1000;
