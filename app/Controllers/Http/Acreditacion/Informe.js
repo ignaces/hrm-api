@@ -62,7 +62,7 @@ class Informe {
         const query = `call acre_getResultadoSOT("${proceso}", "${procesoPersona}")`;
         const result   = await data.execQuery(cliente,query);
         
-        const competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(instrumento){
+        var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(instrumento){
             return{
                 nombre:competencias.nombre,
                 codigo:competencias.codigo
