@@ -65,7 +65,8 @@ class Informe {
         var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(competencia){
             return{
                 nombre:competencia.nombre,
-                codigo:competencia.codigo
+                codigo:competencia.codigo,
+                valor:competencia.valor
             }
         }).toArray()
     
