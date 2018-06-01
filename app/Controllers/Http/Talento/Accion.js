@@ -71,7 +71,9 @@ class Accion {
                             }}).toArray()
                 }}).toArray()
         };
-
+        if(plan.acciones[0].id==null){
+            plan.acciones=[];
+        }
         response.json(plan);
     }
     async getPlanDesarrolloById({request,response}){
