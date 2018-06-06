@@ -40,7 +40,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_gestionTalentos('${idOpinante}','${idTalentoProceso}')`;
-        console.log(query)
+        
         const result = await data.execQuery(cliente,query);
         
         response.json(result[0][0]);
@@ -63,7 +63,47 @@ class Talento {
         
     }
 
+    async getPersona({request,response}){
+    
+        var idPersona = request.input('idPersona');
+        var idProceso = request.input('idProceso');
+        var identificador = "";
+        
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_getPersona('${idPersona}','${idProceso}')`;
+        
+        //const query =  `call pers_getClasificacion('${idPersona}')`;
+        const usp   = await data.execQuery(cliente,query);
+       
+        
+       if(usp[0]==undefined){
+           return response.json({})
+       }
+       if (usp[0][0][0]==undefined){
+        return response.json({})
+       }
+       
+        /*const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
+            return{
+               nombre:Clasificacion.Clasificacion,
+               valor:Clasificacion.Valor
 
+            }
+        })*/
+        
+        var persona = {
+            identificador:usp[0][0][0].identificador,
+            nombres:usp[0][0][0].nombres,
+            apellidoPaterno:usp[0][0][0].apellidoPaterno,
+            apellidoMaterno:usp[0][0][0].apellidoMaterno,
+            email:usp[0][0][0].email,
+            cargo:usp[0][0][0].cargo,
+            //clasificaciones:Clasificaciones.toArray()      
+        };
+        
+      response.json(persona);
+    }
     async seleccionDragTalentoAPI({request,response}){
 
         
@@ -72,10 +112,10 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_seleccionTalento('${idTalentoMatriz}','${idTalentoOpinante}')`;
+
         const result   = await data.execQuery(cliente,query);
         
-       response.json(result[0][0][0]);
-       //console.log(result[0][0][0]);
+       response.json(result[0]);
         
     }
 
@@ -91,7 +131,7 @@ class Talento {
         
         var clasificacionTale = [];
          //.distinct("$.idPadre")
-        const clasificaciones = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(clasificacion){
+        const personas = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(clasificacion){
             return{
                 idPersona:clasificacion.idPersona,
                 identificador:clasificacion.identificador,
@@ -110,9 +150,9 @@ class Talento {
         })
 
         clasificacionTale = {
-            clasificaciones:clasificaciones.toArray()
+            clasificaciones:personas.toArray()
         }
-
+        
         for(var clasificacion in clasificacionTale.clasificaciones){
             var conjuntoPadre = clasificacionTale.clasificaciones[clasificacion].idPersona
 
@@ -392,18 +432,86 @@ class Talento {
 
     async organigrama({request,response}){
 
-        var procesoOrganigrama = request.input("procesoOrganigrama");
+        var procesoOrganigrama = request.input("idProceso");
         const cliente = request.input('cliente');
         
-
-        const query = `call tale_organigrama('${procesoOrganigrama}')`;
-        const result   = await data.execQuery(cliente,query);
+      
+        const query = `call tale_getPosiciones('${procesoOrganigrama}')`;
         
-        response.json(result[0][0]);
+        const result   = await data.execQuery(cliente,query);
+        const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function(posicion){
+            return{
+                idPosicion:posicion.idPosicion,
+                nombre:posicion.nombre,
+                codigo:posicion.codigo,
+                critico:posicion.critico,
+                nivel:posicion.nivel,
+                idPadre:posicion.idPadre,
+                idPersona:posicion.idPersona,
+                nombresPersona:posicion.nombresPersona,
+                apellidoPaterno:posicion.apellidoPaterno,
+                apellidoMaterno:posicion.apellidoMaterno,
+                fotoPersona:posicion.fotoPersona,
+                colorPosicion:posicion.colorPosicion,
+                nombreCuadrante:posicion.nombreCuadrante,
+                valor:posicion.valor,
+                edd:posicion.edd,
+                idCuadranteEq:posicion.idCuadranteEq,
+                valorEdeEq:posicion.valorEdeEq,
+                idCuadrante:posicion.idCuadrante,
+                atributos:Enumerable.from(result[0][0]).where(`$.idPosicion == "${posicion.idPosicion}"`).select(function(atributo){
+                    return {
+                        atributo:atributo.atributo,
+                        colorAtributo:atributo.colorAtributo,
+                        iconoAtributo:atributo.iconoAtributo,
+                        tooltipAtributo:atributo.tooltipAtributo,
+                    }
+                }).toArray()
+
+            }
+        }).toArray()
+        
+        response.json(posiciones);
         
      
     }
 
+    async getCurriculumCategoria({request,response}){
+        var idPersona = request.input("idPersona");
+        const cliente = request.input('cliente');
+
+        const query = `call tale_getCurriculumCategoria()`;
+        const result   = await data.execQuery(cliente,query);
+        response.json(result[0][0]);
+
+    }
+
+
+    async getCurriculumPersona({request,response}){
+
+        var idPersona = request.input("idPersona");
+        const cliente = request.input('cliente');
+
+        const query = `call tale_getCurriculumPersona('${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+        response.json(result[0][0]);
+    }
+
+    async addCurriculumPersona({request,response}){
+        
+        var titulo = request.input("titulo");
+        var bajada = request.input("bajada");
+        var desde = request.input("desde");
+        var hasta = request.input("hasta");
+        var descripcion = request.input("descripcion");
+        var idPersonaCurriculumCategoria = request.input("idPersonaCurriculumCategoria");
+        var idPersonaFicha = request.input("idPersonaFicha");
+
+        const cliente = request.input('cliente');
+        const query = `call tale_addPersonaCurriculumItem('${titulo}', '${bajada}', '${desde}', '${hasta}', '${descripcion}', '${idPersonaFicha}', '${idPersonaCurriculumCategoria}')`;
+        const result   = await data.execQuery(cliente,query);
+        response.json(result[0][0]);
+    }
 }
 
 module.exports = Talento
