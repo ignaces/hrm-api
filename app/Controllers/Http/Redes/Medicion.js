@@ -96,7 +96,7 @@ class Medicion {
           }
         }
         */
-        
+        console.log(stmnt)
         var desdePersona = "";
         var conRelacion = "r";
         var conSentido1 = "-";
