@@ -48,6 +48,7 @@ class Instrumento {
       inner join Persona p on e.idPersona = p.id
       where e.id='${code}';`;
       
+      //console.log(query)
       const resPersona   = await data.execQuery(cliente,query);
       
       const persona = resPersona[0][0]
@@ -72,6 +73,7 @@ class Instrumento {
                     p.apellidoMaterno = '${persona.apellidoMaterno}'`                      
       })
    
+      //console.log(instrucciones.statements[0])
       for(var propertyName in rData) {
         
             const qPreguntas = `select * from RedesPreguntas where id='${propertyName}';`;
@@ -79,6 +81,7 @@ class Instrumento {
 
             var pregunta = preguntas[0][0]
             if(rData[propertyName].constructor === Array){
+            
             for(var item in rData[propertyName]){    
                   var qp = `select * from Persona where id ='${rData[propertyName][item]}'`
                   const resp   = await data.execQuery(cliente,qp);  
@@ -98,6 +101,7 @@ class Instrumento {
                           p.apellidoMaterno = '${pp.apellidoMaterno}' \
                           `                      
                   })
+
                   /**
                    * Se crea relación entre las personass
                    */
@@ -109,7 +113,7 @@ class Instrumento {
         }else{
             var qp = `select * from Persona where id ='${rData[propertyName]}'`
             const resp   = await data.execQuery(cliente,qp);
-            var pp = resp[0]
+            var pp = resp[0][0]
             /**
              * Se crea persona a la que se hace mención
              */
@@ -124,13 +128,21 @@ class Instrumento {
                       p.apellidoMaterno = '${pp.apellidoMaterno}' \
                       `                      
             })
+            /*console.log(`MERGE (p:Persona { codigo:'${pp.id}' ,idAplicacion:'${idAplicacion}'}) \
+            ON CREATE SET p.nombre = '${pp.nombres}', \
+            p.apellidoPaterno = '${pp.apellidoPaterno}' , \
+            p.apellidoMaterno = '${pp.apellidoMaterno}' \
+            ON MATCH SET p.nombre = '${pp.nombres}', \
+            p.apellidoPaterno = '${pp.apellidoPaterno}' , \
+            p.apellidoMaterno = '${pp.apellidoMaterno}' \
+            `  )*/
             /**
              * Se crea relación entre las personass
              */
             instrucciones.statements.push({
               statement : `MATCH(pr:Persona {codigo:'${code}',idAplicacion:'${idAplicacion}'}), (p:Persona {codigo:'${pp.id}',idAplicacion:'${idAplicacion}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`
             })
-            
+            //console.log(`MATCH(pr:Persona {codigo:'${code}',idAplicacion:'${idAplicacion}'}), (p:Persona {codigo:'${pp.id}',idAplicacion:'${idAplicacion}'}) CREATE (pr)-[:${pregunta.relacion} {pregunta:'${propertyName}'}]->(p);`)
         }
         //Actualizacion estado
 

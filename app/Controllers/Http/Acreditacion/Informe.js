@@ -53,6 +53,56 @@ class Informe {
         response.json(body);
     }
 
+    async getResultadoSOT({request,response}){
+
+
+        const proceso = request.input('proceso');
+        const procesoPersona = request.input('procesoPersona');
+        const cliente =request.input('cliente') ;
+        const query = `call acre_getResultadoSOT("${proceso}", "${procesoPersona}")`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(competencia){
+            return{
+                nombre:competencia.nombre,
+                codigo:competencia.codigo,
+                valor:competencia.valor
+            }
+        }).toArray()
+    
+
+        
+        for(var competencia in competencias){
+            var codigoCompetencia = competencias[competencia].codigo
+            
+            const instrumentos = Enumerable.from(result[0][0]).where(`$.codigo == "${codigoCompetencia}"`).distinct("$.nombre").select(function(instrumento){
+                return{
+                    nombre:instrumento.nombre,
+                    total:instrumento.total,
+                    totalBuenas:instrumento.totalBuenas,
+                    totalMalas:instrumento.totalMalas
+                }
+            }).toArray()
+            competencias[competencia].instrumentos = instrumentos
+        }
+
+
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              competencias: competencias
+          }
+          
+        }
+    
+        response.json(body);
+    }
+
 
     async getResultadosProceso({request,response}){
         const proceso = request.input('proceso');
