@@ -6,7 +6,8 @@ tmp
 
 # Environment variables, never commit this file
 .env
-
+.DS_STORE
+.DS_Store
 # Lock files
 package-lock.json
 yarn.lock
