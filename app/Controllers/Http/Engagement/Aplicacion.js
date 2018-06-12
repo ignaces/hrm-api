@@ -55,7 +55,14 @@ class Aplicacion {
         const query = `call engagement_getRespuestas('${idEncuestaAplicacion}')`;
         
         const result   = await data.execQuery(cliente,query);
+        var cabeceras =Object.keys(result[0][0][0]);
+        var keyClasificaciones = [];
+        for(var i = 12;i<cabeceras.length;i++){
+            keyClasificaciones.push(cabeceras[i]);
+        }
+        
         const registros = Enumerable.from(result[0][0]).distinct("$.identificador").select(function(persona){
+           
            var registro = {
                 identificador:persona.identificador,
                 nombres:persona.nombres,
@@ -64,6 +71,10 @@ class Aplicacion {
                 fechaNacimiento:persona.fechaNacimiento,
                 fechaIngreso:persona.fechaIngreso
                 
+            }
+            
+            for(var i in keyClasificaciones){
+                registro[keyClasificaciones[i]]=persona[keyClasificaciones[i]];
             }
 
             var respuestas = Enumerable.from(result[0][0]).where(`$.identificador == "${persona.identificador}"`).select(function(respuesta){
@@ -109,7 +120,8 @@ class Aplicacion {
 
             var endDate = new Date().getFullYear();
             var startDate = new Date(registros[i].fechaIngreso).getFullYear();
-            registros[i].ANTIGUEDAD = endDate-startDate;
+
+            registros[i].ANTIGUEDAD = endDate - startDate;
 
             
             
@@ -137,6 +149,7 @@ class Aplicacion {
         }
         response.json(registros);
     }
+    
 }
 
 module.exports = Aplicacion
