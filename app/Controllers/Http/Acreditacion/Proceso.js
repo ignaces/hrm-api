@@ -215,8 +215,11 @@ class Proceso {
                 tipoOpinantes[tipoOpinante].personas[persona].instrumentos = instrumentos
             }
         }
-        avance = (finalizados*100)/total;
-        avance = avance.toFixed(2);
+        if(total>0){
+            avance = (finalizados*100)/total;
+            avance = avance.toFixed(2);
+        }
+        
         var body = 
         {
           estado: {
