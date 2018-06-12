@@ -172,8 +172,9 @@ class Proceso {
         }).toArray()
 
         
-        
-        
+        var avance = 0.0;
+        var total =0;
+        var finalizados = 0;
         for(var tipoOpinante in tipoOpinantes){
             var idTipoOpinante = tipoOpinantes[tipoOpinante].idTipoOpinante
             
@@ -193,6 +194,13 @@ class Proceso {
                 var idPersona = personas[persona].id
                 
                 const instrumentos = Enumerable.from(result[0][0]).where(`$.idPersona == "${idPersona}"`).select(function(instrumento){
+                    if(instrumento.codigoEstado=="FINALIZADO"){
+                        finalizados += 1;
+                    }
+                   
+                        total += 1;
+                   
+
                     return{
                         idOpinante:instrumento.idOpinante,
                         idTipoInstrumento:instrumento.idTipoInstrumento,
@@ -207,7 +215,8 @@ class Proceso {
                 tipoOpinantes[tipoOpinante].personas[persona].instrumentos = instrumentos
             }
         }
-
+        avance = (finalizados*100)/total;
+        avance = avance.toFixed(2);
         var body = 
         {
           estado: {
@@ -215,7 +224,7 @@ class Proceso {
             mensaje: ""
           },
           paginacion: result[0][1][0],
-          data: {tipoOpinante: tipoOpinantes}
+          data: {tipoOpinante: tipoOpinantes,avance:avance}
           
         }
         response.json(body);
