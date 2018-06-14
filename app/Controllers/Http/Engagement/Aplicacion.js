@@ -107,7 +107,7 @@ class Aplicacion {
             registros[i].OPPORTUNITIES_FOR_DEVELOPMENT	=  await this.average(registros[i],["oppor1","oppor2","oppor3"]);
             registros[i].WORK_ENGAGEMENT	=  await this.average(registros[i],["WE1","WE2","WE3","WE4","WE5","WE6","WE7","WE8","WE9"]);
             registros[i].SELF_EFFICACY	=  await this.average(registros[i],["SE1","SE2","SE3"]);
-            registros[i].OPTIMISM	=  await this.average(registros[i],["optim1","optim2","optim4"," optim5"]);
+            registros[i].OPTIMISM	=  await this.average(registros[i],["optim1","optim2","optim4","optim5"]);
             registros[i].VIGOR	=  await this.average(registros[i],["WE1","WE2","WE5"]);
             registros[i].ABSORTION	=  await this.average(registros[i],["WE6","WE8","WE9"]);
             registros[i].DEDICATION	=  await this.average(registros[i],["WE3","WE4","WE7"]);
