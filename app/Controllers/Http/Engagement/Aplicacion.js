@@ -119,7 +119,7 @@ class Aplicacion {
             
             registros[i].ABSORTION_BINARY = await this.sumBinaria(registros[i],["ABSORTION"],5);
             registros[i].DEDICATION_BINARY =await this.sumBinaria(registros[i],["DEDICATION"],5);
-            registros[i].ENGAGEMENT_PROPORTION = await this.sumBinaria(registros[i],["VIGOR_BINARY","ABSORTION_BINARY","DEDICATION_BINARY"],5);
+            registros[i].ENGAGEMENT_PROPORTION = await this.sumBinaria(registros[i],["VIGOR_BINARY","ABSORTION_BINARY","DEDICATION_BINARY"],3);
 
             var endDate = new Date().getFullYear();
             var startDate = new Date(registros[i].fechaIngreso).getFullYear();
