@@ -433,10 +433,11 @@ class Talento {
     async organigrama({request,response}){
 
         var procesoOrganigrama = request.input("idProceso");
+        var idPersonaOpinante = request.input("idPersonaOpinante");
         const cliente = request.input('cliente');
         
       
-        const query = `call tale_getPosiciones('${procesoOrganigrama}')`;
+        const query = `call tale_getPosiciones('${procesoOrganigrama}','${idPersonaOpinante}')`;
         
         const result   = await data.execQuery(cliente,query);
         const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function(posicion){
