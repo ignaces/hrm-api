@@ -20,6 +20,34 @@ class Accion {
         
         response.json(acciones);
     }
+    async acciones({request,response}){
+    
+        
+        const idTipo = request.input('idTipo');
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_acciones('${idTipo}')`;
+        
+        const result   = await data.execQuery(cliente,query);
+
+        const acciones = result[0][0];
+        
+        response.json(acciones);
+    }
+    async tipoAccion({request,response}){
+    
+        
+        const idProceso = request.input('idProceso');
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_tipoAccion('${idProceso}')`;
+        
+        const result   = await data.execQuery(cliente,query);
+
+        const acciones = result[0][0];
+        
+        response.json(acciones);
+    }
 
     async getCompetencias({request,response}){
         const idModelo = '8ddf9879-63bb-11e8-8fb3-bc764e100f2b';//request.input("idModelo");
@@ -58,6 +86,9 @@ class Accion {
                 return{
                         id:accion.idAccion,
                         nombre:accion.nombre,
+                        idAccionPredeterminada:accion.idAccionPredeterminada,
+                        idTipoAccion:accion.idTipoAccion,
+                        tipoAccion:accion.tipoAccion,
                         objetivo:accion.objetivo,
                         idCompetencia:accion.idCompetencia,
                         competencia:accion.competencia,
@@ -92,6 +123,9 @@ class Accion {
                 return{
                         id:accion.idAccion,
                         nombre:accion.nombre,
+                        idAccionPredeterminada:accion.idAccionPredeterminada,
+                        idTipoAccion:accion.idTipoAccion,
+                        tipoAccion:accion.tipoAccion,
                         objetivo:accion.objetivo,
                         idCompetencia:accion.idCompetencia,
                         competencia:accion.competencia,
