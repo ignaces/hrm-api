@@ -93,8 +93,8 @@ class Accion {
                         idCompetencia:accion.idCompetencia,
                         competencia:accion.competencia,
                         apoyoGerente:accion.apoyoGerente,
-                        fechaInicio:accion.fechaInicio,
-                        fechaTermino:accion.fechaTermino,
+                        fechaInicio:dateformat(accion.fechaInicio,"yyyy-mm-dd"),
+                        fechaTermino:dateformat(accion.fechaTermino,"yyyy-mm-dd"),
                         indicadores:Enumerable.from(resultPlan[0][0]).where(`$.idAccion=="${accion.idAccion}"`).select(function(indicador){
                             return{
                                 id:indicador.idIndicador,
@@ -130,8 +130,8 @@ class Accion {
                         idCompetencia:accion.idCompetencia,
                         competencia:accion.competencia,
                         apoyoGerente:accion.apoyoGerente,
-                        fechaInicio:accion.fechaInicio,
-                        fechaTermino:accion.fechaTermino,
+                        fechaInicio:dateformat(accion.fechaInicio,"yyyy-mm-dd"),
+                        fechaTermino:dateformat(accion.fechaTermino,"yyyy-mm-dd"),
                         indicadores:Enumerable.from(resultPlan[0][0]).where(`$.idAccion=="${accion.idAccion}"`).select(function(indicador){
                             return{
                                 id:indicador.idIndicador,
@@ -166,6 +166,21 @@ class Accion {
         
         response.json(rAccion);
     }
+    async deleteAccion({request,response}){
+        const idProceso = request.input('idProceso');
+        const accion = request.input('accion').accion;
+
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_deleteAccion('${accion.id}')`;
+        
+        
+        const result   = await data.execQuery(cliente,query);
+
+        
+        
+        response.json({message:"OK"});
+    }
 
     async saveAccion({request,response}){
         const idProceso = request.input('idProceso');
@@ -174,19 +189,19 @@ class Accion {
 
         const cliente = request.input('cliente');
         
-        const query =  `call tale_saveAccion('${idPlan}',0,'${accion.objetivo}','${accion.apoyoGerente}','${accion.idCompetencia}','${accion.idAccionPredeterminada}','${accion.fechaInicio}','${accion.fechaTermino}')`;
+        const query =  `call tale_saveAccion('${accion.id}',0,'${accion.objetivo}','${accion.apoyoGerente}','${accion.idCompetencia}','${accion.idAccionPredeterminada}','${accion.fechaInicio}','${accion.fechaTermino}')`;
         
         
         const result   = await data.execQuery(cliente,query);
 
         const rAccion = result[0][0][0];
 
-        /*var idAccion = rAccion.id;
+        var idAccion = rAccion.id;
         for(var i in accion.indicadores){
             const queryIndicador =  `call tale_addIndicador('${idAccion}','${accion.indicadores[i].texto}')`;
         
             const resultIndicador   = await data.execQuery(cliente,queryIndicador);
-        }*/
+        }
         
         response.json(rAccion);
     }
