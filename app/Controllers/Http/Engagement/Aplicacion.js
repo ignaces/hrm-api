@@ -18,10 +18,13 @@ class Aplicacion {
     }
     async sumBinaria(registro ,variables,limite) {
         var suma = 0.0;
+
         for (var item in variables)
         {
+            
             suma +=registro[variables[item]] *1;
         }
+        
         if (suma >= limite)
         {
             return 1;
@@ -112,11 +115,11 @@ class Aplicacion {
             registros[i].ABSORTION	=  await this.average(registros[i],["WE6","WE8","WE9"]);
             registros[i].DEDICATION	=  await this.average(registros[i],["WE3","WE4","WE7"]);
             
-            registros[i].VIGOR_BINARY = await this.sumBinaria(registros[i],"VIGOR",5);
+            registros[i].VIGOR_BINARY = await this.sumBinaria(registros[i],["VIGOR"],5);
             
-            registros[i].ABSORTION_BINARY = await this.sumBinaria(registros[i],"VIGOR",5);
-            registros[i].DEDICATION_BINARY =await this.sumBinaria(registros[i],"ABSORTION",5);
-            registros[i].ENGAGEMENT_PROPORTION = await this.sumBinaria(registros[i],"DEDICATION",5);
+            registros[i].ABSORTION_BINARY = await this.sumBinaria(registros[i],["ABSORTION"],5);
+            registros[i].DEDICATION_BINARY =await this.sumBinaria(registros[i],["DEDICATION"],5);
+            registros[i].ENGAGEMENT_PROPORTION = await this.sumBinaria(registros[i],["VIGOR_BINARY","ABSORTION_BINARY","DEDICATION_BINARY"],5);
 
             var endDate = new Date().getFullYear();
             var startDate = new Date(registros[i].fechaIngreso).getFullYear();
