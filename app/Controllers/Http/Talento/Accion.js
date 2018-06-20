@@ -166,5 +166,29 @@ class Accion {
         
         response.json(rAccion);
     }
+
+    async saveAccion({request,response}){
+        const idProceso = request.input('idProceso');
+        const idPlan = request.input('idPlan');
+        const accion = request.input('accion').accion;
+
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_saveAccion('${idPlan}',0,'${accion.objetivo}','${accion.apoyoGerente}','${accion.idCompetencia}','${accion.idAccionPredeterminada}','${accion.fechaInicio}','${accion.fechaTermino}')`;
+        
+        
+        const result   = await data.execQuery(cliente,query);
+
+        const rAccion = result[0][0][0];
+
+        /*var idAccion = rAccion.id;
+        for(var i in accion.indicadores){
+            const queryIndicador =  `call tale_addIndicador('${idAccion}','${accion.indicadores[i].texto}')`;
+        
+            const resultIndicador   = await data.execQuery(cliente,queryIndicador);
+        }*/
+        
+        response.json(rAccion);
+    }
 }
 module.exports =Accion;
