@@ -405,15 +405,6 @@ class Talento {
         var nombres = request.input("nombres");
         var paterno = request.input("paterno");
         var materno = request.input("materno");
-        var sClasificaciones = "";
-        for(var i in clasificaciones){
-            if(i<clasificaciones.length-1){
-                sClasificaciones = sClasificaciones + "'"+clasificaciones[i]+"',"
-            }else{
-                sClasificaciones = sClasificaciones + "'"+clasificaciones[i]+"',"
-            }
-            
-        }
         
         const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}')`;
         
