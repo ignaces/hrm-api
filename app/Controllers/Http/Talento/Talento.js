@@ -396,16 +396,26 @@ class Talento {
         
         var idOpinante = request.input("idOpinante");
         var idTalentoProceso = request.input("idTalentoProceso");
-        var nombreFiltro = request.input("nombreFiltro");
+        var clasificaciones = request.input("clasificaciones");
         const cliente = request.input('cliente');
-        var cargosFiltro = request.input("cargosFiltro");
+        var cargos = request.input("cargos");
+        var tr = request.input("tr");
 
-        var rut = request.input("rut");
+        var identificador = request.input("identificador");
         var nombres = request.input("nombres");
         var paterno = request.input("paterno");
         var materno = request.input("materno");
-
-        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${nombreFiltro}','${cargosFiltro}','${rut}','${nombres}','${paterno}','${materno}')`;
+        var sClasificaciones = "";
+        for(var i in clasificaciones){
+            if(i<clasificaciones.length-1){
+                sClasificaciones = sClasificaciones + "'"+clasificaciones[i]+"',"
+            }else{
+                sClasificaciones = sClasificaciones + "'"+clasificaciones[i]+"',"
+            }
+            
+        }
+        
+        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}')`;
         
         const result   = await data.execQuery(cliente,query);
         
