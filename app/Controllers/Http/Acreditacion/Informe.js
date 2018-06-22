@@ -64,9 +64,11 @@ class Informe {
         
         var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(competencia){
             return{
-                nombre:competencia.nombre,
+                nombre:competencia.nombreCompetencia,
                 codigo:competencia.codigo,
-                valor:competencia.valor
+                valor:competencia.valor,
+                logro:competencia.logro,
+                brecha:competencia.brecha
             }
         }).toArray()
     
@@ -80,7 +82,9 @@ class Informe {
                     nombre:instrumento.nombre,
                     total:instrumento.total,
                     totalBuenas:instrumento.totalBuenas,
-                    totalMalas:instrumento.totalMalas
+                    totalMalas:instrumento.totalMalas,
+                    logro:instrumento.instrumentoLogro,
+                    brecha:instrumento.instrumentoBrecha
                 }
             }).toArray()
             competencias[competencia].instrumentos = instrumentos
