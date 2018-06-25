@@ -56,6 +56,7 @@ class Persona {
             pais:posicion.pais,
             nombreNacionalidad:posicion.nombreNacionalidad,
             iconoPais:posicion.iconoPais,
+            jefeDirecto:"Vacante",
             fechaNacimiento: dateformat(posicion.fechaNacimiento,'dd-mm-yyyy'),
             atributos:Enumerable.from(result[0][0]).where(`$.idPosicion == "${posicion.idPosicion}"`).select(function(atributo){
                 return {
@@ -94,6 +95,7 @@ class Persona {
                 nivel:posicion.nivel,
                 idPadre:posicion.idPadre,
                 idPersona:posicion.idPersona,
+                idProcesoPersona:posicion.idProcesoPersona,
                 nombresPersona:posicion.nombresPersona,
                 apellidoPaterno:posicion.apellidoPaterno,
                 apellidoMaterno:posicion.apellidoMaterno,
@@ -116,7 +118,6 @@ class Persona {
 
             }
         }).toArray()
-        
         response.json(posiciones);
     }
 }
