@@ -1,9 +1,8 @@
 'use strict'
-const Database = use('Database')
-const got = use('got')
+
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
-const permisos = use('App/Controllers/Http/Core/Permisos')
+const dateformat = require('dateformat');
 
 class Talento {
 
@@ -31,7 +30,17 @@ class Talento {
         
     }
 
-    
+    async removeFromArray(arr) {
+        var what, a = arguments, L = a.length, ax;
+        while (L > 1 && arr.length) {
+            what = a[--L];
+            while ((ax= arr.indexOf(what)) !== -1) {
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    }
+
     async getPersonaTalentos({request,response}){
 
         //var idProceso = request.input("idProceso");
@@ -99,6 +108,11 @@ class Talento {
             apellidoMaterno:usp[0][0][0].apellidoMaterno,
             email:usp[0][0][0].email,
             cargo:usp[0][0][0].cargo,
+            imageUser:usp[0][0][0].imageUser,
+            nombreNacionalidad:usp[0][0][0].nacionalidad,
+            iconoPais:usp[0][0][0].iconoPais,
+            fechaNacimiento:dateformat(usp[0][0][0].fechaNacimiento,"dd-mm-yyyy"),
+            jefeDirecto:'Vacante'
             //clasificaciones:Clasificaciones.toArray()      
         };
         
@@ -405,16 +419,7 @@ class Talento {
         var nombres = request.input("nombres");
         var paterno = request.input("paterno");
         var materno = request.input("materno");
-        var sClasificaciones = "";
-        for(var i in clasificaciones){
-            if(i<clasificaciones.length-1){
-                sClasificaciones = sClasificaciones + "'"+clasificaciones[i]+"',"
-            }else{
-                sClasificaciones = sClasificaciones + "'"+clasificaciones[i]+"',"
-            }
-            
-        }
-        
+        clasificaciones = await this.removeFromArray(clasificaciones,'-1');
         const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}')`;
         
         const result   = await data.execQuery(cliente,query);
@@ -451,6 +456,7 @@ class Talento {
         
         const result   = await data.execQuery(cliente,query);
         const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function(posicion){
+         
             return{
                 idPosicion:posicion.idPosicion,
                 nombre:posicion.nombre,
@@ -477,12 +483,56 @@ class Talento {
                         iconoAtributo:atributo.iconoAtributo,
                         tooltipAtributo:atributo.tooltipAtributo,
                     }
-                }).toArray()
-
+                }).toArray(),
+                nombreSucesor:posicion.sucesorNombres,
+                apSucesor:posicion.sucesorApellidoPaterno,
+                amSucesor:posicion.sucesorApellidoMaterno,
+                fotoSucesor:posicion.fotoSucesor,
+                colorSucesor:"lightteal"
+/**
+ * fotoSucesor,
+  TalentoColorSucesor.colorPosicion as colorSucesor,
+  TalentoColorSucesor.nombreCuadrante as cuadranteSucesor,
+  TalentoColorSucesor.valor as valorTrSucesor,
+  resultadoSucesor.valor as eddSucesor,
+  atributoSucesor.nombre as nombreAtributoSucesor,
+atributoSucesor.color as colorAtributoSucesor,
+atributoSucesor.icono as iconoAtributoSucesor,
+atributoSucesor.tooltip as tooltipAtributoSucesor,
+eqSucesor.idTalentoCuadrante as idCuadranteEqSucesor,
+eqSucesor.valorEde as valorEdeSucesor,
+ */
             }
         }).toArray()
         
-        response.json(posiciones);
+        var posicionesSalida = posiciones;
+        for(var i in posiciones){
+            if(posiciones[i].nombreSucesor!=null){
+                posicionesSalida.push({
+                    idPosicion:"ss",
+                    nombre:'Sucesor',
+                    codigo:posiciones[i].codigo,
+                    critico:0,
+                    nivel:posiciones[i].nivel,
+                    idSucede:posiciones[i].idPosicion,
+                    idPersona:posiciones[i].idPersona,
+                    nombresPersona:posiciones[i].nombreSucesor,
+                    apellidoPaterno:posiciones[i].apSucesor,
+                    apellidoMaterno:posiciones[i].amSucesor,
+                    fotoPersona:posiciones[i].fotoSucesor,
+                    colorPosicion:posiciones[i].colorSucesor,
+                    nombreCuadrante:posiciones[i].nombreCuadrante,
+                    valor:posiciones[i].valor,
+                    edd:posiciones[i].edd,
+                    idCuadranteEq:posiciones[i].idCuadranteEq,
+                    valorEdeEq:posiciones[i].valorEdeEq,
+                    idCuadrante:posiciones[i].idCuadrante,
+                    atributos:[]
+                });
+            }
+        }
+
+        response.json(posicionesSalida);
         
      
     }

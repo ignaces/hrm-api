@@ -1,10 +1,9 @@
 'use strict'
-const Database = use('Database')
-const got = use('got')
+
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
-const permisos = use('App/Controllers/Http/Core/Permisos')
 const dateformat = require('dateformat');
+
 class Accion {
     async getAccionesPredefinidas({request,response}){
     
