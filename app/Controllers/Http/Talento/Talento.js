@@ -531,7 +531,7 @@ eqSucesor.valorEde as valorEdeSucesor,
                 });
             }
         }
-console.log(posicionesSalida)
+
         response.json(posicionesSalida);
         
      
