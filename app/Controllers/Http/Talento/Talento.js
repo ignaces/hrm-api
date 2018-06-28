@@ -196,18 +196,7 @@ class Talento {
         
         //console.log(clasificacionTale);
         response.json(clasificacionTale);
-        /*
-        //var idProceso = request.input("idProceso");
-        var idOpinante = request.input("idOpinante");
-        var idTalentoProceso = request.input("idTalentoProceso");
-        const cliente = request.input('cliente');
-
-        const query = `call tale_colaboradoresSinCuadrante('${idOpinante}','${idTalentoProceso}')`;
-        const result   = await data.execQuery(cliente,query);
-        
-        response.json(result[0][0]);
-        */
-        //console.log(result[0][0]);
+   
     }
 
 
@@ -231,17 +220,7 @@ class Talento {
 
     async colaboradoresEvaluados({request,response}){
 
-        /*
-        var idOpinante = request.input("idOpinante");
-        var idTalentoProceso = request.input("idTalentoProceso");
-        const cliente = request.input('cliente');
-
-        const query = `call tale_colaboradoresEvaluados('${idOpinante}','${idTalentoProceso}')`;
-        const result = await data.execQuery(cliente,query);
-        
-        
-        response.json(result[0][0]);
-        */
+       
 
         var idOpinante = request.input("idOpinante");
         var idTalentoProceso = request.input("idTalentoProceso");
@@ -251,7 +230,7 @@ class Talento {
         
         const result = await data.execQuery(cliente,query);
         var clasificacionTale = [];
-        //.distinct("$.idPadre")
+        
        const clasificaciones = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(clasificacion){
            return{
                idPersona:clasificacion.idPersona,
@@ -393,16 +372,7 @@ class Talento {
         //console.log(clasificacionTale);
         response.json(clasificacionTale);
         
-        /*
-        var json = [];
-        var primerArreglo = result[0][0][0].hijo;
-        var modificado1 = primerArreglo.split(",");
-        for (var i = 0; i < modificado1.length; i++) {
-            json.push({"Hijo":modificado1[i]});
-        }
-        console.log(json);
-        */
-        //response.json(result[0][0]);
+       
     }
 
     async filtrarColaboradoresSinClasificar({request,response}){
@@ -493,8 +463,30 @@ class Talento {
             }
         }).toArray()
         
-        var posicionesSalida = posiciones;
+        var posicionesSalida = [];
         for(var i in posiciones){
+
+            posicionesSalida.push({
+                idPosicion:posiciones[i].idPosicion,
+                nombre:posiciones[i].nombre,
+                codigo:posiciones[i].codigo,
+                critico:posiciones[i].critico,
+                nivel:posiciones[i].nivel,
+                idPersona:posiciones[i].idPersona,
+                idPadre:posiciones[i].idPadre,
+                nombresPersona:posiciones[i].nombresPersona,
+                apellidoPaterno:posiciones[i].apellidoPaterno,
+                apellidoMaterno:posiciones[i].apellidoMaterno,
+                fotoPersona:posiciones[i].fotoPersona,
+                colorPosicion:posiciones[i].colorPosicion,
+                nombreCuadrante:posiciones[i].nombreCuadrante,
+                valor:posiciones[i].valor,
+                edd:posiciones[i].edd,
+                idCuadranteEq:posiciones[i].idCuadranteEq,
+                valorEdeEq:posiciones[i].valorEdeEq,
+                idCuadrante:posiciones[i].idCuadrante,
+                atributos:posiciones[i].atributos,
+            });
             if(posiciones[i].nombreSucesor!=null){
                 posicionesSalida.push({
                     idPosicion:`S_${posiciones[i].idPosicion}`,
@@ -520,7 +512,7 @@ class Talento {
                 });
             }
         }
-
+        
         response.json(posicionesSalida);
         
      
