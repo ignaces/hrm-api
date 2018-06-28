@@ -489,19 +489,7 @@ class Talento {
                 amSucesor:posicion.sucesorApellidoMaterno,
                 fotoSucesor:posicion.fotoSucesor,
                 colorSucesor:"lightteal"
-/**
- * fotoSucesor,
-  TalentoColorSucesor.colorPosicion as colorSucesor,
-  TalentoColorSucesor.nombreCuadrante as cuadranteSucesor,
-  TalentoColorSucesor.valor as valorTrSucesor,
-  resultadoSucesor.valor as eddSucesor,
-  atributoSucesor.nombre as nombreAtributoSucesor,
-atributoSucesor.color as colorAtributoSucesor,
-atributoSucesor.icono as iconoAtributoSucesor,
-atributoSucesor.tooltip as tooltipAtributoSucesor,
-eqSucesor.idTalentoCuadrante as idCuadranteEqSucesor,
-eqSucesor.valorEde as valorEdeSucesor,
- */
+
             }
         }).toArray()
         
@@ -509,13 +497,14 @@ eqSucesor.valorEde as valorEdeSucesor,
         for(var i in posiciones){
             if(posiciones[i].nombreSucesor!=null){
                 posicionesSalida.push({
-                    idPosicion:"ss",
+                    idPosicion:`S_${posiciones[i].idPosicion}`,
                     nombre:'Sucesor',
                     codigo:posiciones[i].codigo,
                     critico:0,
                     nivel:posiciones[i].nivel,
                     idSucede:posiciones[i].idPosicion,
                     idPersona:posiciones[i].idPersona,
+                    idPadre:posiciones[i].idPadre,
                     nombresPersona:posiciones[i].nombreSucesor,
                     apellidoPaterno:posiciones[i].apSucesor,
                     apellidoMaterno:posiciones[i].amSucesor,
