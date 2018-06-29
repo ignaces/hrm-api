@@ -284,7 +284,7 @@ class Informe {
                     const alternativas = Enumerable.from(result[0][0]).where(`$.criterio == "${nombreCriterio}"`).select(function(alternativa){
                         return{
                             nivel:alternativa.nivel,
-                            estaSeleccionada:alternativa.estaSeleccionada,
+                            estaSeleccionada:alternativa.estaSeleccionado,
                             justificacion:alternativa.justificacion
                             
                         }
