@@ -231,7 +231,7 @@ class Informe {
         var instrumento = [];
         const cliente =request.input('cliente');
         
-        const query =`call acre_getResultadoDetalleSOT('',${procesoPersona}')`;
+        const query =`call acre_getResultadoDetalleSOT('',${procesoPersona})`;
         const result   = await data.execQuery(cliente,query);
 
 
