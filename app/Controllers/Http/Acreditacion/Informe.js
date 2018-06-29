@@ -269,7 +269,7 @@ class Informe {
                 {
                     var nombrePregunta = preguntas[pregunta].actividadClave
 
-                    const criterios = Enumerable.from(result[0][0]).where(`$.actividadClave == "${nombrePregunta}"`).distinct("$.criterio").select(function(criterio){
+                    const criterios = Enumerable.from(result[0][0]).where(`$.actividadClave == "${nombrePregunta}" &&  $.competencia == "${nombreCompetencia}"`).distinct("$.criterio").select(function(criterio){
                         return{
                             criterio:criterio.criterio,
                             
