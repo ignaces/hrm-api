@@ -104,6 +104,49 @@ class Accion {
     }
 
     // ---<< CONFIRMACION ACCION
+
+    // --->> TAREAR ACCION PROCESO PERSONA
+
+    async addTareaAccionProcesoPersona({request,response}){
+      
+        var idProcesoPersona= request.input('idProcesoPersona');
+        var idEtapaTareaProcesoPersona= request.input('idEtapaTareaProcesoPersona');
+        var idEdeEtapaTareaAccion= request.input('idEdeEtapaTareaAccion');
+        var idAccionEstado= request.input('idAccionEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_addEtapaTareaAccionProcesoPersona('${idProcesoPersona}','${idEtapaTareaProcesoPersona}','${idEdeEtapaTareaAccion}','${idAccionEstado}')`;
+            const respuesta   = await data.execQuery(cliente,query);
+            response.json({mensaje:"OK"});
+           }
+           catch(err)
+           { 
+            response.json({mensaje:err});
+          }
+    }
+
+    async updTareaAccionProcesoPersona({request,response}){
+      
+        var idEtapaTareaAccionProcesoPersona= request.input('idEtapaTareaAccionProcesoPersona');
+        var idProcesoPersona= request.input('idProcesoPersona');
+        var idEtapaTareaProcesoPersona= request.input('idEtapaTareaProcesoPersona');
+        var idEdeEtapaTareaAccion= request.input('idEdeEtapaTareaAccion');
+        var idAccionEstado= request.input('idAccionEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_updEtapaTareaAccionProcesoPersona('${idEtapaTareaAccionProcesoPersona}','${idProcesoPersona}','${idEtapaTareaProcesoPersona}','${idEdeEtapaTareaAccion}','${idAccionEstado}')`;
+            const respuesta   = await data.execQuery(cliente,query);
+            response.json({mensaje:"OK"});
+           }
+           catch(err)
+           { 
+            response.json({mensaje:err});
+          }
+    }
+
+    // ---<< TAREAR ACCION PROCESO PERSONA
+
+
 }
 
 module.exports=Accion
