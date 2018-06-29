@@ -18,10 +18,13 @@ class Aplicacion {
     }
     async sumBinaria(registro ,variables,limite) {
         var suma = 0.0;
+
         for (var item in variables)
         {
+            
             suma +=registro[variables[item]] *1;
         }
+        
         if (suma >= limite)
         {
             return 1;
@@ -55,7 +58,14 @@ class Aplicacion {
         const query = `call engagement_getRespuestas('${idEncuestaAplicacion}')`;
         
         const result   = await data.execQuery(cliente,query);
+        var cabeceras =Object.keys(result[0][0][0]);
+        var keyClasificaciones = [];
+        for(var i = 12;i<cabeceras.length;i++){
+            keyClasificaciones.push(cabeceras[i]);
+        }
+        
         const registros = Enumerable.from(result[0][0]).distinct("$.identificador").select(function(persona){
+           
            var registro = {
                 identificador:persona.identificador,
                 nombres:persona.nombres,
@@ -64,6 +74,10 @@ class Aplicacion {
                 fechaNacimiento:persona.fechaNacimiento,
                 fechaIngreso:persona.fechaIngreso
                 
+            }
+            
+            for(var i in keyClasificaciones){
+                registro[keyClasificaciones[i]]=persona[keyClasificaciones[i]];
             }
 
             var respuestas = Enumerable.from(result[0][0]).where(`$.identificador == "${persona.identificador}"`).select(function(respuesta){
@@ -96,20 +110,21 @@ class Aplicacion {
             registros[i].OPPORTUNITIES_FOR_DEVELOPMENT	=  await this.average(registros[i],["oppor1","oppor2","oppor3"]);
             registros[i].WORK_ENGAGEMENT	=  await this.average(registros[i],["WE1","WE2","WE3","WE4","WE5","WE6","WE7","WE8","WE9"]);
             registros[i].SELF_EFFICACY	=  await this.average(registros[i],["SE1","SE2","SE3"]);
-            registros[i].OPTIMISM	=  await this.average(registros[i],["optim1","optim2","optim4"," optim5"]);
+            registros[i].OPTIMISM	=  await this.average(registros[i],["optim1","optim2","optim4","optim5"]);
             registros[i].VIGOR	=  await this.average(registros[i],["WE1","WE2","WE5"]);
             registros[i].ABSORTION	=  await this.average(registros[i],["WE6","WE8","WE9"]);
             registros[i].DEDICATION	=  await this.average(registros[i],["WE3","WE4","WE7"]);
             
-            registros[i].VIGOR_BINARY = await this.sumBinaria(registros[i],"VIGOR",5);
+            registros[i].VIGOR_BINARY = await this.sumBinaria(registros[i],["VIGOR"],5);
             
-            registros[i].ABSORTION_BINARY = await this.sumBinaria(registros[i],"VIGOR",5);
-            registros[i].DEDICATION_BINARY =await this.sumBinaria(registros[i],"ABSORTION",5);
-            registros[i].ENGAGEMENT_PROPORTION = await this.sumBinaria(registros[i],"DEDICATION",5);
+            registros[i].ABSORTION_BINARY = await this.sumBinaria(registros[i],["ABSORTION"],5);
+            registros[i].DEDICATION_BINARY =await this.sumBinaria(registros[i],["DEDICATION"],5);
+            registros[i].ENGAGEMENT_PROPORTION = await this.sumBinaria(registros[i],["VIGOR_BINARY","ABSORTION_BINARY","DEDICATION_BINARY"],3);
 
             var endDate = new Date().getFullYear();
             var startDate = new Date(registros[i].fechaIngreso).getFullYear();
-            registros[i].ANTIGUEDAD = endDate-startDate;
+
+            registros[i].ANTIGUEDAD = endDate - startDate;
 
             
             
@@ -137,6 +152,7 @@ class Aplicacion {
         }
         response.json(registros);
     }
+    
 }
 
 module.exports = Aplicacion

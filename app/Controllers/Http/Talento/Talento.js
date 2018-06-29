@@ -1,9 +1,8 @@
 'use strict'
-const Database = use('Database')
-const got = use('got')
+
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
-const permisos = use('App/Controllers/Http/Core/Permisos')
+const dateformat = require('dateformat');
 
 class Talento {
 
@@ -31,7 +30,17 @@ class Talento {
         
     }
 
-    
+    async removeFromArray(arr) {
+        var what, a = arguments, L = a.length, ax;
+        while (L > 1 && arr.length) {
+            what = a[--L];
+            while ((ax= arr.indexOf(what)) !== -1) {
+                arr.splice(ax, 1);
+            }
+        }
+        return arr;
+    }
+
     async getPersonaTalentos({request,response}){
 
         //var idProceso = request.input("idProceso");
@@ -99,6 +108,11 @@ class Talento {
             apellidoMaterno:usp[0][0][0].apellidoMaterno,
             email:usp[0][0][0].email,
             cargo:usp[0][0][0].cargo,
+            imageUser:usp[0][0][0].imageUser,
+            nombreNacionalidad:usp[0][0][0].nacionalidad,
+            iconoPais:usp[0][0][0].iconoPais,
+            fechaNacimiento:dateformat(usp[0][0][0].fechaNacimiento,"dd-mm-yyyy"),
+            jefeDirecto:'Vacante'
             //clasificaciones:Clasificaciones.toArray()      
         };
         
@@ -182,18 +196,7 @@ class Talento {
         
         //console.log(clasificacionTale);
         response.json(clasificacionTale);
-        /*
-        //var idProceso = request.input("idProceso");
-        var idOpinante = request.input("idOpinante");
-        var idTalentoProceso = request.input("idTalentoProceso");
-        const cliente = request.input('cliente');
-
-        const query = `call tale_colaboradoresSinCuadrante('${idOpinante}','${idTalentoProceso}')`;
-        const result   = await data.execQuery(cliente,query);
-        
-        response.json(result[0][0]);
-        */
-        //console.log(result[0][0]);
+   
     }
 
 
@@ -217,17 +220,7 @@ class Talento {
 
     async colaboradoresEvaluados({request,response}){
 
-        /*
-        var idOpinante = request.input("idOpinante");
-        var idTalentoProceso = request.input("idTalentoProceso");
-        const cliente = request.input('cliente');
-
-        const query = `call tale_colaboradoresEvaluados('${idOpinante}','${idTalentoProceso}')`;
-        const result = await data.execQuery(cliente,query);
-        
-        
-        response.json(result[0][0]);
-        */
+       
 
         var idOpinante = request.input("idOpinante");
         var idTalentoProceso = request.input("idTalentoProceso");
@@ -237,7 +230,7 @@ class Talento {
         
         const result = await data.execQuery(cliente,query);
         var clasificacionTale = [];
-        //.distinct("$.idPadre")
+        
        const clasificaciones = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(clasificacion){
            return{
                idPersona:clasificacion.idPersona,
@@ -379,16 +372,7 @@ class Talento {
         //console.log(clasificacionTale);
         response.json(clasificacionTale);
         
-        /*
-        var json = [];
-        var primerArreglo = result[0][0][0].hijo;
-        var modificado1 = primerArreglo.split(",");
-        for (var i = 0; i < modificado1.length; i++) {
-            json.push({"Hijo":modificado1[i]});
-        }
-        console.log(json);
-        */
-        //response.json(result[0][0]);
+       
     }
 
     async filtrarColaboradoresSinClasificar({request,response}){
@@ -396,16 +380,17 @@ class Talento {
         
         var idOpinante = request.input("idOpinante");
         var idTalentoProceso = request.input("idTalentoProceso");
-        var nombreFiltro = request.input("nombreFiltro");
+        var clasificaciones = request.input("clasificaciones");
         const cliente = request.input('cliente');
-        var cargosFiltro = request.input("cargosFiltro");
+        var cargos = request.input("cargos");
+        var tr = request.input("tr");
 
-        var rut = request.input("rut");
+        var identificador = request.input("identificador");
         var nombres = request.input("nombres");
         var paterno = request.input("paterno");
         var materno = request.input("materno");
-
-        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${nombreFiltro}','${cargosFiltro}','${rut}','${nombres}','${paterno}','${materno}')`;
+        clasificaciones = await this.removeFromArray(clasificaciones,'-1');
+        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}')`;
         
         const result   = await data.execQuery(cliente,query);
         
@@ -433,13 +418,15 @@ class Talento {
     async organigrama({request,response}){
 
         var procesoOrganigrama = request.input("idProceso");
+        var idPersonaOpinante = request.input("idPersonaOpinante");
         const cliente = request.input('cliente');
         
       
-        const query = `call tale_getPosiciones('${procesoOrganigrama}')`;
+        const query = `call tale_getPosiciones('${procesoOrganigrama}','${idPersonaOpinante}')`;
         
         const result   = await data.execQuery(cliente,query);
         const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function(posicion){
+         
             return{
                 idPosicion:posicion.idPosicion,
                 nombre:posicion.nombre,
@@ -466,12 +453,67 @@ class Talento {
                         iconoAtributo:atributo.iconoAtributo,
                         tooltipAtributo:atributo.tooltipAtributo,
                     }
-                }).toArray()
+                }).toArray(),
+                nombreSucesor:posicion.sucesorNombres,
+                apSucesor:posicion.sucesorApellidoPaterno,
+                amSucesor:posicion.sucesorApellidoMaterno,
+                fotoSucesor:posicion.fotoSucesor,
+                colorSucesor:"lightteal"
 
             }
         }).toArray()
         
-        response.json(posiciones);
+        var posicionesSalida = [];
+        for(var i in posiciones){
+
+            posicionesSalida.push({
+                idPosicion:posiciones[i].idPosicion,
+                nombre:posiciones[i].nombre,
+                codigo:posiciones[i].codigo,
+                critico:posiciones[i].critico,
+                nivel:posiciones[i].nivel,
+                idPersona:posiciones[i].idPersona,
+                idPadre:posiciones[i].idPadre,
+                nombresPersona:posiciones[i].nombresPersona,
+                apellidoPaterno:posiciones[i].apellidoPaterno,
+                apellidoMaterno:posiciones[i].apellidoMaterno,
+                fotoPersona:posiciones[i].fotoPersona,
+                colorPosicion:posiciones[i].colorPosicion,
+                nombreCuadrante:posiciones[i].nombreCuadrante,
+                valor:posiciones[i].valor,
+                edd:posiciones[i].edd,
+                idCuadranteEq:posiciones[i].idCuadranteEq,
+                valorEdeEq:posiciones[i].valorEdeEq,
+                idCuadrante:posiciones[i].idCuadrante,
+                atributos:posiciones[i].atributos,
+            });
+            if(posiciones[i].nombreSucesor!=null){
+                posicionesSalida.push({
+                    idPosicion:`S_${posiciones[i].idPosicion}`,
+                    nombre:'Sucesor',
+                    codigo:posiciones[i].codigo,
+                    critico:0,
+                    nivel:posiciones[i].nivel,
+                    idSucede:posiciones[i].idPosicion,
+                    idPersona:posiciones[i].idPersona,
+                    idPadre:posiciones[i].idPadre,
+                    nombresPersona:posiciones[i].nombreSucesor,
+                    apellidoPaterno:posiciones[i].apSucesor,
+                    apellidoMaterno:posiciones[i].amSucesor,
+                    fotoPersona:posiciones[i].fotoSucesor,
+                    colorPosicion:posiciones[i].colorSucesor,
+                    nombreCuadrante:posiciones[i].nombreCuadrante,
+                    valor:posiciones[i].valor,
+                    edd:posiciones[i].edd,
+                    idCuadranteEq:posiciones[i].idCuadranteEq,
+                    valorEdeEq:posiciones[i].valorEdeEq,
+                    idCuadrante:posiciones[i].idCuadrante,
+                    atributos:[]
+                });
+            }
+        }
+        
+        response.json(posicionesSalida);
         
      
     }

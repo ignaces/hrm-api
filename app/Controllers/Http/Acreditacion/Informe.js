@@ -64,9 +64,11 @@ class Informe {
         
         var competencias = Enumerable.from(result[0][0]).distinct("$.codigo").select(function(competencia){
             return{
-                nombre:competencia.nombre,
+                nombre:competencia.nombreCompetencia,
                 codigo:competencia.codigo,
-                valor:competencia.valor
+                valor:competencia.valor,
+                logro:competencia.logro,
+                brecha:competencia.brecha
             }
         }).toArray()
     
@@ -80,7 +82,9 @@ class Informe {
                     nombre:instrumento.nombre,
                     total:instrumento.total,
                     totalBuenas:instrumento.totalBuenas,
-                    totalMalas:instrumento.totalMalas
+                    totalMalas:instrumento.totalMalas,
+                    logro:instrumento.instrumentoLogro,
+                    brecha:instrumento.instrumentoBrecha
                 }
             }).toArray()
             competencias[competencia].instrumentos = instrumentos
@@ -153,7 +157,7 @@ class Informe {
     async getInstrumentosTCO({request,response}){
         var procesoPersona = request.input("procesoPersona");
         var instrumento = [];
-        const cliente =request.input('cliente') ;
+        const cliente =request.input('cliente');
         
         const query =`call acre_getInformeEvaluacionesTCO('${procesoPersona}')`;
         const result   = await data.execQuery(cliente,query);
@@ -200,6 +204,96 @@ class Informe {
                     }
                 }).toArray()
                 instrumentos[instrumento].preguntas[pregunta].alternativas = alternativas
+            }
+
+        }
+
+
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              instrumento: instrumentos
+          }
+          
+        }
+    
+        response.json(body);
+    }
+
+
+    async getResultadoDetalleSOT({request,response}){
+        var procesoPersona = request.input("procesoPersona");
+        var instrumento = [];
+        const cliente =request.input('cliente');
+        
+        const query =`call acre_getResultadoDetalleSOT('','${procesoPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+
+
+
+        const instrumentos = Enumerable.from(result[0][0]).distinct("$.idOpinante").select(function(instrumento){
+            return{
+                id:instrumento.idOpinante
+            }
+        }).toArray()
+    
+
+        
+        for(var instrumento in instrumentos){
+            var idOpinante = instrumentos[instrumento].id
+            
+            const competencias = Enumerable.from(result[0][0]).where(`$.idOpinante == "${idOpinante}"`).distinct("$.competencia").select(function(competencia){
+                return{                    
+                    competencia:competencia.competencia                    
+                }
+            }).toArray()
+            instrumentos[instrumento].competencias = competencias
+
+            for(var competencia in competencias)
+            {
+                var nombreCompetencia = competencias[competencia].competencia
+
+                const preguntas = Enumerable.from(result[0][0]).where(`$.competencia == "${nombreCompetencia}"`).distinct("$.actividadClave").select(function(actividadClave){
+                    return{
+                        actividadClave:actividadClave.actividadClave
+                    }
+                }).toArray()
+                instrumentos[instrumento].competencias[competencia].preguntas = preguntas
+
+                for(var pregunta in preguntas)
+                {
+                    var nombrePregunta = preguntas[pregunta].actividadClave
+
+                    const criterios = Enumerable.from(result[0][0]).where(`$.actividadClave == "${nombrePregunta}"`).where(`$.competencia == "${nombreCompetencia}" `).distinct("$.criterio").select(function(criterio){
+                        return{
+                            criterio:criterio.criterio,
+                            
+                        }
+                    }).toArray()
+                    instrumentos[instrumento].competencias[competencia].preguntas[pregunta].criterios = criterios
+
+                    for(var criterio in criterios)
+                {
+                    var nombreCriterio = criterios[criterio].criterio
+
+                    const alternativas = Enumerable.from(result[0][0]).where(`$.criterio == "${nombreCriterio}"`).select(function(alternativa){
+                        return{
+                            nivel:alternativa.nivel,
+                            estaSeleccionada:alternativa.estaSeleccionado,
+                            justificacion:alternativa.justificacion
+                            
+                        }
+                    }).toArray()
+                    instrumentos[instrumento].competencias[competencia].preguntas[pregunta].criterios[criterio].alternativas = alternativas
+
+                    
+                }
+                }
             }
 
         }
