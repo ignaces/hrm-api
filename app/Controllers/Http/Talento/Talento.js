@@ -141,6 +141,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_colaboradoresSinCuadranteCla('${idOpinante}','${idTalentoProceso}')`;
+        
         const result   = await data.execQuery(cliente,query);
         
         var clasificacionTale = [];
@@ -282,7 +283,7 @@ class Talento {
             clasificacionTale.clasificaciones[clasificacion].atributos = atributos
        }
        
-       
+       console.log(clasificacionTale)
        response.json(clasificacionTale);
  
 

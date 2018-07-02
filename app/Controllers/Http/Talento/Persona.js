@@ -6,6 +6,7 @@ const data = use('App/Utils/Data')
 const permisos = use('App/Controllers/Http/Core/Permisos')
 const dateformat = require('dateformat');
 class Persona {
+    
     async getPersona({request,response}){
     
         var idPersona = request.input('idPersona');
@@ -71,6 +72,24 @@ class Persona {
     }).toArray()
   
     response.json(persona);
+    }
+    async getClasificaciones({request,response}){
+    
+        var idPersona = request.input('idPersona');
+        var idProceso = request.input('idProceso');
+        var identificador = "";
+        
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_getPersonaClasificaciones('${idProceso}','${idPersona}')`;
+        
+        
+        const result   = await data.execQuery(cliente,query);
+       
+        
+     
+        
+        response.json(result[0][0]);
     }
 
     async getPosiblesSucesores({request,response}){
