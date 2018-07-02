@@ -91,6 +91,45 @@ class Persona {
         
         response.json(result[0][0]);
     }
+    async getResultados({request,response}){
+    
+        var idPersona = request.input('idPersona');
+        
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_getPersonaResultados('${idPersona}')`;
+        
+        
+        const result   = await data.execQuery(cliente,query);
+       
+        const clima = Enumerable.from(result[0][0]).where(`$.codigo == "CLIMA"`).select(function(resultado){
+            return{
+                year:resultado.year,
+                value:resultado.valor
+            }
+        }).toArray()
+
+        const edd = Enumerable.from(result[0][0]).where(`$.codigo == "EDE"`).select(function(resultado){
+            return{
+                year:resultado.year,
+                value:resultado.valor
+            }
+        }).toArray()
+
+        const tr = Enumerable.from(result[0][0]).where(`$.codigo == "TR"`).select(function(resultado){
+            return{
+                year:resultado.year,
+                value:resultado.valor
+            }
+        }).toArray()
+     const resultados = {
+         clima:clima,
+         edd:edd,
+         tr:tr
+     }
+        
+        response.json(resultados);
+    }
 
     async getPosiblesSucesores({request,response}){
     
