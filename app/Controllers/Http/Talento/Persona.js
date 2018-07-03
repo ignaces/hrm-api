@@ -6,6 +6,7 @@ const data = use('App/Utils/Data')
 const permisos = use('App/Controllers/Http/Core/Permisos')
 const dateformat = require('dateformat');
 class Persona {
+    
     async getPersona({request,response}){
     
         var idPersona = request.input('idPersona');
@@ -71,6 +72,63 @@ class Persona {
     }).toArray()
   
     response.json(persona);
+    }
+    async getClasificaciones({request,response}){
+    
+        var idPersona = request.input('idPersona');
+        var idProceso = request.input('idProceso');
+        var identificador = "";
+        
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_getPersonaClasificaciones('${idProceso}','${idPersona}')`;
+        
+        
+        const result   = await data.execQuery(cliente,query);
+       
+        
+     
+        
+        response.json(result[0][0]);
+    }
+    async getResultados({request,response}){
+    
+        var idPersona = request.input('idPersona');
+        
+        const cliente = request.input('cliente');
+        
+        const query =  `call tale_getPersonaResultados('${idPersona}')`;
+        
+        
+        const result   = await data.execQuery(cliente,query);
+       
+        const clima = Enumerable.from(result[0][0]).where(`$.codigo == "CLIMA"`).select(function(resultado){
+            return{
+                year:resultado.year,
+                value:resultado.valor
+            }
+        }).toArray()
+
+        const edd = Enumerable.from(result[0][0]).where(`$.codigo == "EDE"`).select(function(resultado){
+            return{
+                year:resultado.year,
+                value:resultado.valor
+            }
+        }).toArray()
+
+        const tr = Enumerable.from(result[0][0]).where(`$.codigo == "TR"`).select(function(resultado){
+            return{
+                year:resultado.year,
+                value:resultado.valor
+            }
+        }).toArray()
+     const resultados = {
+         clima:clima,
+         edd:edd,
+         tr:tr
+     }
+        
+        response.json(resultados);
     }
 
     async getPosiblesSucesores({request,response}){
