@@ -117,6 +117,8 @@ class Talento {
             imageUser:usp[0][0][0].imageUser,
             nombreNacionalidad:usp[0][0][0].nacionalidad,
             iconoPais:usp[0][0][0].iconoPais,
+            paisEmpresa:usp[0][0][0].paisEmpresa,
+            iconoPaisEmpresa:usp[0][0][0].iconoPaisEmpresa,
             fechaNacimiento:dateformat(usp[0][0][0].fechaNacimiento,"dd-mm-yyyy"),
             fechaIngreso:dateformat(usp[0][0][0].fechaIngreso,"dd-mm-yyyy"),
             jefeDirecto:jefe
