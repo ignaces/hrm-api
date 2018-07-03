@@ -106,6 +106,7 @@ class Talento {
         if(usp[0][0][0].idPersonaJefe!="VACANTE"){
             jefe=`${usp[0][0][0].nombresPersonaJefe} ${usp[0][0][0].apellidoPaternoJefe} ${usp[0][0][0].apellidoMaternoJefe}`
         }
+        
         var persona = {
             identificador:usp[0][0][0].identificador,
             nombres:usp[0][0][0].nombres,
@@ -117,6 +118,7 @@ class Talento {
             nombreNacionalidad:usp[0][0][0].nacionalidad,
             iconoPais:usp[0][0][0].iconoPais,
             fechaNacimiento:dateformat(usp[0][0][0].fechaNacimiento,"dd-mm-yyyy"),
+            fechaIngreso:dateformat(usp[0][0][0].fechaIngreso,"dd-mm-yyyy"),
             jefeDirecto:jefe
             //clasificaciones:Clasificaciones.toArray()      
         };
