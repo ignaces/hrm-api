@@ -27,6 +27,25 @@ class Accion {
         });
     }
 
+    async getObservacionAccionColaborador({request,response}){
+       
+        var idObservacionAccion=request.input('idObservacionAccion');
+        var idEtapaTareaAccionProcesoPersona=request.input('idEtapaTareaAccionProcesoPersona');
+        var idEtapaTareaActor=request.input('idEtapaTareaActor');
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getObservacionAccionColaborador('${idObservacionAccion}','${idEtapaTareaAccionProcesoPersona}','${idEtapaTareaActor}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
     async addObservacionAccion({request,response}){
       
         var idEtapaTareaAccionProcesoPersona= request.input('idEtapaTareaAccionProcesoPersona');
@@ -109,13 +128,19 @@ class Accion {
         var idEtapaTareaActor= request.input('idEtapaTareaActor');
         var valor= request.input('valor');
         var cliente = request.input('cliente');
+
+        console.log(idEtapaTareaAccionProcesoPersona);
+        console.log(idEtapaTareaActor);
+        console.log(valor);
         try{
             const query =  `call ede_addConfirmacionAccion('${idEtapaTareaAccionProcesoPersona}','${idEtapaTareaActor}','${valor}')`;
             const respuesta   = await data.execQuery(cliente,query);
+            console.log(respuesta);
             response.json({mensaje:"OK"});
            }
            catch(err)
            { 
+               console.log(err);
             response.json({mensaje:err});
           }
     }
