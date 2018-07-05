@@ -509,5 +509,22 @@ class Proceso {
         });
     }
 
+    async getEmailPorIdMatriz({request,response}){
+       
+        var idEdeEtapaTareaAccionProcesoPersona=request.input('idEdeEtapaTareaAccionProcesoPersona')        
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getEmailPorIdMatriz('${idEdeEtapaTareaAccionProcesoPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
 }
 module.exports=Proceso
