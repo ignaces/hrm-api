@@ -44,6 +44,7 @@ class Accion {
             "paginacion": "",
             "data": respuesta[0][0]
         });
+        
     }
 
     async addObservacionAccion({request,response}){
