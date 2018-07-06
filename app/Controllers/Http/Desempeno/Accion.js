@@ -44,6 +44,7 @@ class Accion {
             "paginacion": "",
             "data": respuesta[0][0]
         });
+        
     }
 
     async addObservacionAccion({request,response}){
@@ -128,7 +129,7 @@ class Accion {
         var idEtapaTareaActor= request.input('idEtapaTareaActor');
         var valor= request.input('valor');
         var cliente = request.input('cliente');
-
+ 
         console.log(idEtapaTareaAccionProcesoPersona);
         console.log(idEtapaTareaActor);
         console.log(valor);
