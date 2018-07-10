@@ -93,15 +93,6 @@ class Talento {
         return response.json({})
        }
        
-        /*const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
-            return{
-               nombre:Clasificacion.Clasificacion,
-               valor:Clasificacion.Valor
-
-            }
-        })*/
-        
-
         var jefe = "Vacante";
         if(usp[0][0][0].idPersonaJefe!="VACANTE"){
             jefe=`${usp[0][0][0].nombresPersonaJefe} ${usp[0][0][0].apellidoPaternoJefe} ${usp[0][0][0].apellidoMaternoJefe}`
@@ -545,6 +536,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_getCurriculumPersona('${idPersona}')`;
+        
         const result   = await data.execQuery(cliente,query);
         response.json(result[0][0]);
     }

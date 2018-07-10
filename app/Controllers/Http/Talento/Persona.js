@@ -29,11 +29,15 @@ class Persona {
        }
        
         
-        
+       var jefe = "Vacante";
+       if(result[0][0][0].idPersonaJefe!="VACANTE"){
+           jefe=`${result[0][0][0].nombresPersonaJefe} ${result[0][0][0].apellidoPaternoJefe} ${result[0][0][0].apellidoMaternoJefe}`
+       }
        const persona = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(posicion){
         return{
             idPosicion:posicion.idPosicion,
             posicion:posicion.nombre,
+            cargo:posicion.cargo,
             codigo:posicion.codigo,
             critico:posicion.critico,
             nivel:posicion.nivel,
@@ -54,10 +58,11 @@ class Persona {
             idioma:posicion.idioma,
             banderaIdioma:posicion.banderaIdioma,
             nivelIdioma:posicion.nivelIdioma,
-            pais:posicion.pais,
+            paisEmpresa:posicion.pais,
             nombreNacionalidad:posicion.nombreNacionalidad,
-            iconoPais:posicion.iconoPais,
-            jefeDirecto:"Vacante",
+            iconoPaisEmpresa:posicion.iconoPais,
+            jefeDirecto:jefe,
+            fechaIngreso:dateformat(posicion.fechaIngreso,'dd-mm-yyyy'),
             fechaNacimiento: dateformat(posicion.fechaNacimiento,'dd-mm-yyyy'),
             atributos:Enumerable.from(result[0][0]).where(`$.idPosicion == "${posicion.idPosicion}"`).select(function(atributo){
                 return {
@@ -65,6 +70,13 @@ class Persona {
                     colorAtributo:atributo.colorAtributo,
                     iconoAtributo:atributo.iconoAtributo,
                     tooltipAtributo:atributo.tooltipAtributo,
+                }
+            }).toArray(),
+            idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${posicion.idPersona}"`).select(function(idioma){
+                return {
+                    nombre:idioma.idioma,
+                    icono:idioma.banderaIdioma,
+                    nivel:idioma.nivelIdioma
                 }
             }).toArray()
 
