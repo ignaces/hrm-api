@@ -72,7 +72,7 @@ class Persona {
                     tooltipAtributo:atributo.tooltipAtributo,
                 }
             }).toArray(),
-            idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${posicion.idPersona}"`).select(function(idioma){
+            idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${posicion.idPersona}"`).distinct("$.codigoIdioma").select(function(idioma){
                 return {
                     nombre:idioma.idioma,
                     icono:idioma.banderaIdioma,
