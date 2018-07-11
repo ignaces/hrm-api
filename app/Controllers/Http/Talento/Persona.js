@@ -33,6 +33,7 @@ class Persona {
        if(result[0][0][0].idPersonaJefe!="VACANTE"){
            jefe=`${result[0][0][0].nombresPersonaJefe} ${result[0][0][0].apellidoPaternoJefe} ${result[0][0][0].apellidoMaternoJefe}`
        }
+       
        const persona = Enumerable.from(result[0][0]).distinct("$.idPersona").select(function(posicion){
         return{
             idPosicion:posicion.idPosicion,
@@ -72,11 +73,20 @@ class Persona {
                     tooltipAtributo:atributo.tooltipAtributo,
                 }
             }).toArray(),
-            idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${posicion.idPersona}"`).distinct("$.codigoIdioma").select(function(idioma){
+            idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${posicion.idPersona}" && $.idioma != null`).distinct("$.codigoIdioma").select(function(idioma){
                 return {
                     nombre:idioma.idioma,
                     icono:idioma.banderaIdioma,
                     nivel:idioma.nivelIdioma
+                }
+            }).toArray(),
+            movilidades:Enumerable.from(result[0][0]).where(`$.idPersona == "${posicion.idPersona}" && $.idMovilidad != null`).distinct("$.idMovilidad").select(function(movilidad){
+                return {
+                    id:movilidad.idMovilidad,
+                    observacion:movilidad.movilidadObservacion,
+                    icono:movilidad.paisIconoMovilidad,
+                    pais:movilidad.paisMovilidad,
+                    paisCodigo:movilidad.movilidadCodigoPais
                 }
             }).toArray()
 
