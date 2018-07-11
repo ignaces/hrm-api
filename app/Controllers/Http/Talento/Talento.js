@@ -93,13 +93,10 @@ class Talento {
         return response.json({})
        }
        
-        /*const Clasificaciones = Enumerable.from(usp[0][0]).select(function(Clasificacion){
-            return{
-               nombre:Clasificacion.Clasificacion,
-               valor:Clasificacion.Valor
-
-            }
-        })*/
+        var jefe = "Vacante";
+        if(usp[0][0][0].idPersonaJefe!="VACANTE"){
+            jefe=`${usp[0][0][0].nombresPersonaJefe} ${usp[0][0][0].apellidoPaternoJefe} ${usp[0][0][0].apellidoMaternoJefe}`
+        }
         
         var persona = {
             identificador:usp[0][0][0].identificador,
@@ -111,8 +108,11 @@ class Talento {
             imageUser:usp[0][0][0].imageUser,
             nombreNacionalidad:usp[0][0][0].nacionalidad,
             iconoPais:usp[0][0][0].iconoPais,
+            paisEmpresa:usp[0][0][0].paisEmpresa,
+            iconoPaisEmpresa:usp[0][0][0].iconoPaisEmpresa,
             fechaNacimiento:dateformat(usp[0][0][0].fechaNacimiento,"dd-mm-yyyy"),
-            jefeDirecto:'Vacante'
+            fechaIngreso:dateformat(usp[0][0][0].fechaIngreso,"dd-mm-yyyy"),
+            jefeDirecto:jefe
             //clasificaciones:Clasificaciones.toArray()      
         };
         
@@ -141,6 +141,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_colaboradoresSinCuadranteCla('${idOpinante}','${idTalentoProceso}')`;
+        
         const result   = await data.execQuery(cliente,query);
         
         var clasificacionTale = [];
@@ -282,7 +283,7 @@ class Talento {
             clasificacionTale.clasificaciones[clasificacion].atributos = atributos
        }
        
-       
+       console.log(clasificacionTale)
        response.json(clasificacionTale);
  
 
@@ -535,6 +536,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_getCurriculumPersona('${idPersona}')`;
+        
         const result   = await data.execQuery(cliente,query);
         response.json(result[0][0]);
     }
