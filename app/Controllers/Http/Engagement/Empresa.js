@@ -8,6 +8,7 @@ class Empresa {
 
     async list({request,response}){
         var idEngagementProceso = request.input("idPeriodo")
+        
         const cliente =request.input('cliente') ;
         
         const query = `call engagement_getEmpresasPeriodo('${idEngagementProceso}')`;
@@ -38,9 +39,10 @@ class Empresa {
             if(encuestas[0].id==null){
                 encuestas=[];
             }
-          for(var i in encuestas){
+            
+            for(var i in encuestas){
               var idEncuesta = encuestas[i].id;
-              var estados  = Enumerable.from(result[0][0]).where(`$.idEncuestaAplicacion == "${idEncuesta}"`).select(function(estado){
+              var estados = Enumerable.from(result[0][0]).where(`$.idEncuestaAplicacion == "${idEncuesta}"`).select(function(estado){
                 return{
                     codigo:estado.codigoEstado,
                     texto:estado.nombreEstado,
@@ -196,6 +198,7 @@ class Empresa {
         const cliente =request.input('cliente') ;
         
         const query = `call engagement_getAvanceClasificaciones('${idEncuestaAplicacion}')`;
+        
         const result   = await data.execQuery(cliente,query);
         const clasificaciones = Enumerable.from(result[0][0]).distinct("$.idClasificacion").select(function(clasificacion){
             return{
