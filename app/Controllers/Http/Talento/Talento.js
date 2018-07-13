@@ -156,10 +156,8 @@ class Talento {
                 Cargo:clasificacion.Cargo,
                 procesoOpinante:clasificacion.procesoOpinante,
                 foto:clasificacion.foto,
-                genero:clasificacion.genero
-                
-                //idHijo:clasificacion.idHijo
-                //nombreHijo:clasificacion.nombreHijo
+                genero:clasificacion.genero,
+                edd:clasificacion.edd
 
             }
         })
@@ -245,7 +243,8 @@ class Talento {
                color:clasificacion.color,
                idOpinante:clasificacion.idOpinante,
                foto:clasificacion.foto,
-               genero:clasificacion.genero
+               genero:clasificacion.genero,
+               edd:clasificacion.edd
                
 
            }
@@ -283,7 +282,7 @@ class Talento {
             clasificacionTale.clasificaciones[clasificacion].atributos = atributos
        }
        
-       console.log(clasificacionTale)
+       
        response.json(clasificacionTale);
  
 
@@ -415,7 +414,17 @@ class Talento {
     }
 
 
+    async getEquivalencias({request,response}){
+        var idProceso = request.input("idProceso");
+        const cliente = request.input('cliente');
+        
+      
+        const query = `call tale_getEquivalencias('${idProceso}')`;
+        
+        const result   = await data.execQuery(cliente,query);
 
+        response.json(result[0][0]);
+    }
     async organigrama({request,response}){
 
         var procesoOrganigrama = request.input("idProceso");
