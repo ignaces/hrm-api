@@ -7,10 +7,7 @@ const permisos = use('App/Controllers/Http/Core/Permisos')
 const dateformat = require('dateformat');
 class Persona {
 
-  async getPersona({
-    request,
-    response
-  }) {
+  async getPersona({request,response}) {
 
     var idPersona = request.input('idPersona');
     var idProceso = request.input('idProceso');
