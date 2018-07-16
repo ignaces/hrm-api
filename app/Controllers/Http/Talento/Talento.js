@@ -118,18 +118,29 @@ class Talento {
         
       response.json(persona);
     }
+    
     async seleccionDragTalentoAPI({request,response}){
 
         
-        var idTalentoMatriz = request.input("idTalentoMatriz");
+        var idCuadrante = request.input("idTalentoMatriz");
         var idTalentoOpinante = request.input("idTalentoOpinante");
+        var justificacion=request.input("justificacion");
         const cliente = request.input('cliente');
 
-        const query = `call tale_seleccionTalento('${idTalentoMatriz}','${idTalentoOpinante}')`;
-
-        const result   = await data.execQuery(cliente,query);
+        const queryValido = `call tale_validaEquivalencia('${idCuadrante}','${idTalentoOpinante}')`;
+      
+        const resultValido   = await data.execQuery(cliente,queryValido);
         
-       response.json(result[0]);
+        var validacion = resultValido[0][0][0];
+        if(validacion.valido==1 || justificacion!=""){
+            const query = `call tale_seleccionTalento('${idCuadrante}','${idTalentoOpinante}','${justificacion}')`;
+
+            const result   = await data.execQuery(cliente,query);
+
+        }
+        
+        
+        response.json(validacion);
         
     }
 
@@ -414,17 +425,7 @@ class Talento {
     }
 
 
-    async getEquivalencias({request,response}){
-        var idProceso = request.input("idProceso");
-        const cliente = request.input('cliente');
-        
-      
-        const query = `call tale_getEquivalencias('${idProceso}')`;
-        
-        const result   = await data.execQuery(cliente,query);
-
-        response.json(result[0][0]);
-    }
+    
     async organigrama({request,response}){
 
         var procesoOrganigrama = request.input("idProceso");
