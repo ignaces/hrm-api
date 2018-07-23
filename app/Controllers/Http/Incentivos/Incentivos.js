@@ -50107,6 +50107,52 @@ class Incentivos {
       //response.json(usp[0][0]);
     }
 
+
+    async getDetalleVentas({request,response})
+    {
+      const cliente =request.input('cliente');
+      //console.log(cliente);
+      //return false;
+      const idPersona =request.input('idPersona');
+      const idPuntoDeVenta =request.input('idPuntoDeVenta');
+      
+      //console.log(productos);
+      //return false;
+
+      const query = `call inc_getDetalleVentas('${idPersona}', '${idPuntoDeVenta}')`;
+      
+      const usp   = await data.execQuery(cliente,query);
+      console.log(query);
+      //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
+      //response.json(1);
+
+      var obj = {};
+      obj.cabeceras = usp[0][0];
+      obj.detalles = usp[0][1];
+      
+
+      response.json(obj);
+    }
+
+    async deleteVenta({request,response})
+    {
+      const cliente =request.input('cliente');
+      //console.log(cliente);
+      //return false;
+      const idVenta =request.input('idVenta');
+      
+      //console.log(productos);
+      //return false;
+
+      const query = `call inc_deleteVenta('${idVenta}')`;
+      
+      const usp   = await data.execQuery(cliente,query);
+      //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
+      //response.json(1);
+
+      response.json(1);
+    }
+
     
     
 }
