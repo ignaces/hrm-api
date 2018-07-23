@@ -8,10 +8,14 @@ class Componentes {
                 
         
         const cliente = request.input('cliente') ;
+
+        //console.log(cliente);
+
         const componente = request.input('componente') ;
-        const query =`call modulo_getComponente('${cliente}','${componente}')`;
+        //const query =`call modulo_getComponente('${cliente}','${componente}')`;
+        const query =`call modulo_getComponente('cs','${componente}')`;
         const respuesta   = await data.execQuery('app',query);
-        console.log(query)
+        //console.log(query)
         response.json({
             "estado": {
                 "codigo": "OK",
@@ -22,10 +26,6 @@ class Componentes {
         });
         
     }
-    
-    
-
-    
 }
 
 module.exports = Componentes
