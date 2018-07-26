@@ -74,6 +74,28 @@ class Medicion {
         response.json(body);
     }
 
+    async getPersona({request,response}){
+        
+        var idPersona = request.input("idPersona")  ;
+        
+        const cliente =request.input('cliente') ;
+        const query =`call encuesta_getPersona('${idPersona}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: result[0][0]
+          
+        }
+        response.json(body);
+    }
+
     async getInstrumento({request,response}){
         
         var idEncuestaPersona = request.input("idEncuestaPersona");
