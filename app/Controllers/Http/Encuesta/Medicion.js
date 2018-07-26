@@ -52,6 +52,28 @@ class Medicion {
         response.json(validacion);
     }
 
+    async getListaEncuesta({request,response}){
+        
+        var idPersona = request.input("idPersona")  ;
+        
+        const cliente =request.input('cliente') ;
+        const query =`call encuesta_getListaEncuesta('${idPersona}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: result[0][0]
+          
+        }
+        response.json(body);
+    }
+
     async getInstrumento({request,response}){
         
         var idEncuestaPersona = request.input("idEncuestaPersona");
@@ -114,8 +136,9 @@ class Medicion {
                             puntaje:alternativa.puntajeAlternativa,
                             orden:alternativa.ordenAlternativa,
                             estaSeleccionada:alternativa.estaSeleccionada,
-                            requiereJustificacion:"0",
-                            justificacion: ""
+                            requiereJustificacion:alternativa.requiereJustificacion,
+                            justificacion: alternativa.justificacion,
+                            instruccionJustificacion: alternativa.instruccionJustificacion
                         }
                     }).toArray()
                     preguntasUnicas[pregunta].alternativas = alternativas
