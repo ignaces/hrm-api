@@ -12,6 +12,7 @@ class Talento {
         var idOpinante = request.input("idOpinante");
         const cliente = request.input('cliente');
         
+
         const query = `call tale_getTalentosWelcome('${idOpinante}')`;
         const result   = await data.execQuery(cliente,query);
         
@@ -24,8 +25,6 @@ class Talento {
           
         }
      
-
-
         response.json(body);
         
     }
