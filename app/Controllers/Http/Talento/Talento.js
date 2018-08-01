@@ -166,7 +166,8 @@ class Talento {
                 procesoOpinante:clasificacion.procesoOpinante,
                 foto:clasificacion.foto,
                 genero:clasificacion.genero,
-                edd:clasificacion.edd
+                edd:clasificacion.edd,
+                trAnterior:clasificacion.tr_anterior
 
             }
         })
@@ -253,12 +254,13 @@ class Talento {
                idOpinante:clasificacion.idOpinante,
                foto:clasificacion.foto,
                genero:clasificacion.genero,
-               edd:clasificacion.edd
+               edd:clasificacion.edd,
+               trAnterior:clasificacion.tr_anterior
                
 
            }
        })
-
+//
        clasificacionTale = {
            clasificaciones:clasificaciones.toArray()
        }
