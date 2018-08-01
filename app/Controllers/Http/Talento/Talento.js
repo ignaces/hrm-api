@@ -261,7 +261,7 @@ class Talento {
 
            }
        })
-
+//
        clasificacionTale = {
            clasificaciones:clasificaciones.toArray()
        }
