@@ -195,6 +195,41 @@ class Persona {
     }).toArray()
     response.json(posiciones);
   }
+
+  async getEncuestaFraseo({request,response}) {
+    
+    try{
+      const cliente = request.input('cliente');
+      const query = `call tale_getEncuestaFraseo()`;
+      const result = await data.execQuery(cliente, query);
+      
+      var body = 
+          {
+            estado: {
+              codigo: "OK",
+              mensaje: ""
+            },
+            paginacion: "",
+            data: result[0][0]
+            
+          }
+      response.json(body);
+    } catch(e){
+      console.log(e)
+      var body = 
+          {
+            estado: {
+              codigo: "ERROR",
+              mensaje: ""
+            },
+            paginacion: "",
+            data: ""
+            
+          }
+      response.json(body);
+    }
+    
+  }
 }
 
 module.exports = Persona
