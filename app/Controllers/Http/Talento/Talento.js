@@ -49,8 +49,7 @@ class Talento {
 
         const query = `call tale_gestionTalentos('${idOpinante}','${idTalentoProceso}')`;
         
-        const result = await data.execQuery(cliente,query);
-        
+        const result = await data.execQuery(cliente,query);        
         response.json(result[0][0]);
         
         //console.log(result[0][0]);
