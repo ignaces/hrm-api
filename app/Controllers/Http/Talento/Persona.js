@@ -95,10 +95,7 @@ class Persona {
 
     response.json(persona);
   }
-  async getClasificaciones({
-    request,
-    response
-  }) {
+  async getClasificaciones({request,response}) {
 
     var idPersona = request.input('idPersona');
     var idProceso = request.input('idProceso');
@@ -107,19 +104,11 @@ class Persona {
     const cliente = request.input('cliente');
 
     const query = `call tale_getPersonaClasificaciones('${idProceso}','${idPersona}')`;
-
-
     const result = await data.execQuery(cliente, query);
-
-
-
-
     response.json(result[0][0]);
   }
-  async getResultados({
-    request,
-    response
-  }) {
+
+  async getResultados({request,response}) {
 
     var idPersona = request.input('idPersona');
 
@@ -159,10 +148,7 @@ class Persona {
     response.json(resultados);
   }
 
-  async getPosiblesSucesores({
-    request,
-    response
-  }) {
+  async getPosiblesSucesores({request,response}) {
 
     var idPosicion = request.input('idPosicion');
     var idProceso = request.input('idProceso');
