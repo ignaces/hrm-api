@@ -313,8 +313,7 @@ class Informe {
         }
     
         response.json(body);
-    }
-    
+    }    
 }
 
 module.exports = Informe
