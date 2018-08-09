@@ -11,6 +11,9 @@ class Avance {
         const cliente =request.input('cliente') ;
         const query = `call acre_getAvanceClasificaciones('${idProceso}')`;
         const result   = await data.execQuery(cliente,query);
+
+        console.log(result);
+
         const clasificaciones = Enumerable.from(result[0][0]).distinct("$.idClasificacion").select(function(clasificacion){
             return{
                 id:clasificacion.idClasificacion,

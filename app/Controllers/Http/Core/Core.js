@@ -32,6 +32,15 @@ class Core {
             });
         } 
     }
+
+    async cp({request,response}){
+      
+        
+            const cliente =request.input('challenge');
+            return cliente;
+         
+    }
+
     
 }
 
