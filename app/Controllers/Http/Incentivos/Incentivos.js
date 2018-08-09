@@ -87,7 +87,7 @@ class Incentivos {
       const cliente =request.input('cliente');
       
       const idPuntoDeVenta = request.input('idPuntoDeVenta');
-      const idPersona = request.input('ean');
+      const idPersona = request.input('idPersona');
 
       const identificador = request.input('identificador');
       const nombres = request.input('nombres');
@@ -96,7 +96,7 @@ class Incentivos {
       const telefono = request.input('telefono');
       
 
-      const query = `call inc_addCliente('${identificador}', '${nombres}', '${apellido}', '${email}', '${telefono}' )`;
+      const query = `call inc_addCliente('${idPersona}', '${identificador}', '${nombres}', '${apellido}', '${email}', '${telefono}' )`;
       //console.log(`call inc_addCliente('${identificador}', '${nombres}', '${apellido}', '${email}', '${telefono}' )`);
       const usp   = await data.execQuery(cliente,query);
       
