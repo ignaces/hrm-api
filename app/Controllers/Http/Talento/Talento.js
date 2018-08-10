@@ -469,7 +469,7 @@ class Talento {
                 apSucesor:posicion.sucesorApellidoPaterno,
                 amSucesor:posicion.sucesorApellidoMaterno,
                 fotoSucesor:posicion.fotoSucesor,
-                colorSucesor:"lightteal"
+                colorSucesor:"neutralgrey"
 
             }
         }).toArray()
