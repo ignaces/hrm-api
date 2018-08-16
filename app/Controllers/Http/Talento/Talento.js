@@ -12,6 +12,7 @@ class Talento {
         var idOpinante = request.input("idOpinante");
         const cliente = request.input('cliente');
         
+
         const query = `call tale_getTalentosWelcome('${idOpinante}')`;
         const result   = await data.execQuery(cliente,query);
         
@@ -24,8 +25,6 @@ class Talento {
           
         }
      
-
-
         response.json(body);
         
     }
@@ -50,8 +49,7 @@ class Talento {
 
         const query = `call tale_gestionTalentos('${idOpinante}','${idTalentoProceso}')`;
         
-        const result = await data.execQuery(cliente,query);
-        
+        const result = await data.execQuery(cliente,query);        
         response.json(result[0][0]);
         
         //console.log(result[0][0]);
@@ -134,7 +132,7 @@ class Talento {
         var validacion = resultValido[0][0][0];
         if(validacion.valido==1 || justificacion!=""){
             const query = `call tale_seleccionTalento('${idCuadrante}','${idTalentoOpinante}','${justificacion}')`;
-
+            
             const result   = await data.execQuery(cliente,query);
 
         }
@@ -168,7 +166,8 @@ class Talento {
                 procesoOpinante:clasificacion.procesoOpinante,
                 foto:clasificacion.foto,
                 genero:clasificacion.genero,
-                edd:clasificacion.edd
+                edd:clasificacion.edd,
+                trAnterior:clasificacion.tr_anterior
 
             }
         })
@@ -255,12 +254,13 @@ class Talento {
                idOpinante:clasificacion.idOpinante,
                foto:clasificacion.foto,
                genero:clasificacion.genero,
-               edd:clasificacion.edd
+               edd:clasificacion.edd,
+               trAnterior:clasificacion.tr_anterior
                
 
            }
        })
-
+//
        clasificacionTale = {
            clasificaciones:clasificaciones.toArray()
        }
@@ -395,13 +395,13 @@ class Talento {
         const cliente = request.input('cliente');
         var cargos = request.input("cargos");
         var tr = request.input("tr");
-
+        var jefatura = request.input("jefatura");
         var identificador = request.input("identificador");
         var nombres = request.input("nombres");
         var paterno = request.input("paterno");
         var materno = request.input("materno");
         clasificaciones = await this.removeFromArray(clasificaciones,'-1');
-        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}')`;
+        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}','${jefatura}')`;
         
         const result   = await data.execQuery(cliente,query);
         
@@ -469,7 +469,7 @@ class Talento {
                 apSucesor:posicion.sucesorApellidoPaterno,
                 amSucesor:posicion.sucesorApellidoMaterno,
                 fotoSucesor:posicion.fotoSucesor,
-                colorSucesor:"lightteal"
+                colorSucesor:"neutralgrey"
 
             }
         }).toArray()
@@ -525,6 +525,23 @@ class Talento {
         }
         
         response.json(posicionesSalida);
+        
+     
+    }
+
+    async getPersonasArbol({request,response}){
+
+        var procesoOrganigrama = request.input("idProceso");
+        var idPersonaOpinante = request.input("idPersonaOpinante");
+        const cliente = request.input('cliente');
+        
+      
+        const query = `call tale_getPersonasArbol('${procesoOrganigrama}','${idPersonaOpinante}')`;
+        
+        const result   = await data.execQuery(cliente,query);
+        const personas = result[0][0];
+        
+        response.json(personas);
         
      
     }

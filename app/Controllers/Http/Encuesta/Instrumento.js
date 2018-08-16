@@ -8,27 +8,32 @@ var Enumerable = require('linq');
  * @class
  */
 class Instrumento {
- /**
-     * @param  {string} cliente
-     * @param  {} idEncuestaPersona
-     * @param  {} idPregunta
-     * @param  {} idAlternativa
-     * @param  {} justificacion
-     */
+    
     async putRespuesta({request,response}){
+
        
         var idEncuestaPersona = request.input("idEncuestaPersona");
         var idPregunta = request.input("idPregunta");
         var idAlternativa = request.input("idAlternativa");
         var justificacion = request.input("justificacion");
+
+        var isChecked = true;
+
+        if(request.input("isChecked"))
+        {
+            isChecked = request.input("isChecked");
+        }
+            
         const cliente =request.input('cliente') ;
         if(idAlternativa==""){
             idAlternativa="null";
         }else{
             idAlternativa =`'${idAlternativa}'`;
         }
-        const query = `call evaluacion_putRespuesta('${idPregunta}',${idAlternativa}, '${justificacion}')`;
+        const query = `call evaluacion_putRespuesta('${idPregunta}',${idAlternativa}, '${justificacion}', ${isChecked})`;
         const result   = await data.execQuery(cliente,query);
+
+        console.log(query);
         
         const qEstado = `call encuesta_setEstadoEncuestaPersona('${idEncuestaPersona}','ENPROCESO')`;
         const rEstado   = await data.execQuery(cliente,qEstado);
@@ -50,5 +55,8 @@ class Instrumento {
 
         return {mensaje:"OK"}
     }
+
+
+   
 }
 module.exports = Instrumento;

@@ -9,7 +9,6 @@ class Users {
       const cliente =request.input('cliente') ;
       
       const query = `call getUsers('${text}')`;
-      
       const usp   = await data.execQuery(cliente,query);
       
       response.json(usp[0][0]);
@@ -39,7 +38,7 @@ class Users {
 
         const cliente ="app";
         const query =`call user_getMenu('${idUser}')`;
-        
+        console.log(query)
         const respuesta   = await data.execQuery(cliente,query);
         var usuario = {
             roles:[],
