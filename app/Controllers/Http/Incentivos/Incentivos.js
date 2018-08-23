@@ -164,6 +164,7 @@ class Incentivos {
       {
         idPersona = request.input('idPersona');
       }
+      
       const query = `call inc_getValoresMetas('${idPersona}', '${idPuntoDeVenta}')`;
       const usp   = await data.execQuery(cliente,query);
       console.log(query);
