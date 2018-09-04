@@ -43,6 +43,34 @@ class Data  {
         
     }
     /**
+     * Ejecuta consulta en BD
+     * @version 1.0.0
+     * @deprecated since version 2.0
+     * @example
+     * // returns 2
+     * globalNS.method1(5, 10);
+     * @param  {string} client Es el nombre de dominio del cliente
+     * @param  {string} query Consulta a la base de datoss
+     */
+    async execQueryMS(query){
+        
+        
+        try{
+            const result = await Database.connection('msprod').schema.raw(query);
+        
+            Database.close(['msprod'])
+            return result;
+        }catch(ex){
+            Database.close(['msprod'])
+            return ex;
+        }
+        
+        
+        
+        
+        
+    }
+    /**
      * 
      * @param  {string} client Es el nombre de dominio del cliente
      */
