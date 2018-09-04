@@ -168,6 +168,7 @@ class Instrumento {
         
         response.json(instrumento);
     }
+    
     async getFacsimil({request,response}){
     
         var id = request.input("idFacsimil");
