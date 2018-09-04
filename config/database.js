@@ -34,7 +34,28 @@ module.exports = {
     useNullAsDefault: true,
     debug: Env.get('DB_DEBUG', false)
   },
+  
 
+  /*
+  |--------------------------------------------------------------------------
+  | MSSQL
+  |--------------------------------------------------------------------------
+  |
+  | Here we define connection settings for MSSQL database.
+  |
+  | npm i --save mssql
+  |
+  */
+ msprod: {
+  client: 'mssql',
+  connection: {
+    host: Env.get('DB_HOST_MS', '192.168.3.3'),
+    port: Env.get('DB_PORT_MS', '1433'),
+    user: Env.get('DB_USER_MS', 'sa'),
+    password: Env.get('DB_PASSWORD_MS', 'Qwerty123'),
+    database: Env.get('DB_DATABASE_MS', 'bci')
+  }
+},
   /*
   |--------------------------------------------------------------------------
   | MySQL

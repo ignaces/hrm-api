@@ -16,5 +16,15 @@ class Organigrama {
         
         response.json({message:"OK"});
     }
+    async delSucesor({request,response}){
+
+        const cliente = request.input('cliente');
+        const idSucesion = request.input('idSucesion');
+        const query =  `call tale_delSucesor('${idSucesion}')`;
+        
+        const result   = await data.execQuery(cliente,query);
+        
+        response.json({message:"OK"});
+    }
 }
 module.exports =Organigrama;

@@ -122,12 +122,18 @@ class Incentivos {
     {
       const cliente =request.input('cliente');
       
-      
       const query = `call inc_getPuntosDeVenta()`;
-      const usp   = await data.execQuery(cliente,query);
+      //console.log(query);
+      try{
+        const usp   = await data.execQuery(cliente,query);
+          
+        //response.json(1);
+        response.json(usp[0][0]);
+      }catch(error)
+      {
+        console.log(error);
+      }
       
-      //response.json(1);
-      response.json(usp[0][0]);
     }
 
     async getCatalogoProductosPuntoDeVenta({request,response})
@@ -156,11 +162,13 @@ class Incentivos {
 
       if(request.input('idPersona'))
       {
-        idPuntoDeVenta = request.input('idPersona');
+        idPersona = request.input('idPersona');
       }
+
+      
       const query = `call inc_getValoresMetas('${idPersona}', '${idPuntoDeVenta}')`;
       const usp   = await data.execQuery(cliente,query);
-      //console.log(query);
+      console.log(query);
       //response.json(1);
       response.json(usp[0][0]);
     }
@@ -179,11 +187,11 @@ class Incentivos {
 
       if(request.input('idPersona'))
       {
-        idPuntoDeVenta = request.input('idPersona');
+        idPersona = request.input('idPersona');
       }
       const query = `call inc_getValoresMetaBonoMix('${idPersona}', '${idPuntoDeVenta}')`;
       const usp   = await data.execQuery(cliente,query);
-      console.log(query);
+      //console.log(query);
       //response.json(1);
       response.json(usp[0][0]);
     }
