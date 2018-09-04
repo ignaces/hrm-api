@@ -144,7 +144,7 @@ class Talento {
             validacion.valido=0;
         }
         
-        console.log(validacion)
+        
         
         response.json(validacion);
         
@@ -254,7 +254,7 @@ class Talento {
         clasificacionesIn = await this.removeFromArray(clasificacionesIn,'-1');
         
 
-        const query = `call tale_colaboradoresEvaluados('${idOpinante}','${idTalentoProceso}')`;
+        const query = `call tale_getColaboradoresEvaluados('${idOpinante}','${idTalentoProceso}','${clasificacionesIn}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}','${jefatura}','${tr}')`;
         
         const result = await data.execQuery(cliente,query);
         var clasificacionTale = [];
