@@ -420,7 +420,7 @@ class Talento {
         var paterno = request.input("paterno");
         var materno = request.input("materno");
         clasificaciones = await this.removeFromArray(clasificaciones,'-1');
-        const query = `call tale_colaboradoresSinCuadranteFiltro('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}','${jefatura}')`;
+        const query = `call tale_getColaboradoresSinCuadrante('${idOpinante}','${idTalentoProceso}','${clasificaciones}','${cargos}','${identificador}','${nombres}','${paterno}','${materno}','${jefatura}','${tr}')`;
         
         const result   = await data.execQuery(cliente,query);
         
