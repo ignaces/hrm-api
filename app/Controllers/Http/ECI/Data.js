@@ -83,6 +83,7 @@ class Data {
             const codigo =request.input('codigo');
             const vista =request.input('vista');*/
             const query =`exec getClasificaciones`;
+            
             const result   = await data.execQueryMS(query);
             var clasificacionesOut = [];
          
