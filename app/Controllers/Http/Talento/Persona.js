@@ -195,6 +195,41 @@ class Persona {
     }).toArray()
     response.json(posiciones);
   }
+  async getSucesores({request,response}) {
+
+    var idPosicion = request.input('idPosicion');
+    var idProceso = request.input('idProceso');
+    var identificador = "";
+
+    const cliente = request.input('cliente');
+
+    const query = `call tale_getSucesores('${idProceso}','${idPosicion}')`;
+
+
+    const result = await data.execQuery(cliente, query);
+
+    const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function (posicion) {
+      return {
+        idPosicion: posicion.idPosicion,
+        nombre: posicion.nombre,
+        codigo: posicion.codigo,
+        critico: posicion.critico,
+        nivel: posicion.nivel,
+        idPadre: posicion.idPadre,
+        idPersona: posicion.idPersona,
+        idSucesion:posicion.idSucesion,
+        idProcesoPersona: posicion.idProcesoPersona,
+        nombresPersona: posicion.nombresPersona,
+        apellidoPaterno: posicion.apellidoPaterno,
+        apellidoMaterno: posicion.apellidoMaterno,
+        fotoPersona: posicion.fotoPersona,
+        
+
+      }
+    }).toArray()
+    
+    response.json(posiciones);
+  }
 
   async getEncuestaFraseo({request,response}) {
     

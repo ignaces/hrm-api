@@ -5,25 +5,34 @@ class Componentes {
 
     async getComponente({request,response}){
       
-                
+        try{
+            const cliente = request.input('cliente') ;
+
+            //console.log(cliente);
         
-        const cliente = request.input('cliente') ;
+    
+            const componente = request.input('componente') ;
 
-        //console.log(cliente);
+            console.log(componente);
 
-        const componente = request.input('componente') ;
-        //const query =`call modulo_getComponente('${cliente}','${componente}')`;
-        const query =`call modulo_getComponente('cs','${componente}')`;
-        const respuesta   = await data.execQuery('app',query);
-        //console.log(query)
-        response.json({
-            "estado": {
-                "codigo": "OK",
-                "mensaje": ""
-            },
-            "paginacion": "",
-            "data": respuesta[0][0]
-        });
+            //const query =`call modulo_getComponente('${cliente}','${componente}')`;
+            const query =`call modulo_getComponente('cs','${componente}')`;
+            const respuesta   = await data.execQuery('app',query);
+            //console.log(query)
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta[0][0]
+            });
+        } catch(e){
+            console.log(e);
+            return null;
+        }     
+        
+        
         
     }
 }
