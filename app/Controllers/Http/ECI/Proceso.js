@@ -110,7 +110,46 @@ class Proceso {
         
         
        // return(body);
-    }  
+    } 
+    
+    
+
+    async addProcesoServicio({request,response}){
+       
+        try{
+            const cliente =request.input('cliente');
+            const idTipoEncuesta =request.input('idTipoEncuesta');
+            const nombre =request.input('nombre');
+            const descripcion =request.input('descripcion');
+            const idProceso =request.input('idProceso');
+            const idPersona =request.input('idPersona');
+            const idCenco =request.input('idCenco');
+        
+console.log(idTipoEncuesta);
+    
+            var query     = `call eci_addProcesoServicio('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${nombre}', '${descripcion}')`;
+            const result    = await data.execQuery(cliente,query);
+            console.log(result);
+        
+            
+            var body = 
+            {
+              estado: {
+                codigo: "OK",
+                mensaje: ""
+              },
+              data: {}
+              
+            }
+            response.json(body);
+        }catch(e){
+            console.log(e)
+            return null;
+        }
+        
+        
+       // return(body);
+    } 
 
     
 }
