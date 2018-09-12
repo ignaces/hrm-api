@@ -41,7 +41,7 @@ class Jefe {
        const idPersona =request.input('idPersona');
        const idCenco =request.input('idCenco');
        
-       const query = `call eci_getEncuestas('${idProceso}','${idPersona}','${idCenco}')`;
+       const query = `call eci_getEncuestas('${idProceso}','${idCenco}','${idPersona}')`;
        console.log(query);
        const result   = await data.execQuery(cliente,query);
        
