@@ -111,6 +111,33 @@ class Proceso {
         
        // return(body);
     } 
+
+    async getOpinantes({request,response}){
+        try{
+         const cliente =request.input('cliente');
+         const idProceso =request.input('idProceso');
+         const idPersona =request.input('idPersona');
+         
+         const query = `call eci_getOpinantes('${idProceso}','${idPersona}')`;
+         console.log(query);
+         const result   = await data.execQuery(cliente,query);
+         
+         var body = 
+         {
+           estado: {
+             codigo: "",
+             mensaje: ""
+           },
+           data: {opinante: result[0][0]}
+           
+         }
+         response.json(body);
+        }catch(e){
+          console.log(e);
+          return null;
+        }
+         
+     }
     
     
 
@@ -125,7 +152,7 @@ class Proceso {
             const idPersona =request.input('idPersona');
             const idCenco =request.input('idCenco');
         
-console.log(idTipoEncuesta);
+            console.log(idTipoEncuesta);
     
             var query     = `call eci_addProcesoServicio('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${nombre}', '${descripcion}')`;
             const result    = await data.execQuery(cliente,query);

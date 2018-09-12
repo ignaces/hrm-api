@@ -60,9 +60,6 @@ class Jefe {
         return null;
       }
        
-       
-
-      // return(body);
    }
 
     async addEncuesta({request,response}){
