@@ -43,15 +43,15 @@ class Data {
             @email varchar(500),
             @nivelesClasificacion varchar(max)
             */
-            const identificador =request.input('identificador');
+            //const identificador =request.input('identificador');
             const nombre =request.input('nombre');
             const apellidoPaterno =request.input('apellidoPaterno');
             const apellidoMaterno =request.input('apellidoMaterno');
             const email =request.input('email');
-            const nivelesArr =request.input('niveles');
+            const nivelesArr = request.input('niveles');
             const niveles = nivelesArr.toString();
             
-            const query =`exec getColaboradoresByFilter '${identificador}', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}'`;
+            const query =`exec getColaboradoresByFilter '', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}'`;
             
             const result   = await data.execQueryMS(query);
             
@@ -88,18 +88,32 @@ class Data {
             var clasificacionesOut = [];
          
             const clasificaciones = Enumerable.from(result).distinct("$.idclasificacion").select(function(clasificacion){
-                return{
-                    idclasificacion:clasificacion.idclasificacion,
-                    clasificacion:clasificacion.clasificacion,
-                    niveles:Enumerable.from(result).where(`$.idclasificacion == "${clasificacion.idclasificacion}"`).select(function(nivel){
-                        return{
-                            id:nivel.idnivel,
-                            nivel:nivel.nivel
-    
-                        }
-                    }).toArray()
-
+                
+                
+                //Fondo, subdependencia y tipos de cargo
+                var nombre = clasificacion.clasificacion;
+                switch(nombre){
+                    case "CENCO":
+                        nombre = "UNIDAD";    
+                    break;
                 }
+                    
+                        return{
+                            idclasificacion:clasificacion.idclasificacion,
+                            clasificacion:nombre,
+                            niveles:Enumerable.from(result).where(`$.idclasificacion == "${clasificacion.idclasificacion}"`).select(function(nivel){
+                                
+                                return{
+                                    id:nivel.idnivel,
+                                    nivel:nivel.nivel
+            
+                                }
+                            }).toArray()
+
+                        }
+                
+
+
             })
 
             clasificacionesOut = {
