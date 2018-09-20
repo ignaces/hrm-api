@@ -50,9 +50,12 @@ class Data {
             const email =request.input('email');
             const nivelesArr = request.input('niveles');
             const niveles = nivelesArr.toString();
+
+            const cargosArr = request.input('cargos');
+            const cargos = cargosArr.toString();
             
-            const query =`exec getColaboradoresByFilter '', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}'`;
-            
+            const query =`exec getColaboradoresByFilter '', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}','${cargos}'`;
+            console.log(query)
             const result   = await data.execQueryMS(query);
             
             response.json({
@@ -148,6 +151,35 @@ class Data {
             const codigo =request.input('codigo');
             const vista =request.input('vista');*/
             const query =`select top 10 * from emp_usuario`;
+            const respuesta   = await data.execQueryMS(query);
+            
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta
+            });
+        } catch (e) {
+            
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+    async getCargos({request,response}){
+      
+        try {
+            /*const cliente =request.input('cliente');
+            const codigo =request.input('codigo');
+            const vista =request.input('vista');*/
+            const query =`exec getCargos`;
             const respuesta   = await data.execQueryMS(query);
             
             response.json({
