@@ -131,16 +131,23 @@ class Persona {
         
         const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}',${idUsuario}, '${nacionalidad}')`;
         
-        //console.log(query);
+        try{
         //return false;
         const respuesta   = await data.execQuery(cliente,query);
-        //console.log(respuesta);
-        response.json({
-            "estado": respuesta[0][0],
-            "paginacion": "",
-            "data": respuesta[0][1]
-        });
+        } catch (e) {
+            console.log(e);
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": respuesta[0]
+            });
+        } 
+        
     }
+    
     
     
 }
