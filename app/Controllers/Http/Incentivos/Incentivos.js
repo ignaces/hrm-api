@@ -120,10 +120,28 @@ class Incentivos {
 
     async getPuntosDeVenta({request,response})
     {
-      const cliente =request.input('cliente');
-      
+      const cliente   = request.input('cliente');
+      const idPersona = request.input('idPersona');
       const query = `call inc_getPuntosDeVenta()`;
       //console.log(query);
+      try{
+        const usp   = await data.execQuery(cliente,query);
+          
+        //response.json(1);
+        response.json(usp[0][0]);
+      }catch(error)
+      {
+        console.log(error);
+      }
+      
+    }
+
+    async getPuntosDeVentaPersona({request,response})
+    {
+      const cliente   = request.input('cliente');
+      const idPersona = request.input('idPersona');
+      const query = `call inc_getPuntosDeVentaPersona('${idPersona}')`;
+      console.log(query);
       try{
         const usp   = await data.execQuery(cliente,query);
           
@@ -166,7 +184,7 @@ class Incentivos {
       }
 
       
-      const query = `call inc_getValoresMetas('${idPersona}', '${idPuntoDeVenta}')`;
+      const query = `call inc_getValoresMetasDev('${idPersona}', '${idPuntoDeVenta}')`;
       const usp   = await data.execQuery(cliente,query);
       console.log(query);
       //response.json(1);
@@ -244,6 +262,32 @@ class Incentivos {
       
       const usp   = await data.execQuery(cliente,query);
       console.log(query);
+      //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
+      //response.json(1);
+
+      var obj = {};
+      obj.cabeceras = usp[0][0];
+      obj.detalles = usp[0][1];
+      
+
+      response.json(obj);
+    }
+
+    async getKardex({request,response})
+    {
+      const cliente =request.input('cliente');
+      //console.log(cliente);
+      //return false;
+      const idPersona =request.input('idPersona');
+      const idPuntoDeVenta =request.input('idPuntoDeVenta');
+      
+      //console.log(productos);
+      //return false;
+
+      const query = `call inc_getKardex('${idPersona}', '${idPuntoDeVenta}')`;
+      
+      const usp   = await data.execQuery(cliente,query);
+      //console.log(query);
       //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
       //response.json(1);
 
