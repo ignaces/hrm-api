@@ -43,16 +43,19 @@ class Data {
             @email varchar(500),
             @nivelesClasificacion varchar(max)
             */
-            const identificador =request.input('identificador');
+            //const identificador =request.input('identificador');
             const nombre =request.input('nombre');
             const apellidoPaterno =request.input('apellidoPaterno');
             const apellidoMaterno =request.input('apellidoMaterno');
             const email =request.input('email');
-            const nivelesArr =request.input('niveles');
+            const nivelesArr = request.input('niveles');
             const niveles = nivelesArr.toString();
+
+            const cargosArr = request.input('cargos');
+            const cargos = cargosArr.toString();
             
-            const query =`exec getColaboradoresByFilter '${identificador}', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}'`;
-            
+            const query =`exec getColaboradoresByFilter '', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}','${cargos}'`;
+            console.log(query)
             const result   = await data.execQueryMS(query);
             
             response.json({
@@ -88,18 +91,32 @@ class Data {
             var clasificacionesOut = [];
          
             const clasificaciones = Enumerable.from(result).distinct("$.idclasificacion").select(function(clasificacion){
-                return{
-                    idclasificacion:clasificacion.idclasificacion,
-                    clasificacion:clasificacion.clasificacion,
-                    niveles:Enumerable.from(result).where(`$.idclasificacion == "${clasificacion.idclasificacion}"`).select(function(nivel){
-                        return{
-                            id:nivel.idnivel,
-                            nivel:nivel.nivel
-    
-                        }
-                    }).toArray()
-
+                
+                
+                //Fondo, subdependencia y tipos de cargo
+                var nombre = clasificacion.clasificacion;
+                switch(nombre){
+                    case "CENCO":
+                        nombre = "UNIDAD";    
+                    break;
                 }
+                    
+                        return{
+                            idclasificacion:clasificacion.idclasificacion,
+                            clasificacion:nombre,
+                            niveles:Enumerable.from(result).where(`$.idclasificacion == "${clasificacion.idclasificacion}"`).select(function(nivel){
+                                
+                                return{
+                                    id:nivel.idnivel,
+                                    nivel:nivel.nivel
+            
+                                }
+                            }).toArray()
+
+                        }
+                
+
+
             })
 
             clasificacionesOut = {
@@ -134,6 +151,35 @@ class Data {
             const codigo =request.input('codigo');
             const vista =request.input('vista');*/
             const query =`select top 10 * from emp_usuario`;
+            const respuesta   = await data.execQueryMS(query);
+            
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta
+            });
+        } catch (e) {
+            
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+    async getCargos({request,response}){
+      
+        try {
+            /*const cliente =request.input('cliente');
+            const codigo =request.input('codigo');
+            const vista =request.input('vista');*/
+            const query =`exec getCargos`;
             const respuesta   = await data.execQueryMS(query);
             
             response.json({
