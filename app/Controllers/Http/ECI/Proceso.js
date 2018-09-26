@@ -8,6 +8,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         
         const query = `call eci_getProcesos()`;
+        
         const result   = await data.execQuery(cliente,query);
         
         var body = 

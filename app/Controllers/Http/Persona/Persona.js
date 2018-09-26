@@ -128,8 +128,9 @@ class Persona {
         const email =request.input('email') ;
         const idUsuario =request.input('idUsuario') ;
         const nacionalidad = request.input('nacionalidad');
+        const imagen =request.input('imagen') ;
         
-        const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}',${idUsuario}, '${nacionalidad}')`;
+        const query = `call pers_addPersona('${identificador}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${genero}', '${email}',${idUsuario}, '${nacionalidad}','${imagen}')`;
         
         //console.log(query);
         //return false;

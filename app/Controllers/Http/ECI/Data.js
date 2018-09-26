@@ -34,6 +34,38 @@ class Data {
             });
         } 
     }
+
+    async getPersona({request,response}){
+        try {
+            
+            const email =request.input('email');
+            
+            
+            
+            const query =`exec getPersonaByMail '${email}'`;
+            
+            const result   = await data.execQueryMS(query);
+            
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": result[0]
+            });
+        } catch (e) {
+            
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
     async getColaboradoresByFilter({request,response}){
         try {
             /*
@@ -55,7 +87,7 @@ class Data {
             const cargos = cargosArr.toString();
             
             const query =`exec getColaboradoresByFilter '', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}','${cargos}'`;
-            console.log(query)
+            
             const result   = await data.execQueryMS(query);
             
             response.json({
