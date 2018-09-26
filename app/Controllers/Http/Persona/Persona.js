@@ -136,7 +136,7 @@ class Persona {
         //return false;
         const respuesta   = await data.execQuery(cliente,query);
         } catch (e) {
-            console.log(e);
+        
             response.json({
                 "estado": {
                     "codigo": "ERROR",
