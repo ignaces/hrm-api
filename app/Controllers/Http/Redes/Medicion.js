@@ -48,6 +48,22 @@ class Medicion {
 
     response.json(preguntas);
   }
+
+  async getClasificaciones({request,response}){
+    
+    const cliente =request.input('cliente');
+    var idAplicacion = request.input("idAplicacion");
+
+    const query = `call redes_getClasificaciones()`;
+
+    const usp   = await data.execQuery(cliente,query);
+    var clasificaciones = {};
+    clasificaciones.clasificaciones = usp[0][0];
+
+    response.json(clasificaciones);
+  }
+
+  
   
     async getGraph ({request,response}){
         const cliente =request.input('cliente');
