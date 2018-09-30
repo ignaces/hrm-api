@@ -35,6 +35,38 @@ class Data {
         } 
     }
 
+    async getColaboradoresMismoCargoCencoByMail({request,response}){
+        try {
+            
+            const correosIn =request.input('correos');
+            
+            var correos = `'''${correosIn.toString().replace(/,/g , "'',''")}'''`;
+            
+            const query =`exec getColaboradoresMismoCargoCencoByMail ${correos}`;
+            
+            const result   = await data.execQueryMS(query);
+            
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": result
+            });
+        } catch (e) {
+            
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+
     async getPersona({request,response}){
         try {
             
