@@ -1,6 +1,7 @@
 'use strict'
 const Database = use('Database')
 const data = use('App/Utils/Data')
+const dateformat = require('dateformat');
 class Proceso {
     
     async getProcesos({request,response}){
@@ -120,16 +121,21 @@ class Proceso {
          const idPersona =request.input('idPersona');
          
          const query = `call eci_getOpinantes('${idProceso}','${idPersona}')`;
-         console.log(query);
+         
          const result   = await data.execQuery(cliente,query);
          
+          var opinantes = result[0][0]
+         for(var item in opinantes){
+            opinantes[item].fechaInicioEncuesta= dateformat(opinantes[item].fechaInicioEncuesta,"dd-mm-yyyy")
+            opinantes[item].fechaTerminoEncuesta= dateformat(opinantes[item].fechaTerminoEncuesta,"dd-mm-yyyy")
+         }
          var body = 
          {
            estado: {
              codigo: "",
              mensaje: ""
            },
-           data: {opinante: result[0][0]}
+           data: {opinante: opinantes}
            
          }
          response.json(body);

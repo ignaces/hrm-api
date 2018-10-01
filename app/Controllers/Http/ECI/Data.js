@@ -9,8 +9,72 @@ class Data {
             const identificadoresIn =request.input('identificadores');
             
             var identificadores = `'''${identificadoresIn.toString().replace(/,/g , "'',''")}'''`;
+            const queryJof =`exec getColaboradoresJof ${identificadores}`;
             
-            const query =`exec getColaboradoresMismoCargoCenco ${identificadores}`;
+            const resultJof   = await data.execQueryMS(queryJof);
+
+            const jof =Enumerable.from(resultJof).where(`$.isJof == true`).select(function(isjof){
+                                
+                return  isjof.identificador
+                
+            }).toArray()
+
+            const nojof =Enumerable.from(resultJof).where(`$.isJof == false`).select(function(isjof){
+                                
+                return  isjof.identificador
+                
+            }).toArray()
+            
+            var salida=[];
+            
+            if(nojof!=null){
+                var iNoJof= `'''${nojof.toString().replace(/,/g , "'',''")}'''`;
+                const queryMismoCenco =`exec getColaboradoresMismoCargoCenco ${iNoJof}`;
+                
+                const result   = await data.execQueryMS(queryMismoCenco);
+
+                salida=result;
+            }
+            
+            if(jof!=null){
+                var iJof= `'''${jof.toString().replace(/,/g , "'',''")}'''`;
+                const queryCargo =`exec getColaboradoresMismoCargo ${iJof}`;
+                
+                const resultCargo   = await data.execQueryMS(queryCargo);    
+                for(var j in resultCargo){
+                    salida.push(resultCargo[j])
+                }
+                
+            }
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": salida
+            });
+        } catch (e) {
+            
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+
+    async getColaboradoresMismoCargoCencoByMail({request,response}){
+        try {
+            
+            const correosIn =request.input('correos');
+            
+            var correos = `'''${correosIn.toString().replace(/,/g , "'',''")}'''`;
+            
+            const query =`exec getColaboradoresMismoCargoCencoByMail ${correos}`;
             
             const result   = await data.execQueryMS(query);
             
@@ -84,6 +148,7 @@ class Data {
             const niveles = nivelesArr.toString();
 
             const cargosArr = request.input('cargos');
+            
             const cargos = cargosArr.toString();
             
             const query =`exec getColaboradoresByFilter '', '${nombre}','${apellidoPaterno}','${apellidoMaterno}','${email}','${niveles}','${cargos}'`;
