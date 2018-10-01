@@ -41,9 +41,9 @@ class Encuesta {
                 return `call eci_addPersona ('${idEncuesta}','${persona.identificador}','${persona.nombres}','${persona.ap_pat}','${persona.ap_mat}','${persona.genero}','${persona.email}','69e8753a-621c-11e8-8fb3-bc764e100f2b'); `;
             }).toArray();
             
-            var idsPersonas=[]
+            
             for(var i in inserts){
-                console.log(inserts[i]);
+                
                 var resultPersonas   = await data.execQuery(cliente,inserts[i]);
                 //idsPersonas.push(resultPersonas[0][0][0].idPersona)
             }
