@@ -62,6 +62,33 @@ class Jefe {
        
    }
 
+   async getEncuestaOpinantes({request,response}){
+    try{
+     const cliente =request.input('cliente');
+     const idEncuesta =request.input('idEncuesta');
+     
+     
+     const query = `call eci_getEncuestaOpinantes('${idEncuesta}')`;
+     
+     const result   = await data.execQuery(cliente,query);
+     
+     var body = 
+     {
+       estado: {
+         codigo: "",
+         mensaje: ""
+       },
+       data: {opinantes: result[0][0]}
+       
+     }
+     response.json(body);
+    }catch(e){
+      console.log(e);
+      return null;
+    }
+     
+ }
+
     async addEncuesta({request,response}){
        
       try{
