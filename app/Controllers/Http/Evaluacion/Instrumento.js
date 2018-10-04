@@ -52,6 +52,7 @@ class Instrumento {
 
 
     }
+
     async getInstrumento({request,response}){
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
@@ -209,6 +210,85 @@ class Instrumento {
         
         return(facsimil);
     }
+
+
+
+
+    async getInstrumentoEde({request,response}){
+        var id = request.input("hostname");
+        var idOpinante = request.input("idOpinante");
+        var instrumento = [];
+        const cliente =request.input('cliente') ;
+        
+        
+            const query =`call ede_getInstrumento('${idOpinante}')`;
+            //console.log(query);
+            const rQuery   = await data.execQuery(cliente,query);
+            
+            const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
+                return{
+                    id:competencia.idCompetencia,
+                    codigo:competencia.competenciaCodigo,
+                    nombre:competencia.competencia,
+                    descripcion:competencia.competenciaDescripcion
+
+                }
+            })
+
+            instrumento = {
+                nombre:"",
+                tipoInstrumento:"DES",
+                competencias:competencias.toArray()
+            }
+            
+            for(var competencia in instrumento.competencias){
+                var idCompetencia = instrumento.competencias[competencia].id
+                
+                const actividadesClave = Enumerable.from(rQuery[0][0]).where(`$.idCompetencia == "${idCompetencia}"`).distinct("$.idActividadClave").select(function(ac){
+                    return{
+                        id:ac.idActividadClave,
+                        nombre:ac.actividad,
+                        visible:ac.actividadVisible,
+                        orden:ac.actividadOrden
+                    }
+                }).toArray()
+                instrumento.competencias[competencia].actividadesClave = actividadesClave
+
+                for(var actividadClave in actividadesClave){
+                    var idActividadClave = actividadesClave[actividadClave].id
+                    
+                    const criterios = Enumerable.from(rQuery[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
+                        return{
+                            id:criterio.idCriterio,
+                            nombre:criterio.criterio,
+                            orden:criterio.criterioOrden
+                        }
+                    }).toArray()
+                    instrumento.competencias[competencia].actividadesClave[actividadClave].criterios = criterios
+
+                    for(var criterio in criterios){
+                        var idCriterio = criterios[criterio].id
+                        
+                        const escala = Enumerable.from(rQuery[0][0]).where(`$.idCriterio == "${idCriterio}"`).select(function(e){
+                            return{
+                                id:e.idEscalaNivel,
+                                nombre:e.nivelEscala,
+                                orden:e.ordenEscala,
+                                valor:e.valorEscala,
+                                requiereJustificacion:e.requiereJustificacion,
+                                indicador:e.indicador,
+                                estaSeleccionada:e.estaSeleccionada,                                
+                                justificacion: e.justificacion
+                            }
+                        }).toArray()
+                        instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
+                    }
+                }
+            }
+        
+        response.json(instrumento);
+    }
+    
 
 
 }
