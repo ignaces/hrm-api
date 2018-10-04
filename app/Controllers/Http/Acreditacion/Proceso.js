@@ -25,7 +25,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         const query = `call acre_findProcesos(${pagina}, ${registros},'${nombre}', ${activo})`;
         const result   = await data.execQuery(cliente,query);
-        
+        console.log(result)
         const body = 
         {
           estado: {
@@ -67,6 +67,49 @@ class Proceso {
         }
         response.json(body);
     }
+
+    async putRespuestaCS({request,response}){
+        try {
+            var idOpinante = request.input("idOpinante");
+            var idPregunta = request.input("idPregunta");
+            var idAlternativa = request.input("idAlternativa");
+            var justificacion = request.input("justificacion");
+            const cliente =request.input('cliente') ;
+            const query = `call acre_putRespuestaCS('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
+            const result   = await data.execQuery(cliente,query);
+            
+            const body = 
+            {
+            estado: {
+                codigo: "OK",
+                mensaje: ""
+            }
+            
+            }
+            console.log(result)
+            response.json(body);
+        }
+        catch(e)
+        {
+            console.log(e);
+        }
+    }
+
+    async getRespuestaCS({request,response}){
+       try{
+        
+        const cliente = request.input('cliente') ;
+        const query = `call acre_getRespuestaCS()`;
+        const result   = await data.execQuery(cliente,query);
+        console.log(result[0][0])
+        response.json(result[0][0]);
+        }
+        catch(e)
+        {
+            console.log(e);
+        }
+    }
+
 
     async cerrarEvaluacion({request,response}){
         
@@ -289,6 +332,27 @@ class Proceso {
     }
 
     async setOpinanteEvaluado({request, response})
+    {
+        var idDndOpinante = request.input("idDndOpinante");
+        var idPersona = request.input("idPersona");
+        const cliente =request.input('cliente') ;
+        
+        const query = `call acre_setOpinanteEvaluado('${idDndOpinante}', '${idPersona}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {procesos: result[0][0]}
+          
+        }
+        response.json(body);
+    }
+
+    async setOpinanteEvaluadoCS({request, response})
     {
         var idDndOpinante = request.input("idDndOpinante");
         var idPersona = request.input("idPersona");
