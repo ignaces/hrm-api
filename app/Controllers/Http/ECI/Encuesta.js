@@ -31,7 +31,7 @@ class Encuesta {
              * 4.-Crear EciOpinante
              */
             const cliente =request.input('cliente');
-            const identificadores = identificadoresIn.toString().replace(/,/g , "'',''");
+            var identificadores = identificadoresIn.toString().replace(/,/g , "'',''");
 
             const query =`exec getColaboradoresByIdentificador '''${identificadores}'''`;
             
@@ -47,13 +47,32 @@ class Encuesta {
                 var resultPersonas   = await data.execQuery(cliente,inserts[i]);
                 //idsPersonas.push(resultPersonas[0][0][0].idPersona)
             }
-          
+            const queryOpinantes = `call eci_getEncuestaOpinantes('${idEncuesta}')`;
+            
+            const resultOpinantes   = await data.execQuery(cliente,queryOpinantes);
+            
+            identificadores =  Enumerable.from(resultOpinantes[0][0]).select(function(persona){
+                                        return persona.identificador;
+                                    }).toArray();
 
+                                    identificadores=identificadores.toString().replace(/,/g , "'',''");
+            const queryCargados =`exec getColaboradoresByIdentificador '''${identificadores}'''`;
+
+            const resultCargados   = await data.execQueryMS(queryCargados);
+
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": resultCargados
+            });
 
         } catch (e) {
 
 
-
+console.log(e.message)
             
             response.json({
                 "estado": {
