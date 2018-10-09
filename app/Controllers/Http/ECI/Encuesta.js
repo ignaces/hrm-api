@@ -67,7 +67,7 @@ class Encuesta {
          }
          
          const query = `call eci_setEstadoEncuesta('${idEncuesta}','${estado}')`;
-         console.log(query)
+         
          const result   = await data.execQuery(cliente,query);
          
          var body = 

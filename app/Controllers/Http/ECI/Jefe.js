@@ -34,7 +34,7 @@ class Jefe {
 
        // return(body);
     }
-
+    
     async getEncuestas({request,response}){
       try{
        const cliente =request.input('cliente');
