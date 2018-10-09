@@ -160,10 +160,39 @@ class Jefe {
         console.log(e)
         return null;
     }
+
+
     
     
    // return(body);
 } 
+
+async addJefaturaCenco({request,response}){   
+  try{
+      const cliente =request.input('cliente');
+
+      const idPersona =request.input('idPersona');
+      const cenco =request.input('cenco');
+  
+
+      var query     = `call eci_addJefaturaCenco('${idPersona}', '${cenco}')`;
+      const result    = await data.execQuery(cliente,query);
+      
+      var body = 
+      {
+        estado: {
+          codigo: "OK",
+          mensaje: ""
+        },
+        data: result[0][0]
+        
+      }
+      response.json(body);
+  }catch(e){
+      console.log(e)
+      return null;
+  }
+}
   async addEncuesta({request,response}){
        
     try{
