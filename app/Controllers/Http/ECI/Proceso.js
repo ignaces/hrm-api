@@ -145,6 +145,33 @@ class Proceso {
         }
          
      }
+     async isJefeCenco({request,response}){
+      try{
+       const cliente =request.input('cliente');
+       const idPersona =request.input('idPersona');
+       
+       const query = `call eci_isJefeCenco('${idPersona}')`;
+       
+       const result   = await data.execQuery(cliente,query);
+       
+      
+      
+       var body = 
+       {
+         estado: {
+           codigo: "",
+           mensaje: ""
+         },
+         data: result[0][0][0]
+         
+       }
+       response.json(body);
+      }catch(e){
+        console.log(e);
+        return null;
+      }
+       
+   }
     
     
 
