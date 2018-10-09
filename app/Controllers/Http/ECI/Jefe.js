@@ -219,10 +219,12 @@ async addJefaturaCenco({request,response}){
           codigo: "OK",
           mensaje: ""
         },
-        data: result[0][0]
+        data: result[0]
         
       }
       response.json(body);
+
+      return body;
   }catch(e){
       console.log(e)
       return null;
