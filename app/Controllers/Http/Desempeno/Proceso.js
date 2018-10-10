@@ -551,25 +551,5 @@ class Proceso {
         }
         response.json(body);
     }
-
-    async putObservacion({request,response}){
-       
-        var idOpinante = request.input("idOpinante");
-        var observacion = request.input("observacion");
-        const cliente =request.input('cliente') ;
-        const query = `call ede_putObservacion('${idOpinante}', '${observacion}')`;
-        const result   = await data.execQuery(cliente,query);
-        
-        const body = 
-        {
-          estado: {
-            codigo: "OK",
-            mensaje: ""
-          }
-          
-        }
-        response.json(body);
-    }
-
 }
 module.exports=Proceso

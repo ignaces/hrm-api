@@ -220,7 +220,12 @@ class Instrumento {
         var instrumento = [];
         const cliente =request.input('cliente') ;
         
-        
+            const queryObs = `call ede_getObservacion('${idOpinante}')`;
+            const respuestaObs   = await data.execQuery(cliente,queryObs);
+
+            const observacion    = respuestaObs[0][0];
+            //console.log(observacion[0]);
+            
             const query =`call ede_getInstrumento('${idOpinante}')`;
             //console.log(query);
             const rQuery   = await data.execQuery(cliente,query);
@@ -238,6 +243,7 @@ class Instrumento {
             instrumento = {
                 nombre:"",
                 tipoInstrumento:"DES",
+                observacion: observacion[0].observacion,
                 competencias:competencias.toArray()
             }
             
@@ -287,6 +293,50 @@ class Instrumento {
             }
         
         response.json(instrumento);
+    }
+
+    async getParametrosValidacionEvaluacion({request,response}){
+        const cliente =request.input('cliente') ;
+        
+        const query = `call ede_getParametrosValidacion()`;
+        const respuesta   = await data.execQuery(cliente,query);
+
+        const parametros    = respuesta[0][0];
+
+        response.json(parametros);
+    }
+
+    async saveEvaluacionEde({request,response}){
+       
+        var idOpinante      = request.input("idOpinante");
+        var observacion     = request.input("observacion");
+        var finaliza        = request.input("finaliza");
+
+        const cliente =request.input('cliente') ;
+        
+        const query = `call ede_putObservacion('${idOpinante}', '${observacion}')`;
+
+        console.log(query);
+        const result   = await data.execQuery(cliente,query);
+        
+        if(finaliza == 1)
+        {
+            const queryEst = `call ede_saveEstadoEvaluacion('${idOpinante}')`;
+
+            //console.log(queryEst);
+            const result   = await data.execQuery(cliente,queryEst);
+        
+        }
+        
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
     }
     
 
