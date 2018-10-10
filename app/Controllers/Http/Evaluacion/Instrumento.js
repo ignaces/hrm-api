@@ -227,7 +227,7 @@ class Instrumento {
             //console.log(observacion[0]);
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
-            //console.log(query);
+            console.log(cliente);
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -284,7 +284,9 @@ class Instrumento {
                                 requiereJustificacion:e.requiereJustificacion,
                                 indicador:e.indicador,
                                 estaSeleccionada:e.estaSeleccionada,                                
-                                justificacion: e.justificacion
+                                justificacion: e.justificacion,
+                                nivel: e.nivel,
+                                mostrarNivel:e.mostrarNivel
                             }
                         }).toArray()
                         instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
@@ -339,8 +341,26 @@ class Instrumento {
         response.json(body);
     }
     
+    async getEscala({request,response}){
+        var id = request.input("hostname");
+        var idOpinante = request.input("idOpinante");
+        
+        const cliente =request.input('cliente') ;
 
+        const query =`call ede_getEscala('${idOpinante}')`;
+        
+        console.log(query);
+        const rQuery   = await data.execQuery(cliente,query);
 
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": rQuery[0][0]
+        }); 
+    }
 }
 
 module.exports = Instrumento
