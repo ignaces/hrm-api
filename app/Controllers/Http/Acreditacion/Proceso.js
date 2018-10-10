@@ -97,12 +97,21 @@ class Proceso {
 
     async getRespuestaCS({request,response}){
        try{
-        
-        const cliente = request.input('cliente') ;
-        const query = `call acre_getRespuestaCS()`;
-        const result   = await data.execQuery(cliente,query);
-        console.log(result[0][0])
-        response.json(result[0][0]);
+            const cliente = request.input('cliente') ;
+            //console.log(cliente)
+            const query = `call acre_getRespuestaCS()`;
+            const result   = await data.execQuery(cliente,query);
+            console.log(result.body);
+            var body = 
+            {
+            estado: {
+                codigo: "",
+                mensaje: ""
+            },
+            data: {procesos: result[0][0]}
+            
+            }
+            response.json(body);
         }
         catch(e)
         {

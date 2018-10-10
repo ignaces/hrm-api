@@ -20,6 +20,72 @@ class Encuesta {
             });
         } 
     }
+    async getEncuestasColaborador({request,response}){
+        try{
+         const cliente =request.input('cliente');
+         const idProceso =request.input('idProceso');
+         const identificador =request.input('identificador');
+         
+         const query = `call eci_getEncuestasColaborador('${idProceso}','${identificador}')`;
+         
+         const result   = await data.execQuery(cliente,query);
+         
+         var body = 
+         {
+           estado: {
+             codigo: "",
+             mensaje: ""
+           },
+           data:  result[0][0]
+           
+         }
+         response.json(body);
+        }catch(e){
+          console.log(e);
+          return null;
+        }
+         
+     }
+     async setEstado({request,response}){
+        try{
+         const cliente =request.input('cliente');
+         const idEncuesta =request.input('idEncuesta');
+         var estado =request.input('estado');
+         
+         switch(estado){
+             case "A":
+                estado = "APROV";
+             break;
+
+             case "B":
+                estado="REJECT";
+             break;
+
+             case "E":
+                estado="VALIDACION";
+             break;
+         }
+         
+         const query = `call eci_setEstadoEncuesta('${idEncuesta}','${estado}')`;
+         
+         const result   = await data.execQuery(cliente,query);
+         
+         var body = 
+         {
+           estado: {
+             codigo: "",
+             mensaje: ""
+           },
+           data:  result[0][0]
+           
+         }
+         response.json(body);
+        }catch(e){
+          console.log(e);
+          return null;
+        }
+         
+     }
     async setOpinantesEncuesta({request,response}){
         const identificadoresIn =request.input('identificadores');
         const idEncuesta = request.input("idEncuesta");

@@ -34,7 +34,7 @@ class Jefe {
 
        // return(body);
     }
-
+    
     async getEncuestas({request,response}){
       try{
        const cliente =request.input('cliente');
@@ -62,6 +62,7 @@ class Jefe {
       }
        
    }
+   
 
    async getEncuestaOpinantes({request,response}){
     try{
@@ -101,6 +102,40 @@ class Jefe {
     }
      
  }
+ async getEquipo({request,response}){
+  try{
+   const cliente =request.input('cliente');
+   const idPersona =request.input('idPersona');
+   
+   
+   const query = `select identificador from Persona where id='${idPersona}'`;
+   
+   const rPersona   = await data.execQuery(cliente,query);
+   
+   var identificador = rPersona[0][0].identificador;
+
+       
+  
+  const queryEquipo =`exec getEquipoByLider '${identificador}'`;
+console.log(queryEquipo)
+  const rEquipo   = await data.execQueryMS(queryEquipo);
+          
+   var body = 
+   {
+     estado: {
+       codigo: "",
+       mensaje: ""
+     },
+     data:rEquipo
+     
+   }
+   response.json(body);
+  }catch(e){
+    console.log(e);
+    return null;
+  }
+   
+}
 
     async addJustificacion({request,response}){
        
@@ -160,10 +195,41 @@ class Jefe {
         console.log(e)
         return null;
     }
+
+
     
     
    // return(body);
 } 
+
+async addJefaturaCenco({request,response}){   
+  try{
+      const cliente =request.input('cliente');
+
+      const idPersona =request.input('idPersona');
+      const cenco =request.input('cenco');
+  
+
+      var query     = `call eci_addJefaturaCenco('${idPersona}', '${cenco}')`;
+      const result    = await data.execQuery(cliente,query);
+      
+      var body = 
+      {
+        estado: {
+          codigo: "OK",
+          mensaje: ""
+        },
+        data: result[0]
+        
+      }
+      response.json(body);
+
+      return body;
+  }catch(e){
+      console.log(e)
+      return null;
+  }
+}
   async addEncuesta({request,response}){
        
     try{

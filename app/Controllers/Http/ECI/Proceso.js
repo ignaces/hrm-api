@@ -90,7 +90,7 @@ class Proceso {
                 var porcentaje = tipoEncuestas[i].porcentaje;
                 var query     = `call eci_updTipoEncuestaPorcentaje('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${activo}', '${porcentaje}')`;
                 const result    = await data.execQuery(cliente,query);
-                console.log(result);
+             
             }
             
             
@@ -145,6 +145,33 @@ class Proceso {
         }
          
      }
+     async isJefeCenco({request,response}){
+      try{
+       const cliente =request.input('cliente');
+       const idPersona =request.input('idPersona');
+       
+       const query = `call eci_isJefeCenco('${idPersona}')`;
+       
+       const result   = await data.execQuery(cliente,query);
+       
+      
+      
+       var body = 
+       {
+         estado: {
+           codigo: "",
+           mensaje: ""
+         },
+         data: result[0][0][0]
+         
+       }
+       response.json(body);
+      }catch(e){
+        console.log(e);
+        return null;
+      }
+       
+   }
     
     
 
@@ -159,18 +186,18 @@ class Proceso {
             const idPersona =request.input('idPersona');
             const idCenco =request.input('idCenco');
         
-            console.log(idTipoEncuesta);
+        
     
             var query     = `call eci_addProcesoServicio('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${nombre}', '${descripcion}')`;
             const result    = await data.execQuery(cliente,query);
-            console.log(result);
+        
         
             
             var body = 
             {
               estado: {
-                codigo: "OK",
-                mensaje: ""
+                codigo: result[0][0][0].codigo,
+                mensaje: result[0][0][0].mensaje
               },
               data: {}
               
