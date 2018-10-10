@@ -531,5 +531,25 @@ class Proceso {
         });
     }
 
+    async putRespuesta({request,response}){
+       
+        var idOpinante = request.input("idOpinante");
+        var idPregunta = request.input("idPregunta");
+        var idAlternativa = request.input("idAlternativa");
+        var justificacion = request.input("justificacion");
+        const cliente =request.input('cliente') ;
+        const query = `call ede_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
+        const result   = await data.execQuery(cliente,query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
+    }
 }
 module.exports=Proceso
