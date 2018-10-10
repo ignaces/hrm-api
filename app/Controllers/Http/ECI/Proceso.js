@@ -90,7 +90,7 @@ class Proceso {
                 var porcentaje = tipoEncuestas[i].porcentaje;
                 var query     = `call eci_updTipoEncuestaPorcentaje('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${activo}', '${porcentaje}')`;
                 const result    = await data.execQuery(cliente,query);
-                console.log(result);
+             
             }
             
             
@@ -186,18 +186,18 @@ class Proceso {
             const idPersona =request.input('idPersona');
             const idCenco =request.input('idCenco');
         
-            console.log(idTipoEncuesta);
+        
     
             var query     = `call eci_addProcesoServicio('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${nombre}', '${descripcion}')`;
             const result    = await data.execQuery(cliente,query);
-            console.log(result);
+        
         
             
             var body = 
             {
               estado: {
-                codigo: "OK",
-                mensaje: ""
+                codigo: result[0][0][0].codigo,
+                mensaje: result[0][0][0].mensaje
               },
               data: {}
               
