@@ -185,19 +185,41 @@ class Proceso {
             const idProceso =request.input('idProceso');
             const idPersona =request.input('idPersona');
             const idCenco =request.input('idCenco');
-        
-        
-    
-            var query     = `call eci_addProcesoServicio('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${nombre}', '${descripcion}')`;
-            const result    = await data.execQuery(cliente,query);
-        
+            var codigo="0";
+            var mensaje="";
+            
+            const qCenco = `select * from EciCenco where id='${idCenco}'`;
+            const rCenco   = await data.execQuery(cliente,qCenco);
+
+            var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
+            
+            const resultJefes    = await data.execQueryMS(qJefes);
+            
+            const qServicios   = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
+            const rServicios   = await data.execQuery(cliente,qServicios);
+            console.log(qJefes)
+            var servicios = rServicios[0][0].length;
+            
+            console.log(resultJefes)
+          
+            if(resultJefes.length <= servicios){
+                codigo ="2";
+                mensaje=`No se puede crear el servicio por qué existen ${resultJefes.length} lideres en este cenco y ya hay ${servicios} servicios creados.`;
+            }else{
+                var query     = `call eci_addProcesoServicio('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${nombre}', '${descripcion}')`;
+                const result    = await data.execQuery(cliente,query);
+                codigo = result[0][0][0].codigo;
+                mensaje = result[0][0][0].mensaje;
+            }
+            
+            
         
             
             var body = 
             {
               estado: {
-                codigo: result[0][0][0].codigo,
-                mensaje: result[0][0][0].mensaje
+                codigo: codigo,
+                mensaje: mensaje
               },
               data: {}
               

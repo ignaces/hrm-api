@@ -12,7 +12,7 @@ class Jefe {
         const idCenco =request.input('idCenco');
         
         const query = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
-        console.log(query);
+        
         const result   = await data.execQuery(cliente,query);
         
         var body = 
