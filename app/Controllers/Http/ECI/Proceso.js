@@ -197,10 +197,10 @@ class Proceso {
             
             const qServicios   = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
             const rServicios   = await data.execQuery(cliente,qServicios);
-            console.log(qJefes)
+            
             var servicios = rServicios[0][0].length;
             
-            console.log(resultJefes)
+            
           
             if(resultJefes.length <= servicios){
                 codigo ="2";
