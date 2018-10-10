@@ -66,7 +66,6 @@ class Informe {
             return{
                 nombre:competencia.nombreCompetencia,
                 codigo:competencia.codigo,
-                valor:competencia.valor,
                 logro:competencia.logro,
                 brecha:competencia.brecha
             }
@@ -80,9 +79,7 @@ class Informe {
             const instrumentos = Enumerable.from(result[0][0]).where(`$.codigo == "${codigoCompetencia}"`).distinct("$.nombre").select(function(instrumento){
                 return{
                     nombre:instrumento.nombre,
-                    total:instrumento.total,
-                    totalBuenas:instrumento.totalBuenas,
-                    totalMalas:instrumento.totalMalas,
+                    
                     logro:instrumento.instrumentoLogro,
                     brecha:instrumento.instrumentoBrecha
                 }
