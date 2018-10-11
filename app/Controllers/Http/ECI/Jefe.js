@@ -12,7 +12,7 @@ class Jefe {
         const idCenco =request.input('idCenco');
         
         const query = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
-        console.log(query);
+        
         const result   = await data.execQuery(cliente,query);
         
         var body = 
@@ -34,6 +34,37 @@ class Jefe {
 
        // return(body);
     }
+    async getLideresCenco({request,response}){
+      try{
+       const cliente =request.input('cliente');
+       const idCenco =request.input('idCenco');
+       
+       const qCenco = `select * from EciCenco where id='${idCenco}'`;
+       const rCenco   = await data.execQuery(cliente,qCenco);
+
+       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
+      
+       const resultJefes    = await data.execQueryMS(qJefes);
+       
+       var body = 
+       {
+         estado: {
+           codigo: "",
+           mensaje: ""
+         },
+         data: resultJefes
+         
+       }
+       response.json(body);
+      }catch(e){
+        console.log(e);
+        return null;
+      }
+       
+       
+
+      // return(body);
+   }
     
     async getEncuestas({request,response}){
       try{
