@@ -209,7 +209,6 @@ async addJefaturaCenco({request,response}){
       const idPersona =request.input('idPersona');
       const cenco =request.input('cenco');
   
-
       var query     = `call eci_addJefaturaCenco('${idPersona}', '${cenco}')`;
       const result    = await data.execQuery(cliente,query);
       
