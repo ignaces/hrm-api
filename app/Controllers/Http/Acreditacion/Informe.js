@@ -287,14 +287,12 @@ class Informe {
                         }
                     }).toArray()
                     instrumentos[instrumento].competencias[competencia].preguntas[pregunta].criterios[criterio].alternativas = alternativas
-
-                    
+   
                 }
                 }
             }
 
         }
-
 
         const body = 
         {
@@ -305,8 +303,7 @@ class Informe {
           paginacion: "",
           data: {
               instrumento: instrumentos
-          }
-          
+          }          
         }
     
         response.json(body);
@@ -334,7 +331,7 @@ class Informe {
 
         instrumento = {
             nombre:"",
-            tipoInstrumento:tipoInstrumento,
+            
             competencias:competencias.toArray()
         }
         
@@ -344,7 +341,7 @@ class Informe {
             const actividadesClave = Enumerable.from(rQuery[0][0]).where(`$.idCompetencia == "${idCompetencia}"`).distinct("$.idActividadClave").select(function(ac){
                 return{
                     id:ac.idActividadClave,
-                    nombre:ac.actividad,
+                    nombre:ac.actividadClave,
                     visible:ac.actividadVisible,
                     orden:ac.actividadOrden
                 }
@@ -383,7 +380,20 @@ class Informe {
             }
         }
         
-        response.json(instrumento);
+        const body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: {
+              instrumento: instrumento
+          }          
+        }
+    
+        response.json(body);
+        
     }
 }
 
