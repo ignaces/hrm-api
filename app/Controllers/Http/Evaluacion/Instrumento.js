@@ -224,10 +224,11 @@ class Instrumento {
             const respuestaObs   = await data.execQuery(cliente,queryObs);
 
             const observacion    = respuestaObs[0][0];
-            //console.log(observacion[0]);
+            
+            console.log(queryObs);
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
-            console.log(cliente);
+            console.log(query);
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -239,14 +240,27 @@ class Instrumento {
 
                 }
             })
-
-            instrumento = {
-                nombre:"",
-                tipoInstrumento:"DES",
-                observacion: observacion[0].observacion,
-                competencias:competencias.toArray()
+            console.log("competencias")
+            try{
+                
+                instrumento = {
+                    nombre:"",
+                    tipoInstrumento:"DES",
+                    observacion: observacion[0].observacion,
+                    competencias:competencias.toArray()
+                }
+            }
+            catch(e)
+            {
+                instrumento = {
+                    nombre:"",
+                    tipoInstrumento:"DES",
+                    observacion: "",
+                    competencias:competencias.toArray()
+                }
             }
             
+            console.log("instrumento")
             for(var competencia in instrumento.competencias){
                 var idCompetencia = instrumento.competencias[competencia].id
                 
