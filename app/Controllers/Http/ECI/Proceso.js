@@ -74,6 +74,7 @@ class Proceso {
     }  
 
 async updLiderServicio({request,response}){
+  console.log()
   try{
     const cliente =request.input('cliente');
     const idServicio =request.input('idServicio');
@@ -83,7 +84,9 @@ async updLiderServicio({request,response}){
     var queryPersona = `select * from emp_usuario where identificador='${identificador}'`
     var resultPersona = await data.execQueryMS(queryPersona);
     var persona = resultPersona[0]
+    
     const queryInPersona = `call pers_addPersona('${identificador}', '${persona.nombres}', '${persona.ap_pat}', '${persona.ap_mat}', '${persona.genero}', '${persona.email}','', 'cl','${persona.foto}')`;
+    
     const resultIn = await data.execQuery(cliente,queryInPersona);
 
     const queryServicio = `call eci_updLiderServicio('${idServicio}','${identificador}');`
@@ -152,34 +155,7 @@ async updLiderServicio({request,response}){
     } 
 
 
-    async updLiderServicio({request,response}){
-       
-      try{
-          const cliente =request.input('cliente');
-          const idServicio =request.input('idServicio');
-          const identificador =request.input('identificador');
-         
-          var query     = `call eci_updLiderServicio('${idServicio}','${identificador}')`;
-          const result    = await data.execQuery(cliente,query);
-          
-          var body = 
-          {
-            estado: {
-              codigo: "OK",
-              mensaje: ""
-            },
-            data: {}
-            
-          }
-          response.json(body);
-      }catch(e){
-          console.log(e)
-          return null;
-      }
-      
-      
-     // return(body);
-  } 
+    
 
     async getOpinantes({request,response}){
         try{
