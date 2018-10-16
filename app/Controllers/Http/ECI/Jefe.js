@@ -148,7 +148,7 @@ class Jefe {
        
   
   const queryEquipo =`exec getEquipoByLider '${identificador}'`;
-console.log(queryEquipo)
+
   const rEquipo   = await data.execQueryMS(queryEquipo);
           
    var body = 
@@ -279,9 +279,9 @@ async addJefaturaCenco({request,response}){
 
         var query     = `call eci_addEncuesta('${idProceso}','${idPersona}','${idCenco}','${idServicio}', '${fechaInicio}', '${fechaTermino}',
          '${chkPreguntaAdicional}', '${textoPreguntaAdicional}', '${escala}')`;
+         
         const result    = await data.execQuery(cliente,query);
         
-        console.log(query);
         
         var body = 
         {
