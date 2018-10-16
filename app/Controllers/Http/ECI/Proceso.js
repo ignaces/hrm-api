@@ -72,7 +72,7 @@ class Proceso {
         response.json(body);
        // return(body);
     }  
-
+    
 
     async updTipoEncuestaPorcentaje({request,response}){
        
@@ -113,6 +113,36 @@ class Proceso {
         
        // return(body);
     } 
+
+
+    async updLiderServicio({request,response}){
+       
+      try{
+          const cliente =request.input('cliente');
+          const idServicio =request.input('idServicio');
+          const identificador =request.input('identificador');
+         
+          var query     = `call eci_updLiderServicio('${idServicio}','${identificador}')`;
+          const result    = await data.execQuery(cliente,query);
+          
+          var body = 
+          {
+            estado: {
+              codigo: "OK",
+              mensaje: ""
+            },
+            data: {}
+            
+          }
+          response.json(body);
+      }catch(e){
+          console.log(e)
+          return null;
+      }
+      
+      
+     // return(body);
+  } 
 
     async getOpinantes({request,response}){
         try{
