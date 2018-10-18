@@ -60,9 +60,18 @@ class Incentivos {
       const idPuntoDeVenta = request.input('idPuntoDeVenta');
       
       const query = `call inc_getCheckIn('${idPersona}', '${idPuntoDeVenta}')`;
+      //console.log(query);
       const usp   = await data.execQuery(cliente,query);
+      //response.json(1);
+      try
+      {
+        response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        response.json(1);
+      } 
       
-      response.json(usp[0][0]);
     }
 
     async getProductoPOS({request,response})
