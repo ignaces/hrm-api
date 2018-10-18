@@ -432,6 +432,95 @@ class Proceso {
             "data": evaluados
         });
     }
+    async getListaEvaluadosGrupal({request,response}){
+        var idEtapa=request.input('idEtapa')
+        var idEvaluador=request.input('idEvaluador')
+        var idProceso=request.input('idProceso')
+
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getEvaluacionGrupal('${idEvaluador}','${idEtapa}','${idProceso}')`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        const relacionesCompetencia = respuesta[0][3];
+        const competencias = respuesta[0][2];
+        const evaluados = Enumerable.from(respuesta[0][0]).select(function(evaluado){
+        
+            return{
+                
+                    idOpinante:evaluado.idOpinante,
+                    idProcesoPersona:evaluado.idProcesoPersona,
+                    idPersona:evaluado.idPersona,
+                    nombres:evaluado.nombres,
+                    competencias:Enumerable.from(relacionesCompetencia).where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
+                        
+
+                        return{
+                                idOpinante:competencia.idOpinante,
+                                idCompetencia:competencia.idCompetencia,
+                                idActividadClave:competencia.idActividadClave,
+                                idCriterio:competencia.idCriterio,
+                                disabled:false,
+                                niveles:[
+                                    {
+                                        valor:0.5,nombre:"C"
+                                    },
+                                    {
+                                        valor:2,nombre:"B"
+                                    },
+                                    {
+                                        valor:3,nombre:"A"
+                                    }
+                                ]
+                        }
+                    }).toArray()
+
+                }
+            }).toArray();
+        
+        
+            
+            for(var e in evaluados){
+               var comps=[];
+               for(var c in competencias){
+                    var competencia = {
+                        idOpinante:'',
+                        idCompetencia:'',
+                        idActividadClave:'',
+                        idCriterio:'',
+                        disabled:true
+                    }
+                    var iteracionComp = competencias[c];
+                    
+                    for(var ec in evaluados[e].competencias){
+                        var eComp = evaluados[e].competencias[ec];
+                       
+                        if(eComp.idCompetencia==iteracionComp.idCompetencia){
+                            competencia = eComp;
+                            
+                        }
+                        
+                
+                    }
+                    comps.push(competencia)
+                }
+                
+                evaluados[e].competencias=comps;
+                
+            }
+        
+        var salida={
+            competencias:competencias,
+            evaluados:evaluados
+        }
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": salida
+        });
+    }
 
     async getEstadosEde({request,response}){
        
