@@ -153,14 +153,15 @@ class Metas {
     }
 
     async putRespuesta({request,response}){
-       
+
+        var idOpinante = request.input("idOpinante");
         var idMeta = request.input("idMeta");
         var idAlternativa = request.input("idAlternativa");
         var justificacion = request.input("justificacion");
         
         const cliente =request.input('cliente') ;
         
-        const query = `call ede_putRespuestaMeta('${idMeta}', '${idAlternativa}', '${justificacion}')`;
+        const query = `call ede_putRespuestaMeta('${idMeta}', '${idAlternativa}', '${justificacion}', '${idOpinante}')`;
 
         const result   = await data.execQuery(cliente,query);
         
