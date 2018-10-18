@@ -276,7 +276,7 @@ class Data {
             /*const cliente =request.input('cliente');
             const codigo =request.input('codigo');
             const vista =request.input('vista');*/
-            const query =`select * from emp_usuario where idestado = 0 order by nombres`;
+            const query =`select * from emp_usuario where idestado = 1 order by nombres`;
             const respuesta   = await data.execQueryMS(query);
             
             response.json({
