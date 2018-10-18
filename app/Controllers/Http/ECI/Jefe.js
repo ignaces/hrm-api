@@ -260,6 +260,89 @@ async addJefaturaCenco({request,response}){
       return null;
   }
 }
+
+async updBackup({request,response}){
+  
+  try{
+    const cliente =request.input('cliente');
+    const idPersona =request.input('idPersona');
+    const identificador =request.input('identificador');
+    const idProceso =request.input('idProceso');
+
+
+    
+
+    var queryPersona = `select * from emp_usuario where identificador='${identificador}'`
+    var resultPersona = await data.execQueryMS(queryPersona);
+    var persona = resultPersona[0]
+    
+    const queryInPersona = `call pers_addPersona('${identificador}', '${persona.nombres}', '${persona.ap_pat}', '${persona.ap_mat}', '${persona.genero}', '${persona.email}','', 'cl','${persona.foto}')`;
+    const resultIn = await data.execQuery(cliente,queryInPersona);
+
+
+
+    const queryServicio = `call eci_updBackup('${idProceso}','${idPersona}', '${identificador}');`
+    
+console.log(queryServicio);
+
+    const resultServicio = await data.execQuery(cliente,queryServicio);
+
+    
+    
+    
+    var body = 
+    {
+      estado: {
+        codigo: "OK",
+        mensaje: ""
+      },
+      data: {}
+      
+    }
+    response.json(body);
+}catch(e){
+    console.log(e)
+    return null;
+}
+
+
+// return(body);
+}
+
+
+async getBackup({request,response}){
+  
+  try{
+    const cliente =request.input('cliente');
+    const idPersona =request.input('idPersona');
+    const idProceso =request.input('idProceso');
+
+    const queryServicio = `call eci_getBackup('${idProceso}','${idPersona}');`
+    
+console.log(queryServicio);
+
+    const result = await data.execQuery(cliente,queryServicio);
+
+
+    var body = 
+    {
+      estado: {
+        codigo: "OK",
+        mensaje: ""
+      },
+      data: {backup: result[0][0]}
+      
+    }
+    response.json(body);
+}catch(e){
+    console.log(e)
+    return null;
+}
+
+
+// return(body);
+}
+
   async addEncuesta({request,response}){
        
     try{
