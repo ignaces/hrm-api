@@ -225,10 +225,10 @@ class Instrumento {
 
             const observacion    = respuestaObs[0][0];
             
-            console.log(queryObs);
+            //console.log(queryObs);
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
-            console.log(query);
+            //console.log(query);
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -240,14 +240,30 @@ class Instrumento {
 
                 }
             })
-            console.log("competencias")
+
+            const queryMet =`call ede_getInstrumentoMeta('${idOpinante}')`;
+            //console.log(query);
+            const rQueryMet   = await data.execQuery(cliente,queryMet);
+            //console.log(rQueryMet[0][0]);
+            
+            const metas = Enumerable.from(rQueryMet[0][0]).distinct("$.idMeta").select(function(meta){
+                return{
+                    id:meta.idMeta,
+                    codigo:meta.metaCodigo,
+                    nombre:meta.nombre,
+                    descripcion:meta.metaDescripcion
+
+                }
+            });
+            //console.log("competencias")
             try{
                 
                 instrumento = {
                     nombre:"",
                     tipoInstrumento:"DES",
                     observacion: observacion[0].observacion,
-                    competencias:competencias.toArray()
+                    competencias:competencias.toArray(),
+                    metas:metas.toArray()
                 }
             }
             catch(e)
@@ -256,11 +272,12 @@ class Instrumento {
                     nombre:"",
                     tipoInstrumento:"DES",
                     observacion: "",
-                    competencias:competencias.toArray()
+                    competencias:competencias.toArray(),
+                    metas:metas.toArray()
                 }
             }
             
-            console.log("instrumento")
+            //console.log("instrumento")
             for(var competencia in instrumento.competencias){
                 var idCompetencia = instrumento.competencias[competencia].id
                 
@@ -307,7 +324,61 @@ class Instrumento {
                     }
                 }
             }
-        
+
+            
+            //console.log("instrumento")
+            for(var meta in instrumento.metas){
+                var idMeta = instrumento.metas[meta].id
+                //console.log(idMeta);
+                const actividadesClave = Enumerable.from(rQueryMet[0][0]).where(`$.idMeta == "${idMeta}"`).distinct("$.idActividadClave").select(function(ac){
+                    return{
+                        id:ac.idActividadClave,
+                        nombre:ac.actividad,
+                        visible:ac.actividadVisible,
+                        orden:ac.actividadOrden
+                    }
+                }).toArray()
+                instrumento.metas[meta].actividadesClave = actividadesClave
+
+                for(var actividadClave in actividadesClave){
+                    var idActividadClave = actividadesClave[actividadClave].id
+                    
+                    const criterios = Enumerable.from(rQueryMet[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
+                        return{
+                            id:criterio.idCriterio,
+                            nombre:criterio.criterio,
+                            orden:criterio.criterioOrden
+                        }
+                    }).toArray()
+                    //console.log(meta, actividadClave, criterios);
+                    instrumento.metas[meta].actividadesClave[actividadClave].criterios = criterios
+                    
+                    for(var criterio in criterios){
+                        var idCriterio = criterios[criterio].id
+                        
+                        const escala = Enumerable.from(rQueryMet[0][0]).where(`$.idCriterio == "${idCriterio}"`).select(function(e){
+                            return{
+                                id:e.idEscalaNivel,
+                                nombre:e.nivelEscala,
+                                orden:e.ordenEscala,
+                                valor:e.valorEscala,
+                                requiereJustificacion:e.requiereJustificacion,
+                                indicador:e.indicador,
+                                estaSeleccionada:e.estaSeleccionada,                                
+                                justificacion: e.justificacion,
+                                nivel: e.nivel,
+                                mostrarNivel:e.mostrarNivel
+                            }
+                        }).toArray()
+                        instrumento.metas[meta].actividadesClave[actividadClave].criterios[criterio].escala = escala
+                    }
+                }
+            }
+            
+
+
+
+
         response.json(instrumento);
     }
 
