@@ -152,6 +152,29 @@ class Metas {
         //response.json(dimensiones);
     }
 
+    async putRespuesta({request,response}){
+       
+        var idMeta = request.input("idMeta");
+        var idAlternativa = request.input("idAlternativa");
+        var justificacion = request.input("justificacion");
+        
+        const cliente =request.input('cliente') ;
+        
+        const query = `call ede_putRespuestaMeta('${idMeta}', '${idAlternativa}', '${justificacion}')`;
+
+        const result   = await data.execQuery(cliente,query);
+        
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
+    }
+
 
 }
 
