@@ -269,9 +269,6 @@ async updBackup({request,response}){
     const identificador =request.input('identificador');
     const idProceso =request.input('idProceso');
 
-
-    
-
     var queryPersona = `select * from emp_usuario where identificador='${identificador}'`
     var resultPersona = await data.execQueryMS(queryPersona);
     var persona = resultPersona[0]
@@ -279,17 +276,9 @@ async updBackup({request,response}){
     const queryInPersona = `call pers_addPersona('${identificador}', '${persona.nombres}', '${persona.ap_pat}', '${persona.ap_mat}', '${persona.genero}', '${persona.email}','', 'cl','${persona.foto}')`;
     const resultIn = await data.execQuery(cliente,queryInPersona);
 
-
-
     const queryServicio = `call eci_updBackup('${idProceso}','${idPersona}', '${identificador}');`
-    
-console.log(queryServicio);
-
     const resultServicio = await data.execQuery(cliente,queryServicio);
 
-    
-    
-    
     var body = 
     {
       estado: {
@@ -304,11 +293,35 @@ console.log(queryServicio);
     console.log(e)
     return null;
 }
-
-
 // return(body);
 }
 
+async getIsBackup({request,response}){
+  
+  try{
+    const cliente =request.input('cliente');
+    const idPersona =request.input('idPersona');
+    const idProceso =request.input('idProceso');
+
+    const queryServicio = `call eci_getIsBackup('${idProceso}','${idPersona}');`
+    const resultServicio = await data.execQuery(cliente,queryServicio);
+
+    var body = 
+    {
+      estado: {
+        codigo: "OK",
+        mensaje: ""
+      },
+      data: { personas : resultServicio[0][0]}
+      
+    }
+    response.json(body);
+}catch(e){
+    console.log(e)
+    return null;
+}
+// return(body);
+}
 
 async getBackup({request,response}){
   
@@ -356,13 +369,16 @@ console.log(queryServicio);
         const fechaInicio =request.input('fechaInicio');
         const fechaTermino =request.input('fechaTermino');
         const chkPreguntaAdicional =request.input('chkPreguntaAdicional');
-        const textoPreguntaAdicional =request.input('textoPreguntaAdicional');
+        const textoPreguntaAdicional1 =request.input('textoPreguntaAdicional1');
+        const textoPreguntaAdicional2 =request.input('textoPreguntaAdicional2');
         const escala =request.input('escala');
     
 
         var query     = `call eci_addEncuesta('${idProceso}','${idPersona}','${idCenco}','${idServicio}', '${fechaInicio}', '${fechaTermino}',
-         '${chkPreguntaAdicional}', '${textoPreguntaAdicional}', '${escala}')`;
+         '${chkPreguntaAdicional}', '${textoPreguntaAdicional1}', '${escala}', '${textoPreguntaAdicional2}')`;
          
+console.log(query);
+
         const result    = await data.execQuery(cliente,query);
         
         
