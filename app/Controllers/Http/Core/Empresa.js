@@ -29,8 +29,8 @@ class Empresa {
         try {
             const cliente =request.input('cliente') ;
             const query =`call core_getMensaje()`;
-            const respuesta   = await data.execQuery(cliente,query);
             
+            const respuesta   = await data.execQuery(cliente,query);
             response.json({
                 "estado": {
                     "codigo": "OK",
