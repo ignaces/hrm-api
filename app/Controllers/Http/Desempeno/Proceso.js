@@ -142,7 +142,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         const query =  `call ede_getEtapas('${idProceso}','${idEtapa}')`;
         const respuesta   = await data.execQuery(cliente,query);
-        console.log(respuesta)
+        //console.log(respuesta)
         response.json({
             "estado": {
                 "codigo": "OK",
@@ -379,11 +379,11 @@ class Proceso {
         var codigoActor=request.input('codigoActor')
         var idAccionPersona=request.input('idAccionPersona')
         const cliente =request.input('cliente') ;
-        console.log ("idEtapa " + idEtapa)
+        /*console.log ("idEtapa " + idEtapa)
         console.log ("idPErsonaActor " + idPersonaActor)
         console.log ("codigoActor " + codigoActor)
         console.log (" idAccionPersona " + idAccionPersona)
-        console.log ("cliente " + cliente)
+        console.log ("cliente " + cliente)*/
         const query =  `call ede_getListaEvaluados('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
         const respuesta   = await data.execQuery(cliente,query);
         
@@ -443,14 +443,20 @@ class Proceso {
         const respuesta   = await data.execQuery(cliente,query);
         const relacionesCompetencia = respuesta[0][3];
         const competencias = respuesta[0][2];
-        const evaluados = Enumerable.from(respuesta[0][0]).select(function(evaluado){
+        const niveles =  respuesta[0][5];
+        const respuestas =  respuesta[0][4];
+        var registros = respuesta[0][0];
         
+        const evaluados = Enumerable.from(registros).select(function(evaluado){
+            
+            
             return{
                 
                     idOpinante:evaluado.idOpinante,
                     idProcesoPersona:evaluado.idProcesoPersona,
                     idPersona:evaluado.idPersona,
                     nombres:evaluado.nombres,
+                    observacion:evaluado.observacion,
                     competencias:Enumerable.from(relacionesCompetencia).where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
                         
 
@@ -460,17 +466,23 @@ class Proceso {
                                 idActividadClave:competencia.idActividadClave,
                                 idCriterio:competencia.idCriterio,
                                 disabled:false,
-                                niveles:[
-                                    {
-                                        valor:0.5,nombre:"C"
-                                    },
-                                    {
-                                        valor:2,nombre:"B"
-                                    },
-                                    {
-                                        valor:3,nombre:"A"
+                                niveles:Enumerable.from(niveles).where(`$.idOpinante=="${evaluado.idOpinante}" && $.idCompetencia=="${competencia.idCompetencia}"`).select(function(nivel){
+                                    return {
+                                        id:nivel.idNivel,
+                                        valor:nivel.valor,
+                                        nombre:nivel.nivel,
+                                        selected:Enumerable.from(respuestas).where(`$.idEscalaNivel!=null && $.idOpinante=="${evaluado.idOpinante}" && $.idCriterio=="${competencia.idCriterio}"`).select(function(seleccionado){
+                                            
+                                            
+                                            if(nivel.idNivel==seleccionado.idEscalaNivel){
+                                                return true;
+                                            }else{
+                                                return false;
+                                            }
+                                            
+                                        }).toArray()[0]
                                     }
-                                ]
+                                }).toArray()
                         }
                     }).toArray()
 
@@ -501,11 +513,30 @@ class Proceso {
                         
                 
                     }
+                    
                     comps.push(competencia)
                 }
                 
                 evaluados[e].competencias=comps;
                 
+                const queryResultado = `call ede_calculaEvaluacion('${evaluados[e].idOpinante}')`;
+                    
+                const resultado  =  await data.execQuery(cliente,queryResultado);
+                
+                var resultados={}
+                resultados.competencias={nivel:"No Disponible"};
+                resultados.metas = {nivel:"No Disponible"};
+                resultados.global = {nivel:"No Disponible"};
+                if(resultado[0][0][0]!=null){
+                    resultados.competencias = resultado[0][0][0];
+                }
+                if(resultado[0][1][0]!=null){
+                    resultados.metas = resultado[0][1][0];
+                }
+                if(resultados.metas.nivel!="No Disponible" && resultados.competencias.nivel!="No Disponible"){
+                    resultados.global = {nivel:`${resultados.competencias.nivel}${resultados.metas.nivel}`};
+                }
+                evaluados[e].resultado=resultados;
             }
         
         var salida={
@@ -629,13 +660,31 @@ class Proceso {
         const cliente =request.input('cliente') ;
         const query = `call ede_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
         const result   = await data.execQuery(cliente,query);
+        const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
+                    
+        const resultado  =  await data.execQuery(cliente,queryResultado);
+        
+        var resultados={}
+        resultados.competencias={nivel:"No Disponible"};
+        resultados.metas = {nivel:"No Disponible"};
+        resultados.global = {nivel:"No Disponible"};
+        if(resultado[0][0][0]!=null){
+            resultados.competencias = resultado[0][0][0];
+        }
+        if(resultado[0][1][0]!=null){
+            resultados.metas = resultado[0][1][0];
+        }
+        if(resultados.metas.nivel!="No Disponible" && resultados.competencias.nivel!="No Disponible"){
+            resultados.global = {nivel:`${resultados.competencias.nivel}${resultados.metas.nivel}`};
+        }
         
         const body = 
         {
           estado: {
             codigo: "OK",
             mensaje: ""
-          }
+          },
+          data:{resultados:resultados}
           
         }
         response.json(body);
