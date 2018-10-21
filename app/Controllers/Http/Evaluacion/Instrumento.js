@@ -228,7 +228,7 @@ class Instrumento {
             //console.log(queryObs);
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
-            //console.log(query);
+            console.log(query);
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -376,8 +376,24 @@ class Instrumento {
             }
             
 
+            
+            const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
 
-
+        
+            const resultado  = await data.execQuery(cliente,queryResultado);
+            instrumento.resultadoCompetencias={nivel:"No Disponible"};
+            instrumento.resultadoMetas = {nivel:"No Disponible"};
+            instrumento.resultadoGlobal = {nivel:"No Disponible"};
+            if(resultado[0][0][0]!=null){
+                instrumento.resultadoCompetencias = resultado[0][0][0];
+            }
+            if(resultado[0][1][0]!=null){
+                instrumento.resultadoMetas = resultado[0][1][0];
+            }
+            if(instrumento.resultadoMetas.nivel!="No Disponible" && instrumento.resultadoCompetencias.nivel!="No Disponible"){
+                instrumento.resultadoGlobal = {nivel:`${instrumento.resultadoCompetencias.nivel}${instrumento.resultadoMetas.nivel}`};
+            }
+            
 
         response.json(instrumento);
     }
@@ -403,7 +419,7 @@ class Instrumento {
         
         const query = `call ede_putObservacion('${idOpinante}', '${observacion}')`;
 
-        console.log(query);
+        
         const result   = await data.execQuery(cliente,query);
         
         if(finaliza == 1)
@@ -414,13 +430,31 @@ class Instrumento {
             const result   = await data.execQuery(cliente,queryEst);
         
         }
+        const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
+
         
+        const resultado  = await data.execQuery(cliente,queryResultado);
+
+        var resultados={};
+        resultados.resultadoCompetencias={nivel:"No Disponible"};
+        resultados.resultadoMetas = {nivel:"No Disponible"};
+        resultados.resultadoGlobal = {nivel:"No Disponible"};
+        if(resultado[0][0][0]!=null){
+            resultados.resultadoCompetencias = resultado[0][0][0];
+        }
+        if(resultado[0][1][0]!=null){
+            resultados.resultadoMetas = resultado[0][1][0];
+        }
+        if(resultados.resultadoMetas.nivel!="No Disponible" && resultados.resultadoCompetencias.nivel!="No Disponible"){
+            resultados.resultadoGlobal = {nivel:`${resultados.resultadoCompetencias.nivel}${resultados.resultadoMetas.nivel}`};
+        }
         const body = 
         {
           estado: {
             codigo: "OK",
             mensaje: ""
-          }
+          },
+          data:resultados
           
         }
         response.json(body);
@@ -434,7 +468,7 @@ class Instrumento {
 
         const query =`call ede_getEscala('${idOpinante}')`;
         
-        console.log(query);
+        
         const rQuery   = await data.execQuery(cliente,query);
 
         response.json({
