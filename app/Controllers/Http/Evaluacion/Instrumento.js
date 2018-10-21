@@ -446,6 +446,53 @@ class Instrumento {
             "data": rQuery[0][0]
         }); 
     }
+
+    async getPromedioGeneral({request,response}){
+        var id = request.input("hostname");
+        var idOpinante = request.input("idOpinante");
+        
+        const cliente =request.input('cliente') ;
+
+        const query =`call ede_getPromedioGeneral('${idOpinante}')`;
+        
+        var salida = [];
+
+        console.log(query);
+        const rQuery   = await data.execQuery(cliente,query);
+
+        const competencias = Enumerable.from(rQuery[0][0]).where(`$.estaSeleccionada == "1"`).distinct("$.idCompetencia").select(function(c){
+            return{
+                id: c.idCompetencia,
+                competencia: c.competencia,
+                nivel: c.nivel,
+                estaSeleccionada: c.estaSeleccionada
+            }
+        }).toArray()
+
+        const competencias2 = Enumerable.from(rQuery[0][0]).where(`$.estaSeleccionada == "0"`).distinct("$.idCompetencia").select(function(c){
+            return{
+                id: c.idCompetencia,
+                competencia: c.competencia,
+                nivel: c.nivel,
+                estaSeleccionada: c.estaSeleccionada
+            }
+        }).toArray()
+
+        var idComp = 0;
+        competencias2.forEach(e => {
+            idComp = e.id;
+            competencias.forEach(e2 => {
+                if(idComp != e2.id)
+                {
+                    console.log(idComp)
+                }
+            });
+            console.log(idComp)
+        });
+        salida = competencias.concat(competencias2);
+        
+        response.json(competencias); 
+    }
 }
 
 module.exports = Instrumento
