@@ -142,7 +142,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         const query =  `call ede_getEtapas('${idProceso}','${idEtapa}')`;
         const respuesta   = await data.execQuery(cliente,query);
-        console.log(respuesta)
+        //console.log(respuesta)
         response.json({
             "estado": {
                 "codigo": "OK",
@@ -379,11 +379,11 @@ class Proceso {
         var codigoActor=request.input('codigoActor')
         var idAccionPersona=request.input('idAccionPersona')
         const cliente =request.input('cliente') ;
-        console.log ("idEtapa " + idEtapa)
+        /*console.log ("idEtapa " + idEtapa)
         console.log ("idPErsonaActor " + idPersonaActor)
         console.log ("codigoActor " + codigoActor)
         console.log (" idAccionPersona " + idAccionPersona)
-        console.log ("cliente " + cliente)
+        console.log ("cliente " + cliente)*/
         const query =  `call ede_getListaEvaluados('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
         const respuesta   = await data.execQuery(cliente,query);
         
