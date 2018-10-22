@@ -119,6 +119,7 @@ class Medicion {
             instrumento = {
                 nombre:preguntas[0][0][0].nombre,
                 preguntasPagina:preguntas[0][0][0].preguntasPagina,
+                paginar:preguntas[0][0][0].paginar,
                 tipoInstrumento:"ENC",
                 dimensiones:dimensiones.toArray(),
                 idFacsimil:preguntas[0][0][0].idFacsimil

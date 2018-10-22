@@ -418,7 +418,7 @@ class Proceso {
                     }
                 }).toArray();
 
-
+                console.log(tareas)
                 evaluados[evaluado].tareas=tareas;
                
             }
