@@ -15,8 +15,8 @@ class Componentes {
 
             console.log(componente);
 
-            //const query =`call modulo_getComponente('${cliente}','${componente}')`;
-            const query =`call modulo_getComponente('cs','${componente}')`;
+            const query =`call modulo_getComponente('${cliente}','${componente}')`;
+            //const query =`call modulo_getComponente('cs','${componente}')`;
             const respuesta   = await data.execQuery('app',query);
             //console.log(query)
             response.json({
