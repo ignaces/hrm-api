@@ -233,6 +233,8 @@ async updLiderServicio({request,response}){
             var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
             
             const resultJefes    = await data.execQueryMS(qJefes);
+
+            
             
             const qServicios   = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
             const rServicios   = await data.execQuery(cliente,qServicios);
@@ -272,6 +274,65 @@ async updLiderServicio({request,response}){
         
        // return(body);
     } 
+
+    async updProcesoServicio({request,response}){
+       
+      try{
+          const cliente =request.input('cliente');
+          
+          const nombre =request.input('nombre');
+          const descripcion =request.input('descripcion');
+          const idServicio =request.input('idServicio');
+                  
+          var query     = `call eci_updProcesoServicio('${idServicio}','${nombre}','${descripcion}')`;
+          const result    = await data.execQuery(cliente,query);
+
+          var body = 
+          {
+            estado: {
+              codigo: "",
+              mensaje: ""
+            },
+            data: {}
+            
+          }
+          response.json(body);
+      }catch(e){
+          console.log(e)
+          return null;
+      }
+      
+      
+     // return(body);
+  } 
+
+  async getServicio({request,response}){
+       
+    try{
+        const cliente =request.input('cliente');
+        
+        const idServicio =request.input('idServicio');
+                
+        var query     = `call eci_getServicio('${idServicio}')`;
+        const result    = await data.execQuery(cliente,query);
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: result[0][0][0]
+          
+        }
+        response.json(body);
+    }catch(e){
+        console.log(e)
+        return null;
+    }
+  } 
+
+  
 
     
 }

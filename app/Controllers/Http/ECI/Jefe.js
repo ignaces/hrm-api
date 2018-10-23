@@ -38,12 +38,18 @@ class Jefe {
       try{
        const cliente =request.input('cliente');
        const idCenco =request.input('idCenco');
+       const idPersona =request.input('idPersona');
+
+       const qPersona = `select * from Persona where id='${idPersona}'`;
+       const rPersona   = await data.execQuery(cliente,qPersona);
        
        const qCenco = `select * from EciCenco where id='${idCenco}'`;
        const rCenco   = await data.execQuery(cliente,qCenco);
 
-       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
+       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}', '${rPersona[0][0].identificador}'`
       
+      console.log(qJefes);
+
        const resultJefes    = await data.execQueryMS(qJefes);
        
        var body = 
@@ -377,7 +383,6 @@ console.log(queryServicio);
         var query     = `call eci_addEncuesta('${idProceso}','${idPersona}','${idCenco}','${idServicio}', '${fechaInicio}', '${fechaTermino}',
          '${chkPreguntaAdicional}', '${textoPreguntaAdicional1}', '${escala}', '${textoPreguntaAdicional2}')`;
          
-console.log(query);
 
         const result    = await data.execQuery(cliente,query);
         
@@ -396,10 +401,32 @@ console.log(query);
         console.log(e)
         return null;
     }
-    
-    
-   // return(body);
-} 
+   
+  } 
+  async eliminarEncuestaCliente({request,response}){
+       
+    try{
+        const cliente =request.input('cliente');
+        const idEncuesta =request.input('idEncuesta');
+                
+        var query     = `call eci_eliminarEncuestaCliente('${idEncuesta}')`;
+        const result    = await data.execQuery(cliente,query);
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: ""
+          
+        }
+        response.json(body);
+    }catch(e){
+        console.log(e)
+        return null;
+    }
+  } 
 
     
 }
