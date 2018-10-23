@@ -332,7 +332,28 @@ async updLiderServicio({request,response}){
     }
   } 
 
-  
+  async existeBackup({request,response}){
+    try{
+        //console.log(cliente);
+        const idPersona = request.input('idPersona');
+        const cliente =request.input('cliente');
+        
+        const query =`call user_getUserByIdPersona('${idPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        //console.log(query)
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    } catch(e){
+        console.log(e);
+        return null;
+    }     
+  }
 
     
 }
