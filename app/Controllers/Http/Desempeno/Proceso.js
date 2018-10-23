@@ -222,6 +222,7 @@ class Proceso {
         }
 
         async getAccionesTarea({request,response}){
+
             var idEtapaTarea=request.input('idEtapaTarea')
             var idAccionTarea=request.input('idAccionTarea')
             var idAccion=request.input('idAccion')
@@ -339,11 +340,32 @@ class Proceso {
         });
     }
 
+    
     async getProcesoPersona({request,response}){
         var idProceso=request.input('idProceso')
         var idPersona=request.input('idPersona')
         const cliente =request.input('cliente') ;
         const query =  `call ede_getProcesoPersona('${idProceso}','${idPersona}')`;
+
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+    async getProcesosPersona({request,response}){
+        var idPersona=request.input('idPersona')
+        var idEstado=request.input('idEstado')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getProcesosPersona('${idPersona}','${idEstado}')`;
+
+        
         const respuesta   = await data.execQuery(cliente,query);
         
         response.json({
@@ -434,13 +456,14 @@ class Proceso {
         });
     }
     async getListaEvaluadosGrupal({request,response}){
+
         var idEtapa=request.input('idEtapa')
         var idEvaluador=request.input('idEvaluador')
         var idProceso=request.input('idProceso')
 
         const cliente =request.input('cliente') ;
         const query =  `call ede_getEvaluacionGrupal('${idEvaluador}','${idEtapa}','${idProceso}')`;
-        
+        console.log(query)
         const respuesta   = await data.execQuery(cliente,query);
         const relacionesCompetencia = respuesta[0][3];
         const competencias = respuesta[0][2];
@@ -472,7 +495,7 @@ class Proceso {
                                         id:nivel.idNivel,
                                         valor:nivel.valor,
                                         nombre:nivel.nivel,
-                                        selected:Enumerable.from(respuestas).where(`$.idEscalaNivel!=null && $.idOpinante=="${evaluado.idOpinante}" && $.idCriterio=="${competencia.idCriterio}"`).select(function(seleccionado){
+                                        selected:Enumerable.from(respuestas).where(`$.idPersona=="${evaluado.idPersona}" && $.idEscalaNivel!=null && $.idOpinante=="${evaluado.idOpinante}" && $.idCriterio=="${competencia.idCriterio}"`).select(function(seleccionado){
                                             
                                             
                                             if(nivel.idNivel==seleccionado.idEscalaNivel){
