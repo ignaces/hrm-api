@@ -383,7 +383,6 @@ console.log(queryServicio);
         var query     = `call eci_addEncuesta('${idProceso}','${idPersona}','${idCenco}','${idServicio}', '${fechaInicio}', '${fechaTermino}',
          '${chkPreguntaAdicional}', '${textoPreguntaAdicional1}', '${escala}', '${textoPreguntaAdicional2}')`;
          
-console.log(query);
 
         const result    = await data.execQuery(cliente,query);
         
@@ -402,10 +401,32 @@ console.log(query);
         console.log(e)
         return null;
     }
-    
-    
-   // return(body);
-} 
+   
+  } 
+  async eliminarEncuestaCliente({request,response}){
+       
+    try{
+        const cliente =request.input('cliente');
+        const idEncuesta =request.input('idEncuesta');
+                
+        var query     = `call eci_eliminarEncuestaCliente('${idEncuesta}')`;
+        const result    = await data.execQuery(cliente,query);
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: ""
+          
+        }
+        response.json(body);
+    }catch(e){
+        console.log(e)
+        return null;
+    }
+  } 
 
     
 }
