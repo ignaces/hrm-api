@@ -38,12 +38,18 @@ class Jefe {
       try{
        const cliente =request.input('cliente');
        const idCenco =request.input('idCenco');
+       const idPersona =request.input('idPersona');
+
+       const qPersona = `select * from Persona where id='${idPersona}'`;
+       const rPersona   = await data.execQuery(cliente,qPersona);
        
        const qCenco = `select * from EciCenco where id='${idCenco}'`;
        const rCenco   = await data.execQuery(cliente,qCenco);
 
-       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
+       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}', '${rPersona[0][0].identificador}'`
       
+      console.log(qJefes);
+
        const resultJefes    = await data.execQueryMS(qJefes);
        
        var body = 

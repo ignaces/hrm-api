@@ -231,8 +231,10 @@ async updLiderServicio({request,response}){
             const rCenco   = await data.execQuery(cliente,qCenco);
 
             var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
-            
+            console.log(qJefes);
             const resultJefes    = await data.execQueryMS(qJefes);
+
+            console.log(resultJefes);
             
             const qServicios   = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
             const rServicios   = await data.execQuery(cliente,qServicios);
