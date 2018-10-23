@@ -111,6 +111,30 @@ class Users {
             "data": respuesta[0][0]
         }); 
     }
+
+    async addPersonaUsuario({request,response}){
+        const cliente =request.input('cliente') ;
+        var idPersona = request.input('idPersona');
+        var username = request.input('username');
+
+        
+        const query =`call user_addPersonaUsuario('${idPersona}','${username}')`;
+        
+        console.log(query)
+        
+        const respuesta   = await data.execQuery(cliente,query);
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        }); 
+    }
+
+    
 }
 
 module.exports = Users
