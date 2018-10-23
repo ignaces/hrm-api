@@ -335,6 +335,9 @@ class Data {
             const identificador =request.input('identificador');
            
             const query =`exec eci_getCencoJefatura '${identificador}'`;
+
+            console.log(query)
+
             const respuesta   = await data.execQueryMS(query);
             
             response.json({

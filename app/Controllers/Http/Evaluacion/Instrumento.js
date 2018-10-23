@@ -484,22 +484,25 @@ class Instrumento {
     async getPromedioGeneral({request,response}){
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
+        var codigo = request.input("codigoActor");
         
         const cliente =request.input('cliente') ;
 
-        const query =`call ede_getPromedioGeneral('${idOpinante}')`;
+        const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}')`;
         
         var salida = [];
 
         console.log(query);
         const rQuery   = await data.execQuery(cliente,query);
 
-        const competencias = Enumerable.from(rQuery[0][0]).where(`$.estaSeleccionada == "1"`).distinct("$.idCompetencia").select(function(c){
+        const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
             return{
                 id: c.idCompetencia,
                 competencia: c.competencia,
-                nivel: c.nivel,
-                estaSeleccionada: c.estaSeleccionada
+                nivelAuto: c.nivelAuto,
+                nivelSup: c.nivelSup,
+                codigoActor:c.codigoActor// ,
+                //estaSeleccionada: c.estaSeleccionada
             }
         }).toArray()
 
