@@ -689,5 +689,36 @@ class Proceso {
         }
         response.json(body);
     }
+
+    async getMensaje({request,response}){
+      
+        try {
+            var idProceso=request.input('idProceso')
+            const cliente =request.input('cliente') ;
+            const query =`call ede_getMensajeProceso('${idProceso}')`;
+            
+            const respuesta   = await data.execQuery(cliente,query);
+            console.log(respuesta)
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta[0][0]
+            });
+        } catch (e) {
+            console.log(e);
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+
 }
 module.exports=Proceso
