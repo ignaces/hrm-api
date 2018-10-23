@@ -329,6 +329,8 @@ class Data {
         } 
     }
 
+    
+
     async getCencosJefatura({request,response}){
       
         try {
@@ -337,6 +339,38 @@ class Data {
             const query =`exec eci_getCencoJefatura '${identificador}'`;
 
             console.log(query)
+
+            const respuesta   = await data.execQueryMS(query);
+            
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta
+            });
+        } catch (e) {
+            
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+
+    async getEmail({request,response}){
+      
+        try {
+            const identificador =request.input('identificador');
+           
+            const query =`exec eci_getEmail '${identificador}'`;
+
+            
 
             const respuesta   = await data.execQueryMS(query);
             
