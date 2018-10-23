@@ -315,7 +315,7 @@ async updLiderServicio({request,response}){
                 
         var query     = `call eci_getServicio('${idServicio}')`;
         const result    = await data.execQuery(cliente,query);
-console.log(query);
+
         var body = 
         {
           estado: {
@@ -330,10 +330,9 @@ console.log(query);
         console.log(e)
         return null;
     }
-    
-    
-   // return(body);
-} 
+  } 
+
+  
 
     
 }
