@@ -385,6 +385,7 @@ class Proceso {
         console.log (" idAccionPersona " + idAccionPersona)
         console.log ("cliente " + cliente)*/
         const query =  `call ede_getListaEvaluados('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
+        
         const respuesta   = await data.execQuery(cliente,query);
         
         const evaluados = Enumerable.from(respuesta[0][0]).distinct("$.idEvaluado").select(function(evaluado){
@@ -418,7 +419,7 @@ class Proceso {
                     }
                 }).toArray();
 
-                console.log(tareas)
+                //console.log(tareas)
                 evaluados[evaluado].tareas=tareas;
                
             }
@@ -602,7 +603,7 @@ class Proceso {
         const cliente =request.input('cliente') ;
         const query =  `call ede_getEtapasProceso('${idProceso}','${idProcesoEtapa}')`;
         const respuesta   = await data.execQuery(cliente,query);
-        
+     
         response.json({
             "estado": {
                 "codigo": "OK",

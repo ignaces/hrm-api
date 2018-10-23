@@ -501,7 +501,9 @@ class Instrumento {
                 competencia: c.competencia,
                 nivelAuto: c.nivelAuto,
                 nivelSup: c.nivelSup,
-                codigoActor:c.codigoActor// ,
+                codigoActor:c.codigoActor,
+                valorAuto: c.valorAuto,
+                valorSup: c.valorSup// ,
                 //estaSeleccionada: c.estaSeleccionada
             }
         }).toArray()
@@ -516,7 +518,7 @@ class Instrumento {
         }).toArray()
 
         var idComp = 0;
-        competencias2.forEach(e => {
+        competencias.forEach(e => {
             idComp = e.id;
             competencias.forEach(e2 => {
                 if(idComp != e2.id)
