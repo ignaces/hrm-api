@@ -481,6 +481,8 @@ class Proceso {
                     idPersona:evaluado.idPersona,
                     nombres:evaluado.nombres,
                     observacion:evaluado.observacion,
+                    estado:evaluado.estado,
+                    codigoEstado:evaluado.codigoEstado,
                     competencias:Enumerable.from(relacionesCompetencia).where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
                         
 
