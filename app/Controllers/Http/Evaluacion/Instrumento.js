@@ -228,7 +228,7 @@ class Instrumento {
             //console.log(queryObs);
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
-            console.log(query);
+            
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -482,6 +482,8 @@ class Instrumento {
     }
 
     async getPromedioGeneral({request,response}){
+
+        console.log("1")
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
         var codigo = request.input("codigoActor");
@@ -492,24 +494,57 @@ class Instrumento {
 
         const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}','${idProceso}')`;
         
-        console.log(query)
-        var salida = [];
-
         const rQuery   = await data.execQuery(cliente,query);
-
-        const competencias = Enumerable.from(rQuery[0][0]).where(`$.idEscalaNivel != null`).distinct("$.idCompetencia").select(function(c){
+        
+        const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
             return{
                 id: c.idCompetencia,
                 competencia: c.competencia,
-                nivelAuto: c.nivelAuto,
-                nivelSup: c.nivelSup,
+                nivelAuto: "No Disponible",
+                nivelSup: "No Disponible",
                 codigoActor:c.codigoActor,
-                valorAuto: c.valorAuto,
-                valorSup: c.valorSup// ,
-                //estaSeleccionada: c.estaSeleccionada
+                valorAuto: null,
+                valorSup: null
             }
         }).toArray()
 
+            const competenciasSalida = Enumerable.from(rQuery[0][0]).select(function(c){
+                return{
+                    id: c.idCompetencia,
+                    competencia: c.competencia,
+                    nivelAuto: c.nivelAuto,
+                    nivelSup: c.nivelSup,
+                    codigoActor:c.codigoActor,
+                    valorAuto: c.valorAuto,
+                    valorSup: c.valorSup
+                }
+            }).toArray()
+
+            competencias.forEach(e => {
+                competenciasSalida.forEach(c => {
+                    
+                    if(e.id == c.id && c.nivelAuto != "No Disponible"){
+                        e.nivelAuto = c.nivelAuto;
+                    }
+                    
+                    if(e.id == c.id && c.nivelSup != "No Disponible"){
+                        e.nivelSup = c.nivelSup;
+                    }
+
+                    if(e.id == c.id && c.valorAuto != null){
+                        e.valorAuto = c.valorAuto;
+                    }
+
+                    if(e.id == c.id && c.valorSup != null){
+                        e.valorSup = c.valorSup;
+                    }
+                    
+                });
+            });
+
+
+
+            console.log(competencias)
         
         if(typeof competencias == "undefined" || competencias == null || competencias.length == null || competencias.length == 0)
         {
