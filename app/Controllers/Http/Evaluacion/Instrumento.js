@@ -493,7 +493,7 @@ class Instrumento {
         const cliente =request.input('cliente') ;
 
         const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}','${idProceso}')`;
-        
+        console.log(query)
         const rQuery   = await data.execQuery(cliente,query);
         
         const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
@@ -502,9 +502,11 @@ class Instrumento {
                 competencia: c.competencia,
                 nivelAuto: "No Disponible",
                 nivelSup: "No Disponible",
+                nivelFunc: "No Disponible",
                 codigoActor:c.codigoActor,
                 valorAuto: null,
-                valorSup: null
+                valorSup: null,
+                valorFunc: null
             }
         }).toArray()
 
@@ -514,9 +516,11 @@ class Instrumento {
                     competencia: c.competencia,
                     nivelAuto: c.nivelAuto,
                     nivelSup: c.nivelSup,
+                    nivelFunc: c.nivelFunc,
                     codigoActor:c.codigoActor,
                     valorAuto: c.valorAuto,
-                    valorSup: c.valorSup
+                    valorSup: c.valorSup,
+                    valorFunc: c.valorFunc
                 }
             }).toArray()
 
@@ -531,6 +535,10 @@ class Instrumento {
                         e.nivelSup = c.nivelSup;
                     }
 
+                    if(e.id == c.id && c.nivelFunc != "No Disponible"){
+                        e.nivelFunc = c.nivelFunc;
+                    }
+
                     if(e.id == c.id && c.valorAuto != null){
                         e.valorAuto = c.valorAuto;
                     }
@@ -539,6 +547,9 @@ class Instrumento {
                         e.valorSup = c.valorSup;
                     }
                     
+                    if(e.id == c.id && c.valorFunc != null){
+                        e.valorFunc = c.valorFunc;
+                    }
                 });
             });
 
@@ -554,9 +565,11 @@ class Instrumento {
                     competencia: c.competencia,
                     nivelAuto: c.nivelAuto,
                     nivelSup: c.nivelSup,
+                    nivelFunc: c.nivelFunc,
                     codigoActor:c.codigoActor,
                     valorAuto: c.valorAuto,
-                    valorSup: c.valorSup// ,
+                    valorSup: c.valorSup,
+                    valorFunc: c.valorFunc// ,
                     //estaSeleccionada: c.estaSeleccionada
                 }
             }).toArray()
