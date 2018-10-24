@@ -485,17 +485,19 @@ class Instrumento {
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
         var codigo = request.input("codigoActor");
-        
+        var idProceso = request.input("idProceso");
+
+
         const cliente =request.input('cliente') ;
 
-        const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}')`;
+        const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}','${idProceso}')`;
         
+        console.log(query)
         var salida = [];
 
-        console.log(query);
         const rQuery   = await data.execQuery(cliente,query);
 
-        const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
+        const competencias = Enumerable.from(rQuery[0][0]).where(`$.idEscalaNivel != null`).distinct("$.idCompetencia").select(function(c){
             return{
                 id: c.idCompetencia,
                 competencia: c.competencia,
@@ -508,29 +510,51 @@ class Instrumento {
             }
         }).toArray()
 
-        const competencias2 = Enumerable.from(rQuery[0][0]).where(`$.estaSeleccionada == "0"`).distinct("$.idCompetencia").select(function(c){
-            return{
-                id: c.idCompetencia,
-                competencia: c.competencia,
-                nivel: c.nivel,
-                estaSeleccionada: c.estaSeleccionada
-            }
-        }).toArray()
-
-        var idComp = 0;
-        competencias.forEach(e => {
-            idComp = e.id;
-            competencias.forEach(e2 => {
-                if(idComp != e2.id)
-                {
-                    console.log(idComp)
-                }
-            });
-            console.log(idComp)
-        });
-        salida = competencias.concat(competencias2);
         
-        response.json(competencias); 
+        if(typeof competencias == "undefined" || competencias == null || competencias.length == null || competencias.length == 0)
+        {
+            const competenciasVacias = Enumerable.from(rQuery[0][0]).select(function(c){
+                return{
+                    id: c.idCompetencia,
+                    competencia: c.competencia,
+                    nivelAuto: c.nivelAuto,
+                    nivelSup: c.nivelSup,
+                    codigoActor:c.codigoActor,
+                    valorAuto: c.valorAuto,
+                    valorSup: c.valorSup// ,
+                    //estaSeleccionada: c.estaSeleccionada
+                }
+            }).toArray()
+
+            response.json(competenciasVacias); 
+        }
+        else
+        {
+            /*
+            const competencias2 = Enumerable.from(rQuery[0][0]).where(`$.estaSeleccionada == "0"`).distinct("$.idCompetencia").select(function(c){
+                return{
+                    id: c.idCompetencia,
+                    competencia: c.competencia,
+                    nivel: c.nivel,
+                    estaSeleccionada: c.estaSeleccionada
+                }
+            }).toArray()
+
+            var idComp = 0;
+            competencias.forEach(e => {
+                idComp = e.id;
+                competencias.forEach(e2 => {
+                    if(idComp != e2.id)
+                    {
+                        console.log(idComp)
+                    }
+                });
+                console.log(idComp)
+            });
+            salida = competencias.concat(competencias2);
+            */
+            response.json(competencias); 
+        }
     }
 }
 
