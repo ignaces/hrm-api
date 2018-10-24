@@ -790,7 +790,7 @@ class Proceso {
                 "paginacion": "",
                 "data": ""
             });
-        }
+        } 
     }
 
     
