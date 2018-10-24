@@ -122,6 +122,9 @@ async updLiderServicio({request,response}){
             const idProceso =request.input('idProceso');
             const idPersona =request.input('idPersona');
             const idCenco =request.input('idCenco');
+
+            var queryDel     = `call eci_updTipoEncuestaPorcentaje('${idProceso}','${idPersona}','${idCenco})`;
+                const resultDel    = await data.execQuery(cliente,queryDel);
             
             for (var i = 0; i < tipoEncuestas.length; i++) {
                 var idTipoEncuesta = tipoEncuestas[i].idTipoEncuesta;
