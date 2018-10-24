@@ -675,6 +675,23 @@ class Proceso {
         });
     }
 
+    async getEmailJefeEvaluado({request,response}){
+       
+        var idEdeEtapaTareaAccionProcesoPersona=request.input('idEdeEtapaTareaAccionProcesoPersona')        
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getEmailJefeEvaluado('${idEdeEtapaTareaAccionProcesoPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
     async putRespuesta({request,response}){
        
         var idOpinante = request.input("idOpinante");
@@ -743,6 +760,39 @@ class Proceso {
             });
         } 
     }
+
+    async getSysParametros({request,response}){
+      
+        try {
+            var idEtapa=request.input('idEtapa')
+            const cliente =request.input('cliente') ;
+            const query =`call ede_getSysParametros('${idEtapa}')`;
+            
+            const respuesta   = await data.execQuery(cliente,query);
+            //console.log(respuesta)
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta[0][0]
+            });
+        } catch (e) {
+            console.log(e);
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+
+    
+    
 
 }
 module.exports=Proceso
