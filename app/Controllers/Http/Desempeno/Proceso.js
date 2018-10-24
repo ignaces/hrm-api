@@ -788,7 +788,7 @@ class Proceso {
                 "paginacion": "",
                 "data": ""
             });
-        } 
+        }
     }
 
     
