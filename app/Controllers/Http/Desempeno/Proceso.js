@@ -407,7 +407,7 @@ class Proceso {
         console.log (" idAccionPersona " + idAccionPersona)
         console.log ("cliente " + cliente)*/
         const query =  `call ede_getListaEvaluados('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
-        
+        console.log (query)
         const respuesta   = await data.execQuery(cliente,query);
         
         const evaluados = Enumerable.from(respuesta[0][0]).distinct("$.idEvaluado").select(function(evaluado){
@@ -481,6 +481,8 @@ class Proceso {
                     idPersona:evaluado.idPersona,
                     nombres:evaluado.nombres,
                     observacion:evaluado.observacion,
+                    estado:evaluado.estado,
+                    codigoEstado:evaluado.codigoEstado,
                     competencias:Enumerable.from(relacionesCompetencia).where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
                         
 
