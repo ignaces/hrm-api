@@ -123,15 +123,27 @@ async updLiderServicio({request,response}){
             const idPersona =request.input('idPersona');
             const idCenco =request.input('idCenco');
 
-            var queryDel     = `call eci_updTipoEncuestaPorcentaje('${idProceso}','${idPersona}','${idCenco})`;
+            var queryDel     = `call eci_deleteTipoEncuestaPorcentaje('${idProceso}','${idPersona}','${idCenco}')`;
+
+            console.log(queryDel)
                 const resultDel    = await data.execQuery(cliente,queryDel);
             
             for (var i = 0; i < tipoEncuestas.length; i++) {
                 var idTipoEncuesta = tipoEncuestas[i].idTipoEncuesta;
-                var activo =   (tipoEncuestas[i].estaActivo = 'true') ? 1 : 0;
-                var porcentaje = tipoEncuestas[i].porcentaje;
+
+console.log(tipoEncuestas[i].estaActivo);
+
+                var activo =   (tipoEncuestas[i].estaActivo == 'true') ? 1 : 0;
+
+                console.log(activo);
+                if(activo == 1)
+                {
+                    console.log("ette");
+                  var porcentaje = tipoEncuestas[i].porcentaje;
                 var query     = `call eci_updTipoEncuestaPorcentaje('${idProceso}','${idPersona}','${idCenco}','${idTipoEncuesta}', '${activo}', '${porcentaje}')`;
                 const result    = await data.execQuery(cliente,query);
+                }
+                
             }
             
             var body = 
