@@ -33,6 +33,41 @@ class Core {
         } 
     }
 
+    async getEmail({request,response}){
+      
+        try {
+            const cliente =request.input('cliente');
+            const codigo =request.input('codigo');
+            const idEtapa =request.input('idEtapa');
+            console.log(codigo);
+
+            const query =`call ede_getSysNotificacionesEtapa('${idEtapa}','${codigo}')`;
+            console.log(query);
+            const respuesta   = await data.execQuery(cliente,query);
+            
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": respuesta[0][0]
+            });
+        } catch (e) {
+            console.log(e);
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": ""
+            });
+        } 
+    }
+
+    
+
    
 
     
