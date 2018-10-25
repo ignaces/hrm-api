@@ -106,18 +106,12 @@ class Encuesta {
             
             const result   = await data.execQueryMS(query);
          
-            console.log(result);
+            var json = JSON.stringify(result);
 
-            const inserts = Enumerable.from(result).select(function(persona){
-                return `call eci_addPersona ('${idEncuesta}','${persona.identificador}','${persona.nombres}','${persona.ap_pat}','${persona.ap_mat}','${persona.genero}','${persona.email}','69e8753a-621c-11e8-8fb3-bc764e100f2b'); `;
-            }).toArray();
-            
-            
-            for(var i in inserts){
-                //console.log(inserts[i])
-                var resultPersonas   = await data.execQuery(cliente,inserts[i]);
-                //idsPersonas.push(resultPersonas[0][0][0].idPersona)
-            }
+            const queryMasiva = `call eci_cargaMasiva ('${idEncuesta}','${json}','69e8753a-621c-11e8-8fb3-bc764e100f2b'); `;
+
+            var resultMasiva   = await data.execQuery(cliente,queryMasiva);
+
             const queryOpinantes = `call eci_getEncuestaOpinantes('${idEncuesta}')`;
             
             const resultOpinantes   = await data.execQuery(cliente,queryOpinantes);
