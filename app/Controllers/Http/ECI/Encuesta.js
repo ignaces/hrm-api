@@ -88,6 +88,9 @@ class Encuesta {
      }
     async setOpinantesEncuesta({request,response}){
         const identificadoresIn =request.input('identificadores');
+
+        //console.log(identificadoresIn)
+
         const idEncuesta = request.input("idEncuesta");
         try {
             /**
@@ -103,13 +106,15 @@ class Encuesta {
             
             const result   = await data.execQueryMS(query);
          
+            console.log(result);
+
             const inserts = Enumerable.from(result).select(function(persona){
                 return `call eci_addPersona ('${idEncuesta}','${persona.identificador}','${persona.nombres}','${persona.ap_pat}','${persona.ap_mat}','${persona.genero}','${persona.email}','69e8753a-621c-11e8-8fb3-bc764e100f2b'); `;
             }).toArray();
             
             
             for(var i in inserts){
-                
+                //console.log(inserts[i])
                 var resultPersonas   = await data.execQuery(cliente,inserts[i]);
                 //idsPersonas.push(resultPersonas[0][0][0].idPersona)
             }
@@ -124,7 +129,11 @@ class Encuesta {
                                     identificadores=identificadores.toString().replace(/,/g , "'',''");
             const queryCargados =`exec getColaboradoresByIdentificador '''${identificadores}'''`;
 
+           // console.log(queryCargados);
+
             const resultCargados   = await data.execQueryMS(queryCargados);
+
+            //console.log(resultCargados);
 
             response.json({
                 "estado": {
