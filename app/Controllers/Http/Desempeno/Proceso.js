@@ -793,8 +793,5 @@ class Proceso {
         } 
     }
 
-    
-    
-
 }
 module.exports=Proceso
