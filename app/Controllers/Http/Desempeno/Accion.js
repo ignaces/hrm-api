@@ -206,7 +206,22 @@ class Accion {
     }
 
     // ---<< TAREAR ACCION PROCESO PERSONA
-
+    async addLog({request,response}){
+      
+        var idProcesoPersona= request.input('idProcesoPersona');
+        var mensaje= request.input('mensaje');
+        
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call sys_addLog('${mensaje}')`;
+            const respuesta   = await data.execQuery(cliente,query);
+            //response.json({mensaje:"OK"});
+           }
+           catch(err)
+           { 
+            response.json({mensaje:err});
+          }
+    }
 
 }
 
