@@ -793,5 +793,26 @@ class Proceso {
         } 
     }
 
+    async updEncuesta({request,response}){
+      
+        var idEncuestaPersona = request.input("idEncuestaPersona")
+        const cliente =request.input('cliente') ;
+        var codigoEstado = request.input("codigoEstado")
+        console.log("updEncuesta")
+
+        try{
+            const query =  `call ede_updEstadoEncuestaEDE('${idEncuestaPersona}','${codigoEstado}')`;
+            console.log(query)
+            const respuesta   = await data.execQuery(cliente,query);
+            //response.json({mensaje:"OK"});
+            console.log("OK")
+           }
+           catch(err)
+           { 
+            //response.json({mensaje:err});
+            console.log(err)
+          }
+    }
+
 }
 module.exports=Proceso
