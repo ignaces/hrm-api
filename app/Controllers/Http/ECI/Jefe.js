@@ -12,7 +12,7 @@ class Jefe {
         const idCenco =request.input('idCenco');
         
         const query = `call eci_getProcesoServicio('${idProceso}','${idPersona}','${idCenco}')`;
-        
+        console.log(query);
         const result   = await data.execQuery(cliente,query);
         
         var body = 
@@ -46,7 +46,7 @@ class Jefe {
        const qCenco = `select * from EciCenco where id='${idCenco}'`;
        const rCenco   = await data.execQuery(cliente,qCenco);
 
-       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}', '${rPersona[0][0].identificador}'`
+       var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].codigo}', '${rPersona[0][0].identificador}'`
       
       console.log(qJefes);
 
