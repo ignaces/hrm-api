@@ -88,6 +88,40 @@ class Proceso {
         });
     }
 
+    async getDocumentosProceso({request,response}){
+      
+        var idProceso = request.input('idProceso');
+        const cliente = request.input('cliente') ;
+        const query =  `call ede_getDocumentosProceso('${idProceso}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+       
+        const docs = Enumerable.from(respuesta[0][0]).distinct("$.idCategoria").select(function(categoria){
+                 
+            return{
+                    idCategoria:categoria.idCategoria,
+                    categoria:categoria.categoria,
+                    documentos:Enumerable.from(respuesta[0][0]).where(`$.idCategoria == "${categoria.idCategoria}"`).select(function(doc){
+                        return{
+                            id:doc.idProceso,
+                            nombre:doc.nombre,
+                            tipo:doc.tipo,
+                            url:doc.url,
+                            dt_cre:doc.dt_cre
+                        }
+                    }).toArray()
+                }
+            }).toArray();
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": docs
+        });
+    }
+
     async addEtapa({request,response}){
       
         var idProceso= request.input('idProceso');
@@ -791,6 +825,27 @@ class Proceso {
                 "data": ""
             });
         } 
+    }
+
+    async updEncuesta({request,response}){
+      
+        var idEncuestaPersona = request.input("idEncuestaPersona")
+        const cliente =request.input('cliente') ;
+        var codigoEstado = request.input("codigoEstado")
+        console.log("updEncuesta")
+
+        try{
+            const query =  `call ede_updEstadoEncuestaEDE('${idEncuestaPersona}','${codigoEstado}')`;
+            console.log(query)
+            const respuesta   = await data.execQuery(cliente,query);
+            //response.json({mensaje:"OK"});
+            console.log("OK")
+           }
+           catch(err)
+           { 
+            //response.json({mensaje:err});
+            console.log(err)
+          }
     }
 
 }
