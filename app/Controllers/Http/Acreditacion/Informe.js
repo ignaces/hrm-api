@@ -9,6 +9,31 @@ const permisos = use('App/Controllers/Http/Core/Permisos')
  */
 class Informe {
 
+    async getGlosaResultadoFinal({request,response}){
+        var procesoPersona = "";
+        
+        const cliente = request.input('cliente');
+
+        if(request.input('procesoPersona'))
+        {
+            procesoPersona = request.input('procesoPersona');
+        }
+        
+        const query = `call acre_getGlosaResultadoFinal('${procesoPersona}')`;
+        const result =  await data.execQuery(cliente,query);
+        
+        const body =
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: result[0][0]
+        }
+        response.json(body);
+    }
+
     async getResultadoSistesis({request,response}){
 
 
