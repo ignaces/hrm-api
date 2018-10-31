@@ -78,7 +78,6 @@ class Users {
     
     async getRequiereCambioClave({request,response}){
         var idUser = request.input('idUser');
-
         const cliente ="app";
         const query =`call user_getRequiereCambioClave('${idUser}')`;
         console.log(query)
@@ -96,10 +95,11 @@ class Users {
 
     async updateRequiereCambioClave({request,response}){
         var idUser = request.input('idUser');
-
+        var estado = request.input('estado');
+        
         const cliente ="app";
-        const query =`call user_updateRequiereCambioClave('${idUser}')`;
-        console.log(query)
+        const query =`call user_updateRequiereCambioClave('${idUser}','${estado}')`;
+
         const respuesta   = await data.execQuery(cliente,query);
 
         response.json({
