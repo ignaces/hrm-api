@@ -952,5 +952,53 @@ class Proceso {
             
         });
     }
+
+    async getPersonasEvaluadoras({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        var idPersona   =   request.input('idPersona');
+        
+        const query       =  `call pers_getPersonasSelEvaluador('${idPersona}','${idProceso}');`;
+        //console.log(query);
+        //return false;
+        const respuesta   =  await data.execQuery(cliente,query);
+        //console.log(respuesta[0][0]);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }
+
+    async updEvaluador({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        var idEvaluacion =   request.input('idEvaluacion');
+        var idEaluador   =   request.input('idEvaluador');
+        var idTareaActor = request.input('idTareaActor');
+
+        const query       =  `call pers_updEvaluador('${idTareaActor}', '${idEvaluacion}', '${idEaluador}','${idProceso}');`;
+        //console.log(query);
+        //return false;
+        const respuesta   =  await data.execQuery(cliente,query);
+        //console.log(respuesta[0][0]);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }
 }
 module.exports=Proceso
