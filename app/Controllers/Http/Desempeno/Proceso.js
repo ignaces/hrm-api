@@ -515,7 +515,7 @@ class Proceso {
                         idCompetencia:competencia.idPregunta,
                         nombre:competencia.enunciado,
                         idCriterio:competencia.idPregunta,
-                        disabled:false,
+                        disabled:(competencia.codigoEstado == 'EVALFINALIZADO'),
                         niveles:Enumerable.from(registros).where(`$.idOpinante=="${competencia.idOpinante}" && $.idPregunta=="${competencia.idPregunta}"`).select(function(nivel){
                             return {
                                 id:nivel.idAlternativa,
