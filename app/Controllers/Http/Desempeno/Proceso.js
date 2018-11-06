@@ -489,6 +489,63 @@ class Proceso {
             "data": evaluados
         });
     }
+
+    async getListaEvaluadosGrupalP({request,response}) {
+        var idEtapa=request.input('idEtapa')
+        var idPersona=request.input('idPersona')
+                
+        const cliente =request.input('cliente') ;
+        const query =  `call encuesta_getInstrumentoxJefe('${idPersona}','SUPE','${idEtapa}')`;
+
+        //console.log(query)
+
+        const respuesta   = await data.execQuery(cliente,query);
+
+        var registros = respuesta [0][0];
+
+        const evaluados = Enumerable.from(registros).distinct("$.idOpinante").select(function(evaluado){
+            return {
+                idOpinante:evaluado.idOpinante,
+                nombres:evaluado.nombres,
+                codigoEstado:evaluado.codigoEstado,
+                idEncuestaPersona:evaluado.idEncuestaPersona,
+                competencias:Enumerable.from(registros).distinct("$.idPregunta").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
+                    return {
+                        idOpinante:competencia.idOpinante,
+                        idCompetencia:competencia.idPregunta,
+                        nombre:competencia.enunciado,
+                        idCriterio:competencia.idPregunta,
+                        disabled:false,
+                        niveles:Enumerable.from(registros).where(`$.idOpinante=="${competencia.idOpinante}" && $.idPregunta=="${competencia.idPregunta}"`).select(function(nivel){
+                            return {
+                                id:nivel.idAlternativa,
+                                nombre:nivel.textoAlternativa,
+                                idRespuesta:nivel.idEvaluacionPreguntaAlternativa,
+                                selected:false
+                            }
+                        }).toArray()                
+                    }
+                }).toArray()
+            }
+        }).toArray();
+
+        var salida={
+            evaluados:evaluados
+        }
+
+        /*console.log(evaluados[1].idOpinante + ' ' + evaluados[1].competencias[0].idCompetencia);
+        console.log(evaluados[1].competencias[0].niveles);*/
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": salida
+        });
+    }
+
     async getListaEvaluadosGrupal({request,response}){
 
         var idEtapa=request.input('idEtapa')
@@ -649,11 +706,7 @@ class Proceso {
         });
     }
 
-
-
 /* OLDER */
-
-
 
     async getEtapasProceso({request,response}){
        
@@ -672,10 +725,6 @@ class Proceso {
             "data": respuesta[0][0]
         });
     }
-
-
-
-
 
     async getCuentaEstados({request,response}){
         var idProcesoEtapa=request.input('idProcesoEtapa')
