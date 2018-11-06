@@ -245,8 +245,12 @@ console.log(tipoEncuestas[i].estaActivo);
             const qCenco = `select * from EciCenco where id='${idCenco}'`;
             const rCenco   = await data.execQuery(cliente,qCenco);
 
-            var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].nombre}'`
+            const qPersona = `select * from Persona where id='${idPersona}'`;
+            const rPersona   = await data.execQuery(cliente,qPersona);
+
             
+
+            var qJefes = `exec eci_getCencoLideres '${rCenco[0][0].codigo}', '${rPersona[0][0].identificador}'`
             const resultJefes    = await data.execQueryMS(qJefes);
 
             
