@@ -1000,5 +1000,31 @@ class Proceso {
             
         });
     }
+
+    async getSabanaAvance({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        var idEvaluador   =   request.input('idEvaluador');
+        //console.log(`call pers_getReporteAvanceEdeSabana('${idProceso}', '${idEvaluador}');`);
+        //return false;
+        const query       =  `call pers_getReporteAvanceEdeSabana('${idProceso}', '${idEvaluador}');`;
+        console.log(query);
+        //return false;
+        const respuesta   =  await data.execQuery(cliente,query);
+        //console.log(respuesta[0][0]);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }
+
+    
 }
 module.exports=Proceso
