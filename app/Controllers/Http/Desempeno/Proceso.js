@@ -832,10 +832,12 @@ class Proceso {
         var idEncuestaPersona = request.input("idEncuestaPersona")
         const cliente =request.input('cliente') ;
         var codigoEstado = request.input("codigoEstado")
+        var idProceso = request.input("idProceso")
+        var codigoActor = request.input("codigoActor")
         console.log("updEncuesta")
 
         try{
-            const query =  `call ede_updEstadoEncuestaEDE('${idEncuestaPersona}','${codigoEstado}')`;
+            const query =  `call ede_updEstadoEncuestaEDE('${idEncuestaPersona}','${codigoEstado}','${idProceso}','${codigoActor}')`;
             console.log(query)
             const respuesta   = await data.execQuery(cliente,query);
             //response.json({mensaje:"OK"});
