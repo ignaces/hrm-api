@@ -351,12 +351,25 @@ class Proceso {
               }
         }
 
+    async getInformeComparativo({request,response}){
+        var idPersona=request.input('idPersona')
 
+        const query =  `call ede_getInformeComparativo('${idPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        var registros = respuesta[0][0];
 
+        console.log(registros);
 
-
-
-
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
 
     async getMenuUsuario({request,response}){
         var idProceso=request.input('idProceso')
@@ -509,6 +522,12 @@ class Proceso {
                 nombres:evaluado.nombres,
                 codigoEstado:evaluado.codigoEstado,
                 idEncuestaPersona:evaluado.idEncuestaPersona,
+                dimension:Enumerable.from(registros).distinct("$.dimension").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(dimension){
+                    return {
+                        nombre:dimension.dimension,
+                        cuentaDimensiones:dimension.cuentaDimensiones,
+                    }
+                }).toArray(), 
                 competencias:Enumerable.from(registros).distinct("$.idPregunta").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
                     return {
                         idOpinante:competencia.idOpinante,
