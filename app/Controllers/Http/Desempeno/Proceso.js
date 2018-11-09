@@ -190,173 +190,186 @@ class Proceso {
 
     async getTareas({request,response}){
         
-            var idTarea=request.input('idTarea')
-            var codigoTipoProceso=request.input('codigoTipoProceso')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getTareas('${idTarea}','${codigoTipoProceso}')`;
+        var idTarea=request.input('idTarea')
+        var codigoTipoProceso=request.input('codigoTipoProceso')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getTareas('${idTarea}','${codigoTipoProceso}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async addTareaEtapa({request,response}){
+    
+        var idEtapa= request.input('idEtapa');
+        var idTarea= request.input('idTarea');
+        var nombre= request.input('nombre');
+        var fecha_inicio = request.input('fecha_inicio');
+        var fecha_termino = request.input('fecha_termino');
+        var imagen = request.input('imagen');
+        var color = request.input('color');
+        var orden = request.input('orden');
+        var ocultar = request.input('ocultar');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_addTareaEtapa('${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
 
-        async addTareaEtapa({request,response}){
-      
-            var idEtapa= request.input('idEtapa');
-            var idTarea= request.input('idTarea');
-            var nombre= request.input('nombre');
-            var fecha_inicio = request.input('fecha_inicio');
-            var fecha_termino = request.input('fecha_termino');
-            var imagen = request.input('imagen');
-            var color = request.input('color');
-            var orden = request.input('orden');
-            var ocultar = request.input('ocultar');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_addTareaEtapa('${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
-
-        async updTareaEtapa({request,response}){
-      
-            var idEtapaTarea= request.input('idEtapaTarea');
-            var idEtapa= request.input('idEtapa');
-            var idTarea= request.input('idTarea');
-            var nombre= request.input('nombre');
-            var fecha_inicio = request.input('fecha_inicio');
-            var fecha_termino = request.input('fecha_termino');
-            var imagen = request.input('imagen');
-            var color = request.input('color');
-            var orden = request.input('orden');
-            var ocultar = request.input('ocultar');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_updTareaEtapa('${idEtapaTarea}','${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
-
-        async getAccionesTarea({request,response}){
-
-            var idEtapaTarea=request.input('idEtapaTarea')
-            var idAccionTarea=request.input('idAccionTarea')
-            var idAccion=request.input('idAccion')
-            var idActor=request.input('idActor')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getAccionesTarea('${idEtapaTarea}','${idAccionTarea}','${idAccion}','${idActor}')`;
+    async updTareaEtapa({request,response}){
+    
+        var idEtapaTarea= request.input('idEtapaTarea');
+        var idEtapa= request.input('idEtapa');
+        var idTarea= request.input('idTarea');
+        var nombre= request.input('nombre');
+        var fecha_inicio = request.input('fecha_inicio');
+        var fecha_termino = request.input('fecha_termino');
+        var imagen = request.input('imagen');
+        var color = request.input('color');
+        var orden = request.input('orden');
+        var ocultar = request.input('ocultar');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_updTareaEtapa('${idEtapaTarea}','${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
 
-        async getAcciones({request,response}){
-            var idAccion=request.input('idAccion')
-            var idTarea=request.input('idTarea')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getAcciones('${idAccion}','${idTarea}')`;
+    async getAccionesTarea({request,response}){
+
+        var idEtapaTarea=request.input('idEtapaTarea')
+        var idAccionTarea=request.input('idAccionTarea')
+        var idAccion=request.input('idAccion')
+        var idActor=request.input('idActor')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getAccionesTarea('${idEtapaTarea}','${idAccionTarea}','${idAccion}','${idActor}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async getAcciones({request,response}){
+        var idAccion=request.input('idAccion')
+        var idTarea=request.input('idTarea')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getAcciones('${idAccion}','${idTarea}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async getActores({request,response}){
+        var idActor=request.input('idActor')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getActores('${idActor}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async addAccionTarea({request,response}){
+    
+        var idEtapaTarea= request.input('idEtapaTarea');
+        var idAccion= request.input('idAccion');
+        var idActor= request.input('idActor');
+        var instruccion = request.input('instruccion');
+        var esFin = request.input('esFin');
+        var orden = request.input('orden');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_addAccionTarea('${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
 
-        async getActores({request,response}){
-            var idActor=request.input('idActor')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getActores('${idActor}')`;
+    async updAccionTarea({request,response}){
+    
+        var idAccionTarea= request.input('idAccionTarea');
+        var idEtapaTarea= request.input('idEtapaTarea');
+        var idAccion= request.input('idAccion');
+        var idActor= request.input('idActor');
+        var instruccion = request.input('instruccion');
+        var esFin = request.input('esFin');
+        var orden = request.input('orden');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_updAccionTarea('${idAccionTarea}','${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
+    
+    async getInformeComparativo({request,response}){
+        var idPersona=request.input('idPersona')
 
-        async addAccionTarea({request,response}){
-      
-            var idEtapaTarea= request.input('idEtapaTarea');
-            var idAccion= request.input('idAccion');
-            var idActor= request.input('idActor');
-            var instruccion = request.input('instruccion');
-            var esFin = request.input('esFin');
-            var orden = request.input('orden');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_addAccionTarea('${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
+        const query =  `call ede_getInformeComparativo('${idPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        var registros = respuesta[0][0];
 
-        async updAccionTarea({request,response}){
-      
-            var idAccionTarea= request.input('idAccionTarea');
-            var idEtapaTarea= request.input('idEtapaTarea');
-            var idAccion= request.input('idAccion');
-            var idActor= request.input('idActor');
-            var instruccion = request.input('instruccion');
-            var esFin = request.input('esFin');
-            var orden = request.input('orden');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_updAccionTarea('${idAccionTarea}','${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
+        console.log(registros);
 
-
-
-
-
-
-
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
 
     async getMenuUsuario({request,response}){
         var idProceso=request.input('idProceso')
@@ -509,6 +522,12 @@ class Proceso {
                 nombres:evaluado.nombres,
                 codigoEstado:evaluado.codigoEstado,
                 idEncuestaPersona:evaluado.idEncuestaPersona,
+                dimension:Enumerable.from(registros).distinct("$.dimension").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(dimension){
+                    return {
+                        nombre:dimension.dimension,
+                        cuentaDimensiones:dimension.cuentaDimensiones,
+                    }
+                }).toArray(), 
                 competencias:Enumerable.from(registros).distinct("$.idPregunta").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
                     return {
                         idOpinante:competencia.idOpinante,
