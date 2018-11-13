@@ -148,7 +148,150 @@ class Persona {
         } 
         
     }
+
+    async updPersona ({request,response}){
+        const cliente =request.input('cliente') ;
+        const identificador =request.input('identificador') ;
+        const idUsuario =request.input('identificador') ;
+        const nombres =request.input('nombres');
+        const apellidoPaterno =request.input('apellidoPaterno') ;
+        const apellidoMaterno =request.input('apellidoMaterno') ;
+        const genero =request.input('genero') ;
+        const email =request.input('email') ;
+        const nacionalidad = request.input('nacionalidad');
+        const imagen =request.input('imagen') ;
+        
+        const query = `call pers_updaPersona('${idUsuario}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${email}'`;
+        
+        try{
+        //return false;
+        
+            const respuesta   = await data.execQuery(cliente,query);
+
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": "OK"
+            });
+            
+        } catch (e) {
+        
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": "ERROR"
+            });
+        } 
+        
+    }
+
+    async resetPassByPersonaId ({request,response}){
+        const cliente =request.input('cliente') ;
+        const idPersona =request.input('idPersona') ;
+        
+        const query = `call pers_updPassword('${idPersona}')`;
+        //console.log(query);
+        //return false;
+        try{
+        //return false;
+        
+            const respuesta   = await data.execQuery(cliente,query);
+
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": "OK"
+            });
+            
+        } catch (e) {
+        
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": respuesta[0]
+            });
+        } 
+        
+    }
+
+    async updDatosPersona ({request,response}){
+        
+        const cliente =request.input('cliente') ;
+        var idPersona =request.input('idPersona');
+        var nombres  =request.input('nombres');
+        var apellidoPaterno  =request.input('apellidoPaterno');
+        var apellidoMaterno  =request.input('apellidoMaterno');
+        var email  =request.input('emailPersona');
+
+        const query = `call pers_updDatosPersona('${idPersona}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${email}')`;
+        //console.log(query);
+        try{
+        //return false;
+        
+            const respuesta   = await data.execQuery(cliente,query);
+
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": "OK"
+            });
+            
+        } catch (e) {
+        
+            response.json({
+                "estado": {
+                    "codigo": "ERROR",
+                    "mensaje": e.message
+                },
+                "paginacion": "",
+                "data": respuesta[0]
+            });
+        } 
+        
+    }
     
+    async updClasificacionesPersona({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        var idPersona   =   request.input('idPersona');
+        
+        
+        if(request.input("codigoPadre"))
+        {
+            var codigoPadre = request.input("codigoPadre");
+            var idClasificacion = request.input("idClasificacion");
+
+            const query       =  `call pers_updClasificacionesPersonaEde('${idPersona}','${idProceso}','${codigoPadre}','${idClasificacion}');`;
+            //console.log(query);
+            //return false;
+            const respuesta   =  await data.execQuery(cliente,query);
+            //console.log(respuesta[0][0]);
+        } 
+        
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            }
+        });
+    }
     
     
 }
