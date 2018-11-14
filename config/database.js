@@ -51,8 +51,8 @@ module.exports = {
   connection: {
     host: Env.get('DB_HOST_MS', '192.168.3.3'),
     port: Env.get('DB_PORT_MS', '1433'),
-    user: Env.get('DB_USER_MS', 'sa'),
-    password: Env.get('DB_PASSWORD_MS', 'Qwerty123'),
+    user: Env.get('DB_USER_MS', 'bci'),
+    password: Env.get('DB_PASSWORD_MS', '5f5G5E4ViH6U'),
     database: Env.get('DB_DATABASE_MS', 'bci')
   }
 },
