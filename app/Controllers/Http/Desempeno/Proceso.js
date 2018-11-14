@@ -354,12 +354,39 @@ class Proceso {
     async getInformeComparativo({request,response}){
         var idPersona=request.input('idPersona')
 
+        //var idPersona= '4b812c9f-df3b-44f8-a7d1-842661d9eae7'
+
+        const cliente =request.input('cliente') ;
         const query =  `call ede_getInformeComparativo('${idPersona}')`;
         const respuesta   = await data.execQuery(cliente,query);
         
         var registros = respuesta[0][0];
 
-        console.log(registros);
+        var evaluaciones = Enumerable.from(registros).distinct("$.dimension").select(function(evaluacion){
+            return {
+                idEvaluado:evaluacion.idEvaluado,
+                conducta:evaluacion.dimensionNombre,
+                codconducta:evaluacion.dimension,
+                angulos:Enumerable.from(registros).distinct("$.Angulo").select(function(angulo){
+                    return {
+                        tipo:angulo.Angulo,
+                        feedback:Enumerable.from(registros).where(`$.Angulo == "${angulo.Angulo}" && $.dimension == "${evaluacion.dimension}"`).select(function(feed){
+                            return {
+                                Evaluador:feed.Evaluador,
+                                estado:feed.EstadoEncuesta,
+                                enunciado:feed.enunciado,
+                                respuesta:feed.textoAlternativa,
+                                alternativas:Enumerable.from(registros).distinct("$.textoAlternativa").select(function(alt){
+                                    return {
+                                        alternativa:alt.textoAlternativa
+                                    }
+                                }).toArray()
+                            }
+                        }).toArray()
+                    }
+                }).toArray()
+            }
+        }).toArray();
 
         response.json({
             "estado": {
@@ -367,7 +394,7 @@ class Proceso {
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": evaluaciones
         });
     }
 
