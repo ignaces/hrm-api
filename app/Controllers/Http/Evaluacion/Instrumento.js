@@ -379,7 +379,6 @@ class Instrumento {
             
             const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
 
-        
             const resultado  = await data.execQuery(cliente,queryResultado);
             instrumento.resultadoCompetencias={nivel:"No Disponible"};
             instrumento.resultadoMetas = {nivel:"No Disponible"};
@@ -393,7 +392,6 @@ class Instrumento {
             if(instrumento.resultadoMetas.nivel!="No Disponible" && instrumento.resultadoCompetencias.nivel!="No Disponible"){
                 instrumento.resultadoGlobal = {nivel:`${instrumento.resultadoCompetencias.nivel}${instrumento.resultadoMetas.nivel}`};
             }
-            
 
         response.json(instrumento);
     }

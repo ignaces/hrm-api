@@ -489,6 +489,113 @@ class Proceso {
             "data": evaluados
         });
     }
+
+    async getListaCalibracion({request,response}){
+        var idEtapa=request.input('idEtapa')
+        var idPersonaActor=request.input('idPersonaActor')
+        var codigoActor=request.input('codigoActor')
+        var idAccionPersona=request.input('idAccionPersona')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getListaCalibracion('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        const evaluados = Enumerable.from(respuesta[0][0]).distinct("$.idEvaluado").select(function(evaluado){
+            return{
+                    idEvaluado:evaluado.idEvaluado,
+                    idProceso:evaluado.idProceso,
+                    idPersona:evaluado.evaluado_idPersona,
+                    idCompetenciaPerfil:evaluado.evaluado_idCompetenciaPerfil,
+                    idEdeMetaPerfil:evaluado.evaluado_idMetaPerfil,
+                    activoEdeProcesoPersona:evaluado.evaluado_activoProceso,
+                    nombres:evaluado.q,
+                    idOpinante:evaluado.evaluado_idOpinante,
+                    apellidoPaterno:evaluado.evaluado_apellidoPaterno,
+                    apellidoMaterno:evaluado.evaluado_apellidoMaterno,
+                    foto:evaluado.evaluado_foto,
+                    codigoGenero:evaluado.evaluado_codigoGenero,
+                    nombreCargo:evaluado.evaluado_nombreCargo,
+                    PerfilCompetencias:evaluado.evaluado_perfilCompetencias,
+                    PerfilMetas:evaluado.evaluado_perfilMetas,
+                    estadoEdeProcesoPersona:evaluado.evaluado_nombreEstadoProceso,
+                    tareas:[]
+
+                }
+            }).toArray();
+
+            var matrizEval = {
+                "AA":0,
+                "AB":0,
+                "AC":0,
+                "BA":0,
+                "BB":0,
+                "BC":0,
+                "CA":0,
+                "CB":0,
+                "CC":0
+            }
+
+            for(var evaluado in evaluados){
+                
+                const tareas = Enumerable.from(respuesta[0][0]).where(`$.idEvaluado == "${evaluados[evaluado].idEvaluado}"`).select(function(tarea){
+                    return{
+                        tarea
+                    }
+                }).toArray();
+
+                //console.log(tareas)
+                evaluados[evaluado].tareas=tareas;
+                var idOpinante = evaluados[evaluado].idOpinante;
+                console.log(evaluados[evaluado]);
+                const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
+                console.log('idOpinante:'+idOpinante);
+            
+                const resultado2  = await data.execQuery(cliente,queryResultado);
+                //console.log(JSON.stringify(resultado2));
+                var resultadoCompetencias={nivel:"No Disponible"};
+                var resultadoMetas = {nivel:"No Disponible"};
+                var resultadoGlobal = {nivel:"No Disponible"};
+                
+                if(resultado2[0][0][0]!=undefined){
+                    resultadoCompetencias = resultado2[0][0][0];
+                }
+                if(resultado2[0][1][0]!=undefined){
+                    resultadoMetas = resultado2[0][1][0];
+                }
+                if(resultadoMetas.nivel!="No Disponible" && resultadoCompetencias.nivel!="No Disponible"){
+                    resultadoGlobal = {nivel:`${resultadoCompetencias.nivel}${resultadoMetas.nivel}`};
+                }
+                evaluados[evaluado].tareas[0].resultadoGlobal = resultadoGlobal;
+                if(resultadoGlobal.nivel == "AA"){
+                    matrizEval.AA = matrizEval.AA + 1;
+                }else if(resultadoGlobal.nivel == "AB"){
+                    matrizEval.AB = matrizEval.AB + 1;
+                }else if(resultadoGlobal.nivel == "AC"){
+                    matrizEval.AC = matrizEval.AC + 1;
+                }else if(resultadoGlobal.nivel == "BA"){
+                    matrizEval.BA = matrizEval.BA + 1;
+                }else if(resultadoGlobal.nivel == "BB"){
+                    matrizEval.BB = matrizEval.BB + 1;
+                }else if(resultadoGlobal.nivel == "BC"){
+                    matrizEval.BC = matrizEval.BC + 1;
+                }else if(resultadoGlobal.nivel == "CA"){
+                    matrizEval.CA = matrizEval.CA + 1;
+                }else if(resultadoGlobal.nivel == "CB"){
+                    matrizEval.CB = matrizEval.CB + 1;
+                }else if(resultadoGlobal.nivel == "CC"){
+                    matrizEval.CC = matrizEval.CC + 1;
+                }
+            }
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": evaluados,
+            "matriz": matrizEval
+        });
+    }
+
     async getListaEvaluadosGrupal({request,response}){
 
         var idEtapa=request.input('idEtapa')
