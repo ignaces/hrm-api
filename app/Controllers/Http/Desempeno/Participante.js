@@ -44,7 +44,7 @@ class Participante {
                 "paginacion": "",
                 "data": respuesta[0][0]
             });
-        } catch(err) { 
+        } catch(err) {
             //response.json({mensaje:err});
             console.log(err)
         }

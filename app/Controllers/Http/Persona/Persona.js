@@ -8,11 +8,11 @@ class Persona {
         const text =request.input('nombre');
         const cliente =request.input('cliente') ;
         const query =  `call getPersonas('${text}')`;
-        const usp   = await data.execQuery(cliente,query);
+        const usp = await data.execQuery(cliente,query);
       
       
       
-      //const usp   = yield Database.schema.raw("SELECT * from users;");
+      //const usp = yield Database.schema.raw("SELECT * from users;");
       //response.json(usp[0]);--
       
       response.json(usp[0][0]);
@@ -23,7 +23,7 @@ class Persona {
         var idUser = request.input('idUser');
         const cliente =request.input('cliente') ;
         const query =  `call pers_getIdPersonaByIdUsuario('${idUser}')`;
-        const respuesta   = await data.execQuery(cliente,query);
+        const respuesta = await data.execQuery(cliente,query);
         
         response.json({
             "estado": {
@@ -43,7 +43,7 @@ class Persona {
         
         const query = `call pers_getPersonaByIdUsuario('${idUser}')`;
 
-        const respuesta   = await data.execQuery(cliente,query);
+        const respuesta = await data.execQuery(cliente,query);
         
         response.json({
             "estado": {
@@ -55,25 +55,35 @@ class Persona {
         });
     }
 
-    async getPersonaByIdentificador ({request,response}){
-        
-        var identificador = request.input('identificador');
-        const cliente =request.input('cliente') ;
-        
-        const query = `call pers_getPersonaByIdentificador('${identificador}')`;
+    //>20181116-fretamal-vectoritcgroup
+    async getPersonaByIdentificador ({request, response}){
+        var identificador = request.input('persona_identificador');
+        const cliente = request.input('cliente') ;
 
-        const respuesta   = await data.execQuery(cliente,query);
-        
-        response.json({
-            "estado": {
-                "codigo": "OK",
-                "mensaje": ""
-            },
-            "paginacion": "",
-            "data": respuesta[0][0]
-        });
+        try {
+            const query = `call pers_getPersonaByIdentificador('${identificador}')`;
+            const result = await data.execQuery(cliente,query);
+
+            if (Object.keys(result[0][0]).length === 0) {
+                response.json({
+                    "status": { "code": "0000", "message": "" },
+                    "data": null
+                });
+            } else {
+                response.json({
+                    "status": { "code": "0000", "message": "" },
+                    "data": result[0][0]
+                });
+            }
+        } catch (e) {
+            response.json({
+                "status": { "code": "0001", "message": e },
+                "data": null
+            });
+        }
     }
-    
+    //<
+
     async getPersona({request,response}){
     
         var idPersona = request.input('idPersona');
@@ -89,7 +99,7 @@ class Persona {
         const query =  `call pers_getPersona('${idPersona}')`;
         console.log(query)
         //const query =  `call pers_getClasificacion('${idPersona}')`;
-        const usp   = await data.execQuery(cliente,query);
+        const usp = await data.execQuery(cliente,query);
        
         
        if(usp[0]==undefined){
@@ -134,7 +144,7 @@ class Persona {
         
         try{
         //return false;
-        const respuesta   = await data.execQuery(cliente,query);
+        const respuesta = await data.execQuery(cliente,query);
         } catch (e) {
         
             response.json({
@@ -166,7 +176,7 @@ class Persona {
         try{
         //return false;
         
-            const respuesta   = await data.execQuery(cliente,query);
+            const respuesta = await data.execQuery(cliente,query);
 
             response.json({
                 "estado": {
@@ -201,7 +211,7 @@ class Persona {
         try{
         //return false;
         
-            const respuesta   = await data.execQuery(cliente,query);
+            const respuesta = await data.execQuery(cliente,query);
 
             response.json({
                 "estado": {
@@ -230,17 +240,17 @@ class Persona {
         
         const cliente =request.input('cliente') ;
         var idPersona =request.input('idPersona');
-        var nombres  =request.input('nombres');
-        var apellidoPaterno  =request.input('apellidoPaterno');
-        var apellidoMaterno  =request.input('apellidoMaterno');
-        var email  =request.input('emailPersona');
+        var nombres =request.input('nombres');
+        var apellidoPaterno =request.input('apellidoPaterno');
+        var apellidoMaterno =request.input('apellidoMaterno');
+        var email =request.input('emailPersona');
 
         const query = `call pers_updDatosPersona('${idPersona}', '${nombres}', '${apellidoPaterno}', '${apellidoMaterno}', '${email}')`;
         //console.log(query);
         try{
         //return false;
         
-            const respuesta   = await data.execQuery(cliente,query);
+            const respuesta = await data.execQuery(cliente,query);
 
             response.json({
                 "estado": {
@@ -267,9 +277,9 @@ class Persona {
     
     async updClasificacionesPersona({request,response}){
        
-        const cliente   =   request.input('cliente');
-        var idProceso   =   request.input('idProceso');
-        var idPersona   =   request.input('idPersona');
+        const cliente =   request.input('cliente');
+        var idProceso =   request.input('idProceso');
+        var idPersona =   request.input('idPersona');
         
         
         if(request.input("codigoPadre"))
@@ -277,10 +287,10 @@ class Persona {
             var codigoPadre = request.input("codigoPadre");
             var idClasificacion = request.input("idClasificacion");
 
-            const query       =  `call pers_updClasificacionesPersonaEde('${idPersona}','${idProceso}','${codigoPadre}','${idClasificacion}');`;
+            const query     =  `call pers_updClasificacionesPersonaEde('${idPersona}','${idProceso}','${codigoPadre}','${idClasificacion}');`;
             //console.log(query);
             //return false;
-            const respuesta   =  await data.execQuery(cliente,query);
+            const respuesta =  await data.execQuery(cliente,query);
             //console.log(respuesta[0][0]);
         } 
         
@@ -292,7 +302,6 @@ class Persona {
             }
         });
     }
-    
     
 }
 
