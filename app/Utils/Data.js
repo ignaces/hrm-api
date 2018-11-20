@@ -30,11 +30,17 @@ class Data  {
         try{
             const result = await Database.connection('default').schema.raw(query);
         
-            Database.close(['default'])
+            try{
+                Database.close(['default']);
+            }catch(e){}
+            
+            
             return result;
         }catch(ex){
             Database.close(['default'])
+            
             Logger.debug(`query:${query},mensaje:${ex.message}`);
+            
             return ex;
         }
         
