@@ -545,7 +545,11 @@ class Proceso {
                 "BC":0,
                 "CA":0,
                 "CB":0,
-                "CC":0
+                "CC":0,
+                "sum":0,
+                "Sesp":0,
+                "esp":0,
+                "Besp":0
             }
 
             var matrizCalib = {
@@ -557,7 +561,11 @@ class Proceso {
                 "BC":0,
                 "CA":0,
                 "CB":0,
-                "CC":0
+                "CC":0,
+                "sum":0,
+                "Sesp":0,
+                "esp":0,
+                "Besp":0
             }
 
             for(var evaluado in evaluados){
@@ -593,42 +601,78 @@ class Proceso {
                 }
                 evaluados[evaluado].tareas[0].resultadoGlobal = resultadoGlobal;
                 if(resultadoGlobal.nivel == "AA"){
-                    matrizEval.AA = matrizEval.AA + 1;
+                    matrizEval.AA++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
                 }else if(resultadoGlobal.nivel == "AB"){
-                    matrizEval.AB = matrizEval.AB + 1;
+                    matrizEval.AB++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
                 }else if(resultadoGlobal.nivel == "AC"){
-                    matrizEval.AC = matrizEval.AC + 1;
+                    matrizEval.AC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
                 }else if(resultadoGlobal.nivel == "BA"){
-                    matrizEval.BA = matrizEval.BA + 1;
+                    matrizEval.BA++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
                 }else if(resultadoGlobal.nivel == "BB"){
-                    matrizEval.BB = matrizEval.BB + 1;
+                    matrizEval.BB++;
+                    matrizEval.sum++;
+                    matrizEval.esp++;
                 }else if(resultadoGlobal.nivel == "BC"){
-                    matrizEval.BC = matrizEval.BC + 1;
+                    matrizEval.BC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
                 }else if(resultadoGlobal.nivel == "CA"){
-                    matrizEval.CA = matrizEval.CA + 1;
+                    matrizEval.CA++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
                 }else if(resultadoGlobal.nivel == "CB"){
-                    matrizEval.CB = matrizEval.CB + 1;
+                    matrizEval.CB++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
                 }else if(resultadoGlobal.nivel == "CC"){
-                    matrizEval.CC = matrizEval.CC + 1;
+                    matrizEval.CC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
                 }
                 if(resultadoCalibracion == "AA"){
-                    matrizCalib.AA = matrizCalib.AA + 1;
+                    matrizCalib.AA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
                 }else if(resultadoCalibracion == "AB"){
-                    matrizCalib.AB = matrizCalib.AB + 1;
+                    matrizCalib.AB++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
                 }else if(resultadoCalibracion == "AC"){
-                    matrizCalib.AC = matrizCalib.AC + 1;
+                    matrizCalib.AC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
                 }else if(resultadoCalibracion == "BA"){
-                    matrizCalib.BA = matrizCalib.BA + 1;
+                    matrizCalib.BA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
                 }else if(resultadoCalibracion == "BB"){
-                    matrizCalib.BB = matrizCalib.BB + 1;
+                    matrizCalib.BB++;
+                    matrizCalib.sum++;
+                    matrizCalib.esp++;
                 }else if(resultadoCalibracion == "BC"){
-                    matrizCalib.BC = matrizCalib.BC + 1;
+                    matrizCalib.BC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
                 }else if(resultadoCalibracion == "CA"){
-                    matrizCalib.CA = matrizCalib.CA + 1;
+                    matrizCalib.CA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
                 }else if(resultadoCalibracion == "CB"){
-                    matrizCalib.CB = matrizCalib.CB + 1;
+                    matrizCalib.CB++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
                 }else if(resultadoCalibracion == "CC"){
-                    matrizCalib.CC = matrizCalib.CC + 1;
+                    matrizCalib.CC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
                 }
             }
         response.json({
