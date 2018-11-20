@@ -634,12 +634,25 @@ class Proceso {
                     PerfilCompetencias:evaluado.evaluado_perfilCompetencias,
                     PerfilMetas:evaluado.evaluado_perfilMetas,
                     estadoEdeProcesoPersona:evaluado.evaluado_nombreEstadoProceso,
+                    resultadoCalibracion: evaluado.resultadoCalibracion,
                     tareas:[]
 
                 }
             }).toArray();
 
             var matrizEval = {
+                "AA":0,
+                "AB":0,
+                "AC":0,
+                "BA":0,
+                "BB":0,
+                "BC":0,
+                "CA":0,
+                "CB":0,
+                "CC":0
+            }
+
+            var matrizCalib = {
                 "AA":0,
                 "AB":0,
                 "AC":0,
@@ -667,11 +680,12 @@ class Proceso {
                 console.log('idOpinante:'+idOpinante);
             
                 const resultado2  = await data.execQuery(cliente,queryResultado);
-                //console.log(JSON.stringify(resultado2));
+                
                 var resultadoCompetencias={nivel:"No Disponible"};
                 var resultadoMetas = {nivel:"No Disponible"};
                 var resultadoGlobal = {nivel:"No Disponible"};
-                
+                var resultadoCalibracion = evaluados[evaluado].resultadoCalibracion;
+                console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
                 if(resultado2[0][0][0]!=undefined){
                     resultadoCompetencias = resultado2[0][0][0];
                 }
@@ -701,6 +715,25 @@ class Proceso {
                 }else if(resultadoGlobal.nivel == "CC"){
                     matrizEval.CC = matrizEval.CC + 1;
                 }
+                if(resultadoCalibracion == "AA"){
+                    matrizCalib.AA = matrizCalib.AA + 1;
+                }else if(resultadoCalibracion == "AB"){
+                    matrizCalib.AB = matrizCalib.AB + 1;
+                }else if(resultadoCalibracion == "AC"){
+                    matrizCalib.AC = matrizCalib.AC + 1;
+                }else if(resultadoCalibracion == "BA"){
+                    matrizCalib.BA = matrizCalib.BA + 1;
+                }else if(resultadoCalibracion == "BB"){
+                    matrizCalib.BB = matrizCalib.BB + 1;
+                }else if(resultadoCalibracion == "BC"){
+                    matrizCalib.BC = matrizCalib.BC + 1;
+                }else if(resultadoCalibracion == "CA"){
+                    matrizCalib.CA = matrizCalib.CA + 1;
+                }else if(resultadoCalibracion == "CB"){
+                    matrizCalib.CB = matrizCalib.CB + 1;
+                }else if(resultadoCalibracion == "CC"){
+                    matrizCalib.CC = matrizCalib.CC + 1;
+                }
             }
         response.json({
             "estado": {
@@ -709,7 +742,8 @@ class Proceso {
             },
             "paginacion": "",
             "data": evaluados,
-            "matriz": matrizEval
+            "matrizE": matrizEval,
+            "matrizC": matrizCalib
         });
     }
 
