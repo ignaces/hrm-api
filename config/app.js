@@ -159,7 +159,7 @@ module.exports = {
     | Available drivers are: `file` and `console`.
     |
     */
-    transport: 'console',
+    transport: 'file',
 
     /*
     |--------------------------------------------------------------------------
@@ -191,7 +191,7 @@ module.exports = {
       driver: 'file',
       name: 'adonis-app',
       filename: 'adonis.log',
-      level: 'info'
+      level: 'debug'
     }
   }
 }

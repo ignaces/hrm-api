@@ -2,6 +2,7 @@ const Database = use('Database')
 const got = use('got')
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
+const Logger = use('Logger')
 //jTest
 class Instrumento {
 
@@ -481,7 +482,7 @@ class Instrumento {
 
     async getPromedioGeneral({request,response}){
 
-        console.log("1")
+        
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
         var codigo = request.input("codigoActor");
@@ -491,116 +492,101 @@ class Instrumento {
         const cliente =request.input('cliente') ;
 
         const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}','${idProceso}')`;
-        console.log(query)
+        
+        try{
+
         const rQuery   = await data.execQuery(cliente,query);
         
-        const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
-            return{
-                id: c.idCompetencia,
-                competencia: c.competencia,
-                nivelAuto: "No Disponible",
-                nivelSup: "No Disponible",
-                nivelFunc: "No Disponible",
-                codigoActor:c.codigoActor,
-                valorAuto: null,
-                valorSup: null,
-                valorFunc: null
+        Logger.debug(`query:${query},mensaje:OK`);
+            const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
+                return{
+                    id: c.idCompetencia,
+                    competencia: c.competencia,
+                    nivelAuto: "No Disponible",
+                    nivelSup: "No Disponible",
+                    nivelFunc: "No Disponible",
+                    codigoActor:c.codigoActor,
+                    valorAuto: null,
+                    valorSup: null,
+                    valorFunc: null
+                }
+            }).toArray()
+            Logger.debug(`linea:514,mensaje:OK`);
+                const competenciasSalida = Enumerable.from(rQuery[0][0]).select(function(c){
+                    return{
+                        id: c.idCompetencia,
+                        competencia: c.competencia,
+                        nivelAuto: c.nivelAuto,
+                        nivelSup: c.nivelSup,
+                        nivelFunc: c.nivelFunc,
+                        codigoActor:c.codigoActor,
+                        valorAuto: c.valorAuto,
+                        valorSup: c.valorSup,
+                        valorFunc: c.valorFunc
+                    }
+                }).toArray()
+                Logger.debug(`linea:528,mensaje:OK`);
+                competencias.forEach(e => {
+                    competenciasSalida.forEach(c => {
+                        
+                        if(e.id == c.id && c.nivelAuto != "No Disponible"){
+                            e.nivelAuto = c.nivelAuto;
+                        }
+                        
+                        if(e.id == c.id && c.nivelSup != "No Disponible"){
+                            e.nivelSup = c.nivelSup;
+                        }
+    
+                        if(e.id == c.id && c.nivelFunc != "No Disponible"){
+                            e.nivelFunc = c.nivelFunc;
+                        }
+    
+                        if(e.id == c.id && c.valorAuto != null){
+                            e.valorAuto = c.valorAuto;
+                        }
+    
+                        if(e.id == c.id && c.valorSup != null){
+                            e.valorSup = c.valorSup;
+                        }
+                        
+                        if(e.id == c.id && c.valorFunc != null){
+                            e.valorFunc = c.valorFunc;
+                        }
+                    });
+                });
+    
+                Logger.debug(`linea:558,mensaje:OK`);
+    
+                
+            
+            if(typeof competencias == "undefined" || competencias == null || competencias.length == null || competencias.length == 0)
+            {
+                const competenciasVacias = Enumerable.from(rQuery[0][0]).select(function(c){
+                    return{
+                        id: c.idCompetencia,
+                        competencia: c.competencia,
+                        nivelAuto: c.nivelAuto,
+                        nivelSup: c.nivelSup,
+                        nivelFunc: c.nivelFunc,
+                        codigoActor:c.codigoActor,
+                        valorAuto: c.valorAuto,
+                        valorSup: c.valorSup,
+                        valorFunc: c.valorFunc// ,
+                        //estaSeleccionada: c.estaSeleccionada
+                    }
+                }).toArray()
+                Logger.debug(`linea:578,mensaje:OK`);
+                response.json(competenciasVacias); 
             }
-        }).toArray()
-
-            const competenciasSalida = Enumerable.from(rQuery[0][0]).select(function(c){
-                return{
-                    id: c.idCompetencia,
-                    competencia: c.competencia,
-                    nivelAuto: c.nivelAuto,
-                    nivelSup: c.nivelSup,
-                    nivelFunc: c.nivelFunc,
-                    codigoActor:c.codigoActor,
-                    valorAuto: c.valorAuto,
-                    valorSup: c.valorSup,
-                    valorFunc: c.valorFunc
-                }
-            }).toArray()
-
-            competencias.forEach(e => {
-                competenciasSalida.forEach(c => {
-                    
-                    if(e.id == c.id && c.nivelAuto != "No Disponible"){
-                        e.nivelAuto = c.nivelAuto;
-                    }
-                    
-                    if(e.id == c.id && c.nivelSup != "No Disponible"){
-                        e.nivelSup = c.nivelSup;
-                    }
-
-                    if(e.id == c.id && c.nivelFunc != "No Disponible"){
-                        e.nivelFunc = c.nivelFunc;
-                    }
-
-                    if(e.id == c.id && c.valorAuto != null){
-                        e.valorAuto = c.valorAuto;
-                    }
-
-                    if(e.id == c.id && c.valorSup != null){
-                        e.valorSup = c.valorSup;
-                    }
-                    
-                    if(e.id == c.id && c.valorFunc != null){
-                        e.valorFunc = c.valorFunc;
-                    }
-                });
-            });
-
-
-
-            console.log(competencias)
+            else
+            {
+                Logger.debug(`linea:583,mensaje:OK`);
+                response.json(competencias); 
+            }
+        }catch(ex){
+            Logger.debug(`query:${query},mensaje:${ex.message}`);
+        }
         
-        if(typeof competencias == "undefined" || competencias == null || competencias.length == null || competencias.length == 0)
-        {
-            const competenciasVacias = Enumerable.from(rQuery[0][0]).select(function(c){
-                return{
-                    id: c.idCompetencia,
-                    competencia: c.competencia,
-                    nivelAuto: c.nivelAuto,
-                    nivelSup: c.nivelSup,
-                    nivelFunc: c.nivelFunc,
-                    codigoActor:c.codigoActor,
-                    valorAuto: c.valorAuto,
-                    valorSup: c.valorSup,
-                    valorFunc: c.valorFunc// ,
-                    //estaSeleccionada: c.estaSeleccionada
-                }
-            }).toArray()
-
-            response.json(competenciasVacias); 
-        }
-        else
-        {
-            /*
-            const competencias2 = Enumerable.from(rQuery[0][0]).where(`$.estaSeleccionada == "0"`).distinct("$.idCompetencia").select(function(c){
-                return{
-                    id: c.idCompetencia,
-                    competencia: c.competencia,
-                    nivel: c.nivel,
-                    estaSeleccionada: c.estaSeleccionada
-                }
-            }).toArray()
-
-            var idComp = 0;
-            competencias.forEach(e => {
-                idComp = e.id;
-                competencias.forEach(e2 => {
-                    if(idComp != e2.id)
-                    {
-                        console.log(idComp)
-                    }
-                });
-                console.log(idComp)
-            });
-            salida = competencias.concat(competencias2);
-            */
-            response.json(competencias); 
-        }
     }
 }
 
