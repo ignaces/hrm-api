@@ -48,24 +48,30 @@ class Proceso {
      * @param  {} justificacion
      */
     async putRespuesta({request,response}){
-       
-        var idOpinante = request.input("idOpinante");
-        var idPregunta = request.input("idPregunta");
-        var idAlternativa = request.input("idAlternativa");
-        var justificacion = request.input("justificacion");
-        const cliente =request.input('cliente') ;
-        const query = `call acre_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
-        const result   = await data.execQuery(cliente,query);
-        
-        const body = 
-        {
-          estado: {
-            codigo: "OK",
-            mensaje: ""
-          }
-          
+        try{
+
+            var idOpinante = request.input("idOpinante");
+            var idPregunta = request.input("idPregunta");
+            var idAlternativa = request.input("idAlternativa");
+            var justificacion = request.input("justificacion");
+            const cliente =request.input('cliente') ;
+         
+            const query = `call acre_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
+            const result   = await data.execQuery(cliente,query);
+         
+            const body = 
+            {
+              estado: {
+                codigo: "OK",
+                mensaje: ""
+              }
+            }
+   
+            response.json(body);
+        }catch(e){
+            console.log(e);
         }
-        response.json(body);
+        
     }
 
     async putRespuestaCS({request,response}){
@@ -77,7 +83,7 @@ class Proceso {
             const cliente =request.input('cliente') ;
             const query = `call acre_putRespuestaCS('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
             const result   = await data.execQuery(cliente,query);
-            
+
             const body = 
             {
             estado: {
@@ -86,7 +92,7 @@ class Proceso {
             }
             
             }
-            console.log(result)
+            
             response.json(body);
         }
         catch(e)
@@ -121,7 +127,7 @@ class Proceso {
 
 
     async cerrarEvaluacion({request,response}){
-        
+                                        
         var idOpinante = request.input("idOpinante");
         const cliente =request.input('cliente') ;
         const query = `call acre_cerrarEvaluacion('${idOpinante}')`;
