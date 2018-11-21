@@ -775,13 +775,13 @@ class Proceso {
                     matrizCalib.Besp++;
                 }
             }
-            matrizEval.Besp = (100*matrizEval.Besp)/matrizEval.sum;
-            matrizEval.esp = (100*matrizEval.esp)/matrizEval.sum;
-            matrizEval.Sesp = (100*matrizEval.Sesp)/matrizEval.sum;
+            matrizEval.Besp = Math.trunc((100*matrizEval.Besp)/matrizEval.sum);
+            matrizEval.esp = Math.trunc((100*matrizEval.esp)/matrizEval.sum);
+            matrizEval.Sesp = Math.trunc((100*matrizEval.Sesp)/matrizEval.sum);
 
-            matrizCalib.Besp = (100*matrizCalib.Besp)/matrizCalib.sum;
-            matrizCalib.esp = (100*matrizCalib.esp)/matrizCalib.sum;
-            matrizCalib.Sesp = (100*matrizCalib.Sesp)/matrizCalib.sum;
+            matrizCalib.Besp = Math.trunc((100*matrizCalib.Besp)/matrizCalib.sum);
+            matrizCalib.esp = Math.trunc((100*matrizCalib.esp)/matrizCalib.sum);
+            matrizCalib.Sesp = Math.trunc((100*matrizCalib.Sesp)/matrizCalib.sum);
         response.json({
             "estado": {
                 "codigo": "OK",
