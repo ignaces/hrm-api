@@ -2,7 +2,7 @@
 const Database = use('Database')
 const Env = use('Env')
 const Helpers = use('Helpers')
-
+const Logger = use('Logger')
 /**
  * Esta clase está encargada de manejar las llamadas a la base de datos
  * @name Data
@@ -30,10 +30,17 @@ class Data  {
         try{
             const result = await Database.connection('default').schema.raw(query);
         
-            Database.close(['default'])
+            try{
+                Database.close(['default']);
+            }catch(e){}
+            
+            
             return result;
         }catch(ex){
             Database.close(['default'])
+            
+            Logger.debug(`query:${query},mensaje:${ex.message}`);
+            
             return ex;
         }
         
