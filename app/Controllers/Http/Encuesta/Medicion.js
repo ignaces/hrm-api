@@ -104,7 +104,7 @@ class Medicion {
         const cliente = request.input('cliente');
         const query = `call eci_getPreguntasAdicionales('${idPersona}', '${idEncuesta}')`;
         const preguntas = await data.execQuery(cliente,query);
-console.log('cliente: ' + cliente);
+
         var body = 
         {
           estado: {
@@ -124,10 +124,11 @@ console.log('cliente: ' + cliente);
         // var texto = request.input('');
 
         const cliente = request.input('cliente');
+        console.log('cliente: ' + cliente);
         var query = `call eci_addRespuestaAdicionales('86cde995-dd04-11e8-80db-bc764e10787e','7546dd79-db91-11e8-80db-bc764e10787e','texto')`;
         //const query = `call eci_addRespuestaAdicionales('${idOpinante}','${idEncuestaPregunta}','${texto}')`;
         const resp = await data.execQuery(cliente, query);
-console.log('cliente: ' + cliente);
+
         var body = 
         {
           estado: {
