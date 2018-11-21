@@ -119,15 +119,19 @@ console.log('cliente: ' + cliente);
     }
 
     async postPreguntasAdicionales({request, response}){
-        // var idOpinante = request.input('');
-        // var idEncuestaPregunta = request.input('');
-        // var texto = request.input('');
+        var idOpinante = request.input('idOpinante');
+        var idEncuestaPregunta = request.input('idPregunta');
+        var texto = request.input('texto');
 
         const cliente = request.input('cliente');
-        var query = `call eci_addRespuestaAdicionales('86cde995-dd04-11e8-80db-bc764e10787e','7546dd79-db91-11e8-80db-bc764e10787e','texto')`;
-        //const query = `call eci_addRespuestaAdicionales('${idOpinante}','${idEncuestaPregunta}','${texto}')`;
+        //var query = `call eci_addRespuestaAdicionales('86cde995-dd04-11e8-80db-bc764e10787e','7546dd79-db91-11e8-80db-bc764e10787e','texto')`;
+        const query = `call eci_addRespuestaAdicionales('${idOpinante}','${idEncuestaPregunta}','${texto}')`;
+
+        console.log(query);
+
         const resp = await data.execQuery(cliente, query);
-console.log('cliente: ' + cliente);
+
+
         var body = 
         {
           estado: {
@@ -138,9 +142,7 @@ console.log('cliente: ' + cliente);
           data: resp[0][0]
           
         }
-        console.log('************************************');
-        console.log('body: ' + body);
-        console.log('************************************');
+      
         response.json(body);
     }
     
