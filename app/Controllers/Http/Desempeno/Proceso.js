@@ -190,173 +190,186 @@ class Proceso {
 
     async getTareas({request,response}){
         
-            var idTarea=request.input('idTarea')
-            var codigoTipoProceso=request.input('codigoTipoProceso')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getTareas('${idTarea}','${codigoTipoProceso}')`;
+        var idTarea=request.input('idTarea')
+        var codigoTipoProceso=request.input('codigoTipoProceso')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getTareas('${idTarea}','${codigoTipoProceso}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async addTareaEtapa({request,response}){
+    
+        var idEtapa= request.input('idEtapa');
+        var idTarea= request.input('idTarea');
+        var nombre= request.input('nombre');
+        var fecha_inicio = request.input('fecha_inicio');
+        var fecha_termino = request.input('fecha_termino');
+        var imagen = request.input('imagen');
+        var color = request.input('color');
+        var orden = request.input('orden');
+        var ocultar = request.input('ocultar');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_addTareaEtapa('${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
 
-        async addTareaEtapa({request,response}){
-      
-            var idEtapa= request.input('idEtapa');
-            var idTarea= request.input('idTarea');
-            var nombre= request.input('nombre');
-            var fecha_inicio = request.input('fecha_inicio');
-            var fecha_termino = request.input('fecha_termino');
-            var imagen = request.input('imagen');
-            var color = request.input('color');
-            var orden = request.input('orden');
-            var ocultar = request.input('ocultar');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_addTareaEtapa('${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
-
-        async updTareaEtapa({request,response}){
-      
-            var idEtapaTarea= request.input('idEtapaTarea');
-            var idEtapa= request.input('idEtapa');
-            var idTarea= request.input('idTarea');
-            var nombre= request.input('nombre');
-            var fecha_inicio = request.input('fecha_inicio');
-            var fecha_termino = request.input('fecha_termino');
-            var imagen = request.input('imagen');
-            var color = request.input('color');
-            var orden = request.input('orden');
-            var ocultar = request.input('ocultar');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_updTareaEtapa('${idEtapaTarea}','${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
-
-        async getAccionesTarea({request,response}){
-
-            var idEtapaTarea=request.input('idEtapaTarea')
-            var idAccionTarea=request.input('idAccionTarea')
-            var idAccion=request.input('idAccion')
-            var idActor=request.input('idActor')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getAccionesTarea('${idEtapaTarea}','${idAccionTarea}','${idAccion}','${idActor}')`;
+    async updTareaEtapa({request,response}){
+    
+        var idEtapaTarea= request.input('idEtapaTarea');
+        var idEtapa= request.input('idEtapa');
+        var idTarea= request.input('idTarea');
+        var nombre= request.input('nombre');
+        var fecha_inicio = request.input('fecha_inicio');
+        var fecha_termino = request.input('fecha_termino');
+        var imagen = request.input('imagen');
+        var color = request.input('color');
+        var orden = request.input('orden');
+        var ocultar = request.input('ocultar');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_updTareaEtapa('${idEtapaTarea}','${idEtapa}','${idTarea}','${nombre}','${fecha_inicio}','${fecha_termino}','${imagen}','${color}','${orden}','${ocultar}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
 
-        async getAcciones({request,response}){
-            var idAccion=request.input('idAccion')
-            var idTarea=request.input('idTarea')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getAcciones('${idAccion}','${idTarea}')`;
+    async getAccionesTarea({request,response}){
+
+        var idEtapaTarea=request.input('idEtapaTarea')
+        var idAccionTarea=request.input('idAccionTarea')
+        var idAccion=request.input('idAccion')
+        var idActor=request.input('idActor')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getAccionesTarea('${idEtapaTarea}','${idAccionTarea}','${idAccion}','${idActor}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async getAcciones({request,response}){
+        var idAccion=request.input('idAccion')
+        var idTarea=request.input('idTarea')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getAcciones('${idAccion}','${idTarea}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async getActores({request,response}){
+        var idActor=request.input('idActor')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getActores('${idActor}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
+    async addAccionTarea({request,response}){
+    
+        var idEtapaTarea= request.input('idEtapaTarea');
+        var idAccion= request.input('idAccion');
+        var idActor= request.input('idActor');
+        var instruccion = request.input('instruccion');
+        var esFin = request.input('esFin');
+        var orden = request.input('orden');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_addAccionTarea('${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
 
-        async getActores({request,response}){
-            var idActor=request.input('idActor')
-            const cliente =request.input('cliente') ;
-            const query =  `call ede_getActores('${idActor}')`;
+    async updAccionTarea({request,response}){
+    
+        var idAccionTarea= request.input('idAccionTarea');
+        var idEtapaTarea= request.input('idEtapaTarea');
+        var idAccion= request.input('idAccion');
+        var idActor= request.input('idActor');
+        var instruccion = request.input('instruccion');
+        var esFin = request.input('esFin');
+        var orden = request.input('orden');
+        var idEstado = request.input('idEstado');
+        var cliente = request.input('cliente');
+        try{
+            const query =  `call ede_updAccionTarea('${idAccionTarea}','${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
             const respuesta   = await data.execQuery(cliente,query);
-            
-            response.json({
-                "estado": {
-                    "codigo": "OK",
-                    "mensaje": ""
-                },
-                "paginacion": "",
-                "data": respuesta[0][0]
-            });
-        }
+            response.json({mensaje:"OK"});
+            }
+            catch(err)
+            { 
+            response.json({mensaje:err});
+            }
+    }
+    
+    async getInformeComparativo({request,response}){
+        var idPersona=request.input('idPersona')
 
-        async addAccionTarea({request,response}){
-      
-            var idEtapaTarea= request.input('idEtapaTarea');
-            var idAccion= request.input('idAccion');
-            var idActor= request.input('idActor');
-            var instruccion = request.input('instruccion');
-            var esFin = request.input('esFin');
-            var orden = request.input('orden');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_addAccionTarea('${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
+        const query =  `call ede_getInformeComparativo('${idPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        var registros = respuesta[0][0];
 
-        async updAccionTarea({request,response}){
-      
-            var idAccionTarea= request.input('idAccionTarea');
-            var idEtapaTarea= request.input('idEtapaTarea');
-            var idAccion= request.input('idAccion');
-            var idActor= request.input('idActor');
-            var instruccion = request.input('instruccion');
-            var esFin = request.input('esFin');
-            var orden = request.input('orden');
-            var idEstado = request.input('idEstado');
-            var cliente = request.input('cliente');
-            try{
-                const query =  `call ede_updAccionTarea('${idAccionTarea}','${idEtapaTarea}','${idAccion}','${idActor}','${instruccion}','${esFin}','${orden}','${idEstado}')`;
-                const respuesta   = await data.execQuery(cliente,query);
-                response.json({mensaje:"OK"});
-               }
-               catch(err)
-               { 
-                response.json({mensaje:err});
-              }
-        }
+        console.log(registros);
 
-
-
-
-
-
-
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
 
     async getMenuUsuario({request,response}){
         var idProceso=request.input('idProceso')
@@ -490,6 +503,197 @@ class Proceso {
         });
     }
 
+    async getListaCalibracion({request,response}){
+        var idEtapa=request.input('idEtapa')
+        var idPersonaActor=request.input('idPersonaActor')
+        var codigoActor=request.input('codigoActor')
+        var idAccionPersona=request.input('idAccionPersona')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getListaCalibracion('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        const evaluados = Enumerable.from(respuesta[0][0]).distinct("$.idEvaluado").select(function(evaluado){
+            return{
+                    idEvaluado:evaluado.idEvaluado,
+                    idProceso:evaluado.idProceso,
+                    idPersona:evaluado.evaluado_idPersona,
+                    idCompetenciaPerfil:evaluado.evaluado_idCompetenciaPerfil,
+                    idEdeMetaPerfil:evaluado.evaluado_idMetaPerfil,
+                    activoEdeProcesoPersona:evaluado.evaluado_activoProceso,
+                    nombres:evaluado.q,
+                    idOpinante:evaluado.evaluado_idOpinante,
+                    apellidoPaterno:evaluado.evaluado_apellidoPaterno,
+                    apellidoMaterno:evaluado.evaluado_apellidoMaterno,
+                    foto:evaluado.evaluado_foto,
+                    codigoGenero:evaluado.evaluado_codigoGenero,
+                    nombreCargo:evaluado.evaluado_nombreCargo,
+                    PerfilCompetencias:evaluado.evaluado_perfilCompetencias,
+                    PerfilMetas:evaluado.evaluado_perfilMetas,
+                    estadoEdeProcesoPersona:evaluado.evaluado_nombreEstadoProceso,
+                    resultadoCalibracion: evaluado.resultadoCalibracion,
+                    tareas:[]
+
+                }
+            }).toArray();
+
+            var matrizEval = {
+                "AA":0,
+                "AB":0,
+                "AC":0,
+                "BA":0,
+                "BB":0,
+                "BC":0,
+                "CA":0,
+                "CB":0,
+                "CC":0,
+                "sum":0,
+                "Sesp":0,
+                "esp":0,
+                "Besp":0
+            }
+
+            var matrizCalib = {
+                "AA":0,
+                "AB":0,
+                "AC":0,
+                "BA":0,
+                "BB":0,
+                "BC":0,
+                "CA":0,
+                "CB":0,
+                "CC":0,
+                "sum":0,
+                "Sesp":0,
+                "esp":0,
+                "Besp":0
+            }
+
+            for(var evaluado in evaluados){
+                
+                const tareas = Enumerable.from(respuesta[0][0]).where(`$.idEvaluado == "${evaluados[evaluado].idEvaluado}"`).select(function(tarea){
+                    return{
+                        tarea
+                    }
+                }).toArray();
+
+                //console.log(tareas)
+                evaluados[evaluado].tareas=tareas;
+                var idOpinante = evaluados[evaluado].idOpinante;
+                console.log(evaluados[evaluado]);
+                const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
+                console.log('idOpinante:'+idOpinante);
+            
+                const resultado2  = await data.execQuery(cliente,queryResultado);
+                
+                var resultadoCompetencias={nivel:"No Disponible"};
+                var resultadoMetas = {nivel:"No Disponible"};
+                var resultadoGlobal = {nivel:"No Disponible"};
+                var resultadoCalibracion = evaluados[evaluado].resultadoCalibracion;
+                console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
+                if(resultado2[0][0][0]!=undefined){
+                    resultadoCompetencias = resultado2[0][0][0];
+                }
+                if(resultado2[0][1][0]!=undefined){
+                    resultadoMetas = resultado2[0][1][0];
+                }
+                if(resultadoMetas.nivel!="No Disponible" && resultadoCompetencias.nivel!="No Disponible"){
+                    resultadoGlobal = {nivel:`${resultadoCompetencias.nivel}${resultadoMetas.nivel}`};
+                }
+                evaluados[evaluado].tareas[0].resultadoGlobal = resultadoGlobal;
+                if(resultadoGlobal.nivel == "AA"){
+                    matrizEval.AA++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
+                }else if(resultadoGlobal.nivel == "AB"){
+                    matrizEval.AB++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
+                }else if(resultadoGlobal.nivel == "AC"){
+                    matrizEval.AC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "BA"){
+                    matrizEval.BA++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
+                }else if(resultadoGlobal.nivel == "BB"){
+                    matrizEval.BB++;
+                    matrizEval.sum++;
+                    matrizEval.esp++;
+                }else if(resultadoGlobal.nivel == "BC"){
+                    matrizEval.BC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "CA"){
+                    matrizEval.CA++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "CB"){
+                    matrizEval.CB++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "CC"){
+                    matrizEval.CC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }
+                if(resultadoCalibracion == "AA"){
+                    matrizCalib.AA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
+                }else if(resultadoCalibracion == "AB"){
+                    matrizCalib.AB++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
+                }else if(resultadoCalibracion == "AC"){
+                    matrizCalib.AC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "BA"){
+                    matrizCalib.BA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
+                }else if(resultadoCalibracion == "BB"){
+                    matrizCalib.BB++;
+                    matrizCalib.sum++;
+                    matrizCalib.esp++;
+                }else if(resultadoCalibracion == "BC"){
+                    matrizCalib.BC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "CA"){
+                    matrizCalib.CA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "CB"){
+                    matrizCalib.CB++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "CC"){
+                    matrizCalib.CC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }
+            }
+            matrizEval.Besp = (100*matrizEval.Besp)/matrizEval.sum;
+            matrizEval.esp = (100*matrizEval.esp)/matrizEval.sum;
+            matrizEval.Sesp = (100*matrizEval.Sesp)/matrizEval.sum;
+
+            matrizCalib.Besp = (100*matrizCalib.Besp)/matrizCalib.sum;
+            matrizCalib.esp = (100*matrizCalib.esp)/matrizCalib.sum;
+            matrizCalib.Sesp = (100*matrizCalib.Sesp)/matrizCalib.sum;
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": evaluados,
+            "matrizE": matrizEval,
+            "matrizC": matrizCalib
+        });
+    }
+
     async getListaEvaluadosGrupalP({request,response}) {
         var idEtapa=request.input('idEtapa')
         var idPersona=request.input('idPersona')
@@ -509,13 +713,19 @@ class Proceso {
                 nombres:evaluado.nombres,
                 codigoEstado:evaluado.codigoEstado,
                 idEncuestaPersona:evaluado.idEncuestaPersona,
+                dimension:Enumerable.from(registros).distinct("$.dimension").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(dimension){
+                    return {
+                        nombre:dimension.dimension,
+                        cuentaDimensiones:dimension.cuentaDimensiones,
+                    }
+                }).toArray(), 
                 competencias:Enumerable.from(registros).distinct("$.idPregunta").where(`$.idOpinante=="${evaluado.idOpinante}"`).select(function(competencia){
                     return {
                         idOpinante:competencia.idOpinante,
                         idCompetencia:competencia.idPregunta,
                         nombre:competencia.enunciado,
                         idCriterio:competencia.idPregunta,
-                        disabled:false,
+                        disabled:(competencia.codigoEstado == 'EVALFINALIZADO'),
                         niveles:Enumerable.from(registros).where(`$.idOpinante=="${competencia.idOpinante}" && $.idPregunta=="${competencia.idPregunta}"`).select(function(nivel){
                             return {
                                 id:nivel.idAlternativa,
@@ -881,10 +1091,12 @@ class Proceso {
         var idEncuestaPersona = request.input("idEncuestaPersona")
         const cliente =request.input('cliente') ;
         var codigoEstado = request.input("codigoEstado")
+        var idProceso = request.input("idProceso")
+        var codigoActor = request.input("codigoActor")
         console.log("updEncuesta")
 
         try{
-            const query =  `call ede_updEstadoEncuestaEDE('${idEncuestaPersona}','${codigoEstado}')`;
+            const query =  `call ede_updEstadoEncuestaEDE('${idEncuestaPersona}','${codigoEstado}','${idProceso}','${codigoActor}')`;
             console.log(query)
             const respuesta   = await data.execQuery(cliente,query);
             //response.json({mensaje:"OK"});
@@ -1049,5 +1261,31 @@ class Proceso {
             
         });
     }
+
+    async getSabanaAvance({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        var idEvaluador   =   request.input('idEvaluador');
+        //console.log(`call pers_getReporteAvanceEdeSabana('${idProceso}', '${idEvaluador}');`);
+        //return false;
+        const query       =  `call pers_getReporteAvanceEdeSabana('${idProceso}', '${idEvaluador}');`;
+        console.log(query);
+        //return false;
+        const respuesta   =  await data.execQuery(cliente,query);
+        //console.log(respuesta[0][0]);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }
+
+    
 }
 module.exports=Proceso
