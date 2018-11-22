@@ -96,6 +96,56 @@ class Medicion {
         response.json(body);
     }
 
+    async getPreguntasAdicionales({request, response}){
+        var idPersona = request.input("idPersona");
+        var idEncuesta = request.input("idEncuesta");
+
+        var instrumento = [];
+        const cliente = request.input('cliente');
+        const query = `call eci_getPreguntasAdicionales('${idPersona}', '${idEncuesta}')`;
+        const preguntas = await data.execQuery(cliente,query);
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: preguntas[0][0]
+          
+        }
+        response.json(body);
+    }
+
+    async postPreguntasAdicionales({request, response}){
+        var idOpinante = request.input('idOpinante');
+        var idEncuestaPregunta = request.input('idPregunta');
+        var texto = request.input('texto');
+
+        const cliente = request.input('cliente');
+        //var query = `call eci_addRespuestaAdicionales('86cde995-dd04-11e8-80db-bc764e10787e','7546dd79-db91-11e8-80db-bc764e10787e','texto')`;
+        const query = `call eci_addRespuestaAdicionales('${idOpinante}','${idEncuestaPregunta}','${texto}')`;
+
+        console.log(query);
+
+        const resp = await data.execQuery(cliente, query);
+
+
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          paginacion: "",
+          data: resp[0][0]
+          
+        }
+      
+        response.json(body);
+    }
+    
     async getInstrumento({request,response}){
         
         var idEncuestaPersona = request.input("idEncuestaPersona");

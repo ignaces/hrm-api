@@ -192,6 +192,7 @@ console.log(tipoEncuestas[i].estaActivo);
            data: {opinante: opinantes}
            
          }
+         //console.log(body);
          response.json(body);
         }catch(e){
           console.log(e);

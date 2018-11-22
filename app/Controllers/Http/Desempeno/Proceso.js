@@ -503,6 +503,197 @@ class Proceso {
         });
     }
 
+    async getListaCalibracion({request,response}){
+        var idEtapa=request.input('idEtapa')
+        var idPersonaActor=request.input('idPersonaActor')
+        var codigoActor=request.input('codigoActor')
+        var idAccionPersona=request.input('idAccionPersona')
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getListaCalibracion('${idEtapa}','${idPersonaActor}','${codigoActor}','${idAccionPersona}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        const evaluados = Enumerable.from(respuesta[0][0]).distinct("$.idEvaluado").select(function(evaluado){
+            return{
+                    idEvaluado:evaluado.idEvaluado,
+                    idProceso:evaluado.idProceso,
+                    idPersona:evaluado.evaluado_idPersona,
+                    idCompetenciaPerfil:evaluado.evaluado_idCompetenciaPerfil,
+                    idEdeMetaPerfil:evaluado.evaluado_idMetaPerfil,
+                    activoEdeProcesoPersona:evaluado.evaluado_activoProceso,
+                    nombres:evaluado.q,
+                    idOpinante:evaluado.evaluado_idOpinante,
+                    apellidoPaterno:evaluado.evaluado_apellidoPaterno,
+                    apellidoMaterno:evaluado.evaluado_apellidoMaterno,
+                    foto:evaluado.evaluado_foto,
+                    codigoGenero:evaluado.evaluado_codigoGenero,
+                    nombreCargo:evaluado.evaluado_nombreCargo,
+                    PerfilCompetencias:evaluado.evaluado_perfilCompetencias,
+                    PerfilMetas:evaluado.evaluado_perfilMetas,
+                    estadoEdeProcesoPersona:evaluado.evaluado_nombreEstadoProceso,
+                    resultadoCalibracion: evaluado.resultadoCalibracion,
+                    tareas:[]
+
+                }
+            }).toArray();
+
+            var matrizEval = {
+                "AA":0,
+                "AB":0,
+                "AC":0,
+                "BA":0,
+                "BB":0,
+                "BC":0,
+                "CA":0,
+                "CB":0,
+                "CC":0,
+                "sum":0,
+                "Sesp":0,
+                "esp":0,
+                "Besp":0
+            }
+
+            var matrizCalib = {
+                "AA":0,
+                "AB":0,
+                "AC":0,
+                "BA":0,
+                "BB":0,
+                "BC":0,
+                "CA":0,
+                "CB":0,
+                "CC":0,
+                "sum":0,
+                "Sesp":0,
+                "esp":0,
+                "Besp":0
+            }
+
+            for(var evaluado in evaluados){
+                
+                const tareas = Enumerable.from(respuesta[0][0]).where(`$.idEvaluado == "${evaluados[evaluado].idEvaluado}"`).select(function(tarea){
+                    return{
+                        tarea
+                    }
+                }).toArray();
+
+                //console.log(tareas)
+                evaluados[evaluado].tareas=tareas;
+                var idOpinante = evaluados[evaluado].idOpinante;
+                console.log(evaluados[evaluado]);
+                const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
+                console.log('idOpinante:'+idOpinante);
+            
+                const resultado2  = await data.execQuery(cliente,queryResultado);
+                
+                var resultadoCompetencias={nivel:"No Disponible"};
+                var resultadoMetas = {nivel:"No Disponible"};
+                var resultadoGlobal = {nivel:"No Disponible"};
+                var resultadoCalibracion = evaluados[evaluado].resultadoCalibracion;
+                console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
+                if(resultado2[0][0][0]!=undefined){
+                    resultadoCompetencias = resultado2[0][0][0];
+                }
+                if(resultado2[0][1][0]!=undefined){
+                    resultadoMetas = resultado2[0][1][0];
+                }
+                if(resultadoMetas.nivel!="No Disponible" && resultadoCompetencias.nivel!="No Disponible"){
+                    resultadoGlobal = {nivel:`${resultadoCompetencias.nivel}${resultadoMetas.nivel}`};
+                }
+                evaluados[evaluado].tareas[0].resultadoGlobal = resultadoGlobal;
+                if(resultadoGlobal.nivel == "AA"){
+                    matrizEval.AA++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
+                }else if(resultadoGlobal.nivel == "AB"){
+                    matrizEval.AB++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
+                }else if(resultadoGlobal.nivel == "AC"){
+                    matrizEval.AC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "BA"){
+                    matrizEval.BA++;
+                    matrizEval.sum++;
+                    matrizEval.Sesp++;
+                }else if(resultadoGlobal.nivel == "BB"){
+                    matrizEval.BB++;
+                    matrizEval.sum++;
+                    matrizEval.esp++;
+                }else if(resultadoGlobal.nivel == "BC"){
+                    matrizEval.BC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "CA"){
+                    matrizEval.CA++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "CB"){
+                    matrizEval.CB++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }else if(resultadoGlobal.nivel == "CC"){
+                    matrizEval.CC++;
+                    matrizEval.sum++;
+                    matrizEval.Besp++;
+                }
+                if(resultadoCalibracion == "AA"){
+                    matrizCalib.AA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
+                }else if(resultadoCalibracion == "AB"){
+                    matrizCalib.AB++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
+                }else if(resultadoCalibracion == "AC"){
+                    matrizCalib.AC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "BA"){
+                    matrizCalib.BA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Sesp++;
+                }else if(resultadoCalibracion == "BB"){
+                    matrizCalib.BB++;
+                    matrizCalib.sum++;
+                    matrizCalib.esp++;
+                }else if(resultadoCalibracion == "BC"){
+                    matrizCalib.BC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "CA"){
+                    matrizCalib.CA++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "CB"){
+                    matrizCalib.CB++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }else if(resultadoCalibracion == "CC"){
+                    matrizCalib.CC++;
+                    matrizCalib.sum++;
+                    matrizCalib.Besp++;
+                }
+            }
+            matrizEval.Besp = (100*matrizEval.Besp)/matrizEval.sum;
+            matrizEval.esp = (100*matrizEval.esp)/matrizEval.sum;
+            matrizEval.Sesp = (100*matrizEval.Sesp)/matrizEval.sum;
+
+            matrizCalib.Besp = (100*matrizCalib.Besp)/matrizCalib.sum;
+            matrizCalib.esp = (100*matrizCalib.esp)/matrizCalib.sum;
+            matrizCalib.Sesp = (100*matrizCalib.Sesp)/matrizCalib.sum;
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": evaluados,
+            "matrizE": matrizEval,
+            "matrizC": matrizCalib
+        });
+    }
+
     async getListaEvaluadosGrupalP({request,response}) {
         var idEtapa=request.input('idEtapa')
         var idPersona=request.input('idPersona')
