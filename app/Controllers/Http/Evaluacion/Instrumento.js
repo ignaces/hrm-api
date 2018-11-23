@@ -230,6 +230,9 @@ class Instrumento {
             const queryResultados = `call ede_getResultadoGlobal('${idOpinante}')`;
             const resultadosCalibracion   = await data.execQuery(cliente,queryResultados);
             var resultadoCalibracion = "No Disponible";
+            if(resultadosCalibracion[0][0][0]!=null){
+                resultadoCalibracion = resultadosCalibracion[0][0][0].resultadoCalibracion;
+            }
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
             
@@ -386,6 +389,7 @@ class Instrumento {
             const resultado  = await data.execQuery(cliente,queryResultado);
             instrumento.resultadoCompetencias={nivel:"No Disponible"};
             instrumento.resultadoMetas = {nivel:"No Disponible"};
+            instrumento.resultadoCalibracion = {nivel:resultadoCalibracion};
             instrumento.resultadoGlobal = {nivel:"No Disponible"};
             if(resultado[0][0][0]!=null){
                 instrumento.resultadoCompetencias = resultado[0][0][0];
