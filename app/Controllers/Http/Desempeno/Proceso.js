@@ -608,6 +608,24 @@ class Proceso {
         });
     }
 
+    async updateCalibracion({request,response}){
+        var idEdeEtapaTareaActor=request.input('idEdeEtapaTareaActor');
+        var calibracion=request.input('calibracion');
+        const cliente =request.input('cliente') ;
+        
+
+        const query =  `call ede_updateCalibracion('${idEdeEtapaTareaActor}','${calibracion}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": matrizCalib
+        });
+    }
+
     async getListaCalibracion({request,response}){
         var idEtapa=request.input('idEtapa')
         var idPersonaActor=request.input('idPersonaActor')
@@ -683,61 +701,44 @@ class Proceso {
 
                 //console.log(tareas)
                 evaluados[evaluado].tareas=tareas;
-                var idOpinante = evaluados[evaluado].idOpinante;
-                console.log(evaluados[evaluado]);
-                const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
-                console.log('idOpinante:'+idOpinante);
             
-                const resultado2  = await data.execQuery(cliente,queryResultado);
+                var resultadoGlobal = evaluados[evaluado].tareas[0].tarea.resultadoEvaluacion;
+                var resultadoCalibracion = evaluados[evaluado].tareas[0].tarea.resultadoCalibracion;
+                //console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
                 
-                var resultadoCompetencias={nivel:"No Disponible"};
-                var resultadoMetas = {nivel:"No Disponible"};
-                var resultadoGlobal = {nivel:"No Disponible"};
-                var resultadoCalibracion = evaluados[evaluado].resultadoCalibracion;
-                console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
-                if(resultado2[0][0][0]!=undefined){
-                    resultadoCompetencias = resultado2[0][0][0];
-                }
-                if(resultado2[0][1][0]!=undefined){
-                    resultadoMetas = resultado2[0][1][0];
-                }
-                if(resultadoMetas.nivel!="No Disponible" && resultadoCompetencias.nivel!="No Disponible"){
-                    resultadoGlobal = {nivel:`${resultadoCompetencias.nivel}${resultadoMetas.nivel}`};
-                }
-                evaluados[evaluado].tareas[0].resultadoGlobal = resultadoGlobal;
-                if(resultadoGlobal.nivel == "AA"){
+                if(resultadoGlobal == "AA"){
                     matrizEval.AA++;
                     matrizEval.sum++;
                     matrizEval.Sesp++;
-                }else if(resultadoGlobal.nivel == "AB"){
+                }else if(resultadoGlobal == "AB"){
                     matrizEval.AB++;
                     matrizEval.sum++;
                     matrizEval.Sesp++;
-                }else if(resultadoGlobal.nivel == "AC"){
+                }else if(resultadoGlobal == "AC"){
                     matrizEval.AC++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "BA"){
+                }else if(resultadoGlobal == "BA"){
                     matrizEval.BA++;
                     matrizEval.sum++;
                     matrizEval.Sesp++;
-                }else if(resultadoGlobal.nivel == "BB"){
+                }else if(resultadoGlobal == "BB"){
                     matrizEval.BB++;
                     matrizEval.sum++;
                     matrizEval.esp++;
-                }else if(resultadoGlobal.nivel == "BC"){
+                }else if(resultadoGlobal == "BC"){
                     matrizEval.BC++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "CA"){
+                }else if(resultadoGlobal == "CA"){
                     matrizEval.CA++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "CB"){
+                }else if(resultadoGlobal == "CB"){
                     matrizEval.CB++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "CC"){
+                }else if(resultadoGlobal == "CC"){
                     matrizEval.CC++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
@@ -780,13 +781,13 @@ class Proceso {
                     matrizCalib.Besp++;
                 }
             }
-            matrizEval.Besp = (100*matrizEval.Besp)/matrizEval.sum;
-            matrizEval.esp = (100*matrizEval.esp)/matrizEval.sum;
-            matrizEval.Sesp = (100*matrizEval.Sesp)/matrizEval.sum;
+            matrizEval.Besp = Math.trunc((100*matrizEval.Besp)/matrizEval.sum);
+            matrizEval.esp = Math.trunc((100*matrizEval.esp)/matrizEval.sum);
+            matrizEval.Sesp = Math.trunc((100*matrizEval.Sesp)/matrizEval.sum);
 
-            matrizCalib.Besp = (100*matrizCalib.Besp)/matrizCalib.sum;
-            matrizCalib.esp = (100*matrizCalib.esp)/matrizCalib.sum;
-            matrizCalib.Sesp = (100*matrizCalib.Sesp)/matrizCalib.sum;
+            matrizCalib.Besp = Math.trunc((100*matrizCalib.Besp)/matrizCalib.sum);
+            matrizCalib.esp = Math.trunc((100*matrizCalib.esp)/matrizCalib.sum);
+            matrizCalib.Sesp = Math.trunc((100*matrizCalib.Sesp)/matrizCalib.sum);
         response.json({
             "estado": {
                 "codigo": "OK",
