@@ -616,14 +616,7 @@ class Proceso {
 
         const query =  `call ede_updateCalibracion('${idEdeEtapaTareaActor}','${calibracion}')`;
         const respuesta   = await data.execQuery(cliente,query);
-        response.json({
-            "estado": {
-                "codigo": "OK",
-                "mensaje": ""
-            },
-            "paginacion": "",
-            "data": matrizCalib
-        });
+        return {mensaje:"OK"}
     }
 
     async getListaCalibracion({request,response}){
