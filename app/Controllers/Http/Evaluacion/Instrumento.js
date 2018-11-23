@@ -227,6 +227,9 @@ class Instrumento {
             const observacion    = respuestaObs[0][0];
             
             //console.log(queryObs);
+            const queryResultados = `call ede_getResultadoGlobal('${idOpinante}')`;
+            const resultadosCalibracion   = await data.execQuery(cliente,queryResultados);
+            var resultadoCalibracion = "No Disponible";
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
             
