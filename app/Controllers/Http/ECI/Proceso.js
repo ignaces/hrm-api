@@ -375,25 +375,6 @@ console.log(tipoEncuestas[i].estaActivo);
     }     
   }
 
-  async cerrarEvaluacion({request,response}){
-                                        
-    var idOpinante = request.input("idOpinante");
-    const cliente =request.input('cliente') ;
-    const query = `call eci_cerrarEvaluacion('${idOpinante}')`;
-    const result   = await data.execQuery(cliente,query);
-    
-   console.log(query);
-    
-    const body = 
-    {
-      estado: {
-        codigo: "OK",
-        mensaje: ""
-      }
-      
-    }
-    response.json(body);
-}
     
 }
 

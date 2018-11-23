@@ -104,7 +104,7 @@ class Medicion {
         const cliente = request.input('cliente');
         const query = `call eci_getPreguntasAdicionales('${idPersona}', '${idEncuesta}')`;
         const preguntas = await data.execQuery(cliente,query);
-console.log('cliente: ' + cliente);
+
         var body = 
         {
           estado: {
