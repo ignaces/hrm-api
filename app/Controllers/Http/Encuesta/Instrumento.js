@@ -56,7 +56,14 @@ class Instrumento {
         return {mensaje:"OK"}
     }
 
+    async validaCierre({request,response}){
+        var idEncuestaPersona = request.input("idEncuestaPersona");
+        const cliente =request.input('cliente') ;
+        const qEstado = `call encuesta_getValidaEncuestaFinalizada('${idEncuestaPersona}')`;
+        const rEstado   = await data.execQuery(cliente,qEstado);
 
+        return {mensaje:rEstado[0][0][0].idRespuestaEstado}
+    }
    
 }
 module.exports = Instrumento;
