@@ -355,8 +355,8 @@ class Proceso {
         var idPersona=request.input('idPersona')
 
         //var idPersona= '4b812c9f-df3b-44f8-a7d1-842661d9eae7'
-
         //var idPersona= 'e5429228-7efd-11e8-80db-bc764e10787e';
+        //var idPersona = '30f65cfc-d234-11e8-8771-bc764e100f2b';
 
         const cliente =request.input('cliente') ;
         const query =  `call ede_getInformeComparativo('${idPersona}')`;
@@ -384,6 +384,11 @@ class Proceso {
 
             for(var angulo in vlEvaluado.angulos){
                 var vlAngulo = vlEvaluado.angulos[angulo];
+                var alterna = [];
+
+                alterna.push({alternativa:'Mayormente No'});
+                alterna.push({alternativa:'A Veces'});
+                alterna.push({alternativa:'Mayormente Si'});
 
                 var vlfeedback = Enumerable.from(registros).where(`$.Angulo == "${vlAngulo.tipo}" && $.dimension == "${vlEvaluado.codconducta}"`).select(function(feed){
                     return {
@@ -391,11 +396,7 @@ class Proceso {
                         estado:feed.EstadoEncuesta,
                         enunciado:feed.enunciado,
                         respuesta:feed.textoAlternativa,
-                        alternativas:Enumerable.from(registros).distinct("$.textoAlternativa").select(function(alt){
-                            return {
-                                alternativa:alt.textoAlternativa
-                            }
-                        }).toArray()
+                        alternativas:alterna
                     }
                 }).toArray()
 
