@@ -74,6 +74,35 @@ class Persona {
         });
     }
     
+        //>20181116-fretamal-vectoritcgroup
+        async getPersonaByIdentificador ({request, response}){
+            var identificador = request.input('persona_identificador');
+            const cliente = request.input('cliente') ;
+    
+            try {
+                const query = `call pers_getPersonaByIdentificador('${identificador}')`;
+                const result = await data.execQuery(cliente,query);
+    
+                if (Object.keys(result[0][0]).length === 0) {
+                    response.json({
+                        "status": { "code": "0000", "message": "" },
+                        "data": null
+                    });
+                } else {
+                    response.json({
+                        "status": { "code": "0000", "message": "" },
+                        "data": result[0][0]
+                    });
+                }
+            } catch (e) {
+                response.json({
+                    "status": { "code": "0001", "message": e },
+                    "data": null
+                });
+            }
+        }
+        //<
+        
     async getPersona({request,response}){
     
         var idPersona = request.input('idPersona');

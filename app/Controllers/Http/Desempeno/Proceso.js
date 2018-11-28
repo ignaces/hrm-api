@@ -354,12 +354,117 @@ class Proceso {
     async getInformeComparativo({request,response}){
         var idPersona=request.input('idPersona')
 
+        //var idPersona= '4b812c9f-df3b-44f8-a7d1-842661d9eae7'
+        //var idPersona= 'e5429228-7efd-11e8-80db-bc764e10787e';
+        //var idPersona = '30f65cfc-d234-11e8-8771-bc764e100f2b';
+
+        const cliente =request.input('cliente') ;
         const query =  `call ede_getInformeComparativo('${idPersona}')`;
         const respuesta   = await data.execQuery(cliente,query);
         
         var registros = respuesta[0][0];
 
-        console.log(registros);
+        var evaluaciones = Enumerable.from(registros).distinct("$.dimension").select(function(evaluacion){
+            return {
+                idEvaluado:evaluacion.idEvaluado,
+                conducta:evaluacion.dimensionNombre,
+                codconducta:evaluacion.dimension,
+                cuentaAngulos:0,
+                angulos:Enumerable.from(registros).distinct("$.Angulo").select(function(angulo){
+                    return {
+                        tipo:angulo.Angulo,
+                        feedback:[]
+                    }
+                }).toArray(),
+            }
+        }).toArray();
+
+        for(var evaluado in evaluaciones){
+            var vlEvaluado = evaluaciones[evaluado];    
+
+            for(var angulo in vlEvaluado.angulos){
+                var vlAngulo = vlEvaluado.angulos[angulo];
+                var alterna = [];
+
+                alterna.push({alternativa:'Mayormente No'});
+                alterna.push({alternativa:'A Veces'});
+                alterna.push({alternativa:'Mayormente Si'});
+
+                var vlfeedback = Enumerable.from(registros).where(`$.Angulo == "${vlAngulo.tipo}" && $.dimension == "${vlEvaluado.codconducta}"`).select(function(feed){
+                    return {
+                        Evaluador:feed.Evaluador,
+                        estado:feed.EstadoEncuesta,
+                        enunciado:feed.enunciado,
+                        respuesta:feed.textoAlternativa,
+                        alternativas:alterna
+                    }
+                }).toArray()
+
+                if (vlAngulo.tipo == 'MI EQUIPO' && vlfeedback.length > 0) {
+
+                    var resp=[];
+                    var arr=[];
+                    var a="";
+
+                    for(var fee in vlfeedback){
+                        if(vlfeedback[fee].respuesta !== null) {
+                            a = vlfeedback[fee].enunciado + "_" + vlfeedback[fee].respuesta;
+                            arr.push(a);
+                        }
+                    }
+
+                    const counts = Object.create(null);
+                    for (const a of arr) {
+                        const [aa, bb] = a.split('_');
+                        if (!counts[aa]) counts[aa] = Object.create(null);
+                        counts[aa][bb] = counts[aa][bb] ? counts[aa][bb] + 1 : 1;
+                    }
+
+                    for (const a of Object.keys(counts)) {
+                        var c = counts[a];
+                        var y = [];
+                        var z = [];
+                        for (const x in c){
+                            var w = c[x];
+
+                            z.push(w);
+                            y[w] = x;
+                        }
+
+                        z.sort(function(a, b){return b-a});
+                        //console.log(z)
+                        //console.log(y)
+
+                        resp[a] = y[z[0]];
+                    }
+
+                    //console.log(resp)
+                   
+                    var vlfeedbackB = Enumerable.from(vlfeedback).distinct("$.enunciado").select(function(vlfeed){
+                        return {
+                            Evaluador:vlfeed.Evaluador,
+                            estado:vlfeed.estado,
+                            enunciado:vlfeed.enunciado,
+                            respuesta:resp[vlfeed.enunciado],
+                            alternativas:vlfeed.alternativas
+                        }
+                    }).toArray();
+
+                    vlfeedback = vlfeedbackB;
+                }
+
+                evaluaciones[evaluado].angulos[angulo].feedback=vlfeedback;
+            }      
+        }
+        
+        var i = 0;
+        for(var evaluado in evaluaciones){
+            i = 0;
+            for(var angulo in evaluaciones[evaluado].angulos){
+                i++;            
+            }
+            evaluaciones[evaluado].cuentaAngulos=i + 1;
+        }
 
         response.json({
             "estado": {
@@ -367,7 +472,7 @@ class Proceso {
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": evaluaciones
         });
     }
 
@@ -503,6 +608,17 @@ class Proceso {
         });
     }
 
+    async updateCalibracion({request,response}){
+        var idEdeEtapaTareaActor=request.input('idEdeEtapaTareaActor');
+        var calibracion=request.input('calibracion');
+        const cliente =request.input('cliente') ;
+        
+
+        const query =  `call ede_updateCalibracion('${idEdeEtapaTareaActor}','${calibracion}')`;
+        const respuesta   = await data.execQuery(cliente,query);
+        return {mensaje:"OK"}
+    }
+
     async getListaCalibracion({request,response}){
         var idEtapa=request.input('idEtapa')
         var idPersonaActor=request.input('idPersonaActor')
@@ -578,61 +694,44 @@ class Proceso {
 
                 //console.log(tareas)
                 evaluados[evaluado].tareas=tareas;
-                var idOpinante = evaluados[evaluado].idOpinante;
-                console.log(evaluados[evaluado]);
-                const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
-                console.log('idOpinante:'+idOpinante);
             
-                const resultado2  = await data.execQuery(cliente,queryResultado);
+                var resultadoGlobal = evaluados[evaluado].tareas[0].tarea.resultadoEvaluacion;
+                var resultadoCalibracion = evaluados[evaluado].tareas[0].tarea.resultadoCalibracion;
+                //console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
                 
-                var resultadoCompetencias={nivel:"No Disponible"};
-                var resultadoMetas = {nivel:"No Disponible"};
-                var resultadoGlobal = {nivel:"No Disponible"};
-                var resultadoCalibracion = evaluados[evaluado].resultadoCalibracion;
-                console.log(JSON.stringify(evaluados[evaluado].resultadoCalibracion));
-                if(resultado2[0][0][0]!=undefined){
-                    resultadoCompetencias = resultado2[0][0][0];
-                }
-                if(resultado2[0][1][0]!=undefined){
-                    resultadoMetas = resultado2[0][1][0];
-                }
-                if(resultadoMetas.nivel!="No Disponible" && resultadoCompetencias.nivel!="No Disponible"){
-                    resultadoGlobal = {nivel:`${resultadoCompetencias.nivel}${resultadoMetas.nivel}`};
-                }
-                evaluados[evaluado].tareas[0].resultadoGlobal = resultadoGlobal;
-                if(resultadoGlobal.nivel == "AA"){
+                if(resultadoGlobal == "AA"){
                     matrizEval.AA++;
                     matrizEval.sum++;
                     matrizEval.Sesp++;
-                }else if(resultadoGlobal.nivel == "AB"){
+                }else if(resultadoGlobal == "AB"){
                     matrizEval.AB++;
                     matrizEval.sum++;
                     matrizEval.Sesp++;
-                }else if(resultadoGlobal.nivel == "AC"){
+                }else if(resultadoGlobal == "AC"){
                     matrizEval.AC++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "BA"){
+                }else if(resultadoGlobal == "BA"){
                     matrizEval.BA++;
                     matrizEval.sum++;
                     matrizEval.Sesp++;
-                }else if(resultadoGlobal.nivel == "BB"){
+                }else if(resultadoGlobal == "BB"){
                     matrizEval.BB++;
                     matrizEval.sum++;
                     matrizEval.esp++;
-                }else if(resultadoGlobal.nivel == "BC"){
+                }else if(resultadoGlobal == "BC"){
                     matrizEval.BC++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "CA"){
+                }else if(resultadoGlobal == "CA"){
                     matrizEval.CA++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "CB"){
+                }else if(resultadoGlobal == "CB"){
                     matrizEval.CB++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
-                }else if(resultadoGlobal.nivel == "CC"){
+                }else if(resultadoGlobal == "CC"){
                     matrizEval.CC++;
                     matrizEval.sum++;
                     matrizEval.Besp++;
@@ -675,13 +774,13 @@ class Proceso {
                     matrizCalib.Besp++;
                 }
             }
-            matrizEval.Besp = (100*matrizEval.Besp)/matrizEval.sum;
-            matrizEval.esp = (100*matrizEval.esp)/matrizEval.sum;
-            matrizEval.Sesp = (100*matrizEval.Sesp)/matrizEval.sum;
+            matrizEval.Besp = Math.trunc((100*matrizEval.Besp)/matrizEval.sum);
+            matrizEval.esp = Math.trunc((100*matrizEval.esp)/matrizEval.sum);
+            matrizEval.Sesp = Math.trunc((100*matrizEval.Sesp)/matrizEval.sum);
 
-            matrizCalib.Besp = (100*matrizCalib.Besp)/matrizCalib.sum;
-            matrizCalib.esp = (100*matrizCalib.esp)/matrizCalib.sum;
-            matrizCalib.Sesp = (100*matrizCalib.Sesp)/matrizCalib.sum;
+            matrizCalib.Besp = Math.trunc((100*matrizCalib.Besp)/matrizCalib.sum);
+            matrizCalib.esp = Math.trunc((100*matrizCalib.esp)/matrizCalib.sum);
+            matrizCalib.Sesp = Math.trunc((100*matrizCalib.Sesp)/matrizCalib.sum);
         response.json({
             "estado": {
                 "codigo": "OK",
