@@ -74,8 +74,9 @@ class Logging {
       console.log(error);
     }
 
-
     await next();
+    
+
   }
 }
 
