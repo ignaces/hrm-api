@@ -195,7 +195,7 @@ class Proceso {
           
         }
 
-        var test = 1 / g;
+        //var test = 1 / g;
         
 
         response.json(body);
