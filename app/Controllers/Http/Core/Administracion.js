@@ -21,7 +21,19 @@ class Administracion {
         //response.json(respuesta[0][0]);
     }
     
-    
+    async cargaEvaluadorMasiva({request,response}){
+
+        var idProceso = request.input("idProceso");
+        var idEtapa = request.input("idEtapa");
+        var json = request.input("json");
+        const cliente =request.input('cliente') ;
+
+        const query = `call pers_updEvaluadorMasivo('${json}','${idProceso}','${idEtapa}')`;
+        //const rEstado   = await data.execQuery(cliente,query);
+
+        console.log(query);
+
+    }
 
     
 }
