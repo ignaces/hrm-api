@@ -50,20 +50,16 @@ class Proceso {
     async putRespuesta({request,response}){
         try{
 
-            var idOpinante = '86cde995-dd04-11e8-80db-bc764e10787e';//request.input("idOpinante");
+            var idOpinante = request.input("idOpinante");
             var idPregunta = request.input("idPregunta");
             var idAlternativa = request.input("idAlternativa");
             var justificacion = request.input("justificacion");
             const cliente =request.input('cliente') ;
     
-    console.log('idOpinante: ' + idOpinante + ', idPregunta: ' + idPregunta );
-    console.log('idAlternativa: ' + idAlternativa + ', cliente: ' + cliente);
-    console.log('justificacion: ' + justificacion);
-    console.log('**************************************************');        
+  
             const query = `call acre_putRespuesta('${idOpinante}', '${idPregunta}','${idAlternativa}', '${justificacion}')`;
             const result   = await data.execQuery(cliente,query);
-    //console.log(result);
-    console.log('**************************************************');        
+ 
             const body = 
             {
               estado: {
@@ -71,7 +67,7 @@ class Proceso {
                 mensaje: ""
               }
             }
-    console.log(body);        
+     
             response.json(body);
         }catch(e){
             console.log(e);
@@ -198,6 +194,10 @@ class Proceso {
           data: {procesos: result[0][0]}
           
         }
+
+        //var test = 1 / g;
+        
+
         response.json(body);
         
 
