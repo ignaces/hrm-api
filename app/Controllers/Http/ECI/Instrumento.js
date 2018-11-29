@@ -35,5 +35,29 @@ class Instrumento {
         }
         
     }
+
+    async getEncuestaInstruccion({request,response}){
+        try{
+            var idEncuesta = request.input("idEncuesta");
+            const cliente =request.input('cliente') ;
+         
+            const query = `call eci_getEncuestaInstruccion('${idEncuesta}')`;
+            const result   = await data.execQuery(cliente,query);
+       
+            var body = 
+            {
+                estado: {
+                    codigo: "",
+                    mensaje: ""
+                },
+                data: result[0][0]
+            }
+            response.json(body);
+
+        }catch(e){
+            console.log(e);
+        }
+        
+    }
  }
  module.exports = Instrumento
