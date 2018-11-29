@@ -99,10 +99,11 @@ class Medicion {
     async getPreguntasAdicionales({request, response}){
         var idPersona = request.input("idPersona");
         var idEncuesta = request.input("idEncuesta");
+        var idOpinante = request.input("idOpinante");
 
         var instrumento = [];
         const cliente = request.input('cliente');
-        const query = `call eci_getPreguntasAdicionales('${idPersona}', '${idEncuesta}')`;
+        const query = `call eci_getPreguntasAdicionales('${idPersona}', '${idEncuesta}', '${idOpinante}')`;
         const preguntas = await data.execQuery(cliente,query);
 
         var body = 
