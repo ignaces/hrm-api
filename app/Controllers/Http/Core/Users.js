@@ -80,7 +80,7 @@ class Users {
         var idUser = request.input('idUser');
         const cliente ="app";
         const query =`call user_getRequiereCambioClave('${idUser}')`;
-        console.log(query)
+        
         const respuesta   = await data.execQuery(cliente,query);
 
         response.json({
