@@ -29,9 +29,9 @@ class Administracion {
         const cliente =request.input('cliente') ;
 
         const query = `call pers_updEvaluadorMasivo('${json}','${idProceso}','${idEtapa}')`;
-        //const rEstado   = await data.execQuery(cliente,query);
+        const registros = await data.execQuery(cliente,query);
 
-        console.log(query);
+        return {mensaje:registros[0][0]};
 
     }
 
