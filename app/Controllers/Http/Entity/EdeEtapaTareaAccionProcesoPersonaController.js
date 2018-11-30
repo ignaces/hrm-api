@@ -1,33 +1,39 @@
 'use strict'
-const data = use('App/Utils/Data')
+const data = use('App/Utils/Data');
+const response_builder = use('App/Utils/ResponseBuilderUtil');
+const persona_controller = make('App/Controllers/Http/Entity/PersonaController');
+const ede_etapp_controller = make('App/Controllers/Http/Entity/EdeEtapaTareaAccionProcesoPersonaController');
 
+//20181116 / fretamal / vectoritcgroup
 class EdeEtapaTareaAccionProcesoPersonaController {
 
-    //>20181116-fretamal-vectoritcgroup
-    async getByEdeEtapaTareaId({request, response}) {
-        console.log('access app =[api] class =[EdeEtapaTareaAccionProcesoPersonaController] method =[create]');
-
-        var obj = request.input('obj');
-        const cliente = request.input('cliente') ;
-
-        console.log(JSON.stringify(obj));
-
-        //const query = `SELECT * FROM EdeEtapaTareaAccion WHERE activo = 1 AND idEdeEtapaTarea = '${ede_etapa_tarea_id}'`;
+    //20181116 / fretamal / vectoritcgroup
+    async getBy$PersonaIdentificador$EdeEtapaTareaAccionId({request, response}) {
+        console.log('api / Entity / EdeEtapaTareaAccionProcesoPersonaController / validate / access');
+        var result = null;
         try {
-            //const result = await data.execQuery(cliente, obj);
-            response.json({
-                "estado": { "codigo": "0000", "mensaje": null },
-                "data": null
-            });
+            const result_temp = await persona_controller.getByIdentificador({request, response});
+            if (result_temp.status.code != '0000') {
+                return result_temp;
+            }
+            request._qs.persona_id,
+            request._all.persona_id = result_temp.data[0].id;
         } catch (e) {
-            response.json({
-                "estado": { "codigo": "0001", "mensaje": e },
-                "data": null
-            });
+            return response_builder.technical_exception('Error al consultar Persona para Identificador.', e);
         }
-        console.log('exit app =[api] class =[EdeEtapaTareaAccionProcesoPersonaController] method =[create]');
+
+
+
+
+
+        
+        try {
+            const result_temp = await ede_etapp_controller.getByIdentificador({request, response});
+            return result_temp;
+        } catch (e) {
+            return response_builder.technical_exception('Error al consultar Accion para Id de Persona.', e);
+        }
     }
-    //<
 }
 
-module.exports = EdeEtapaTareaAccionProcesoPersonaController
+module.exports = EdeEtapaTareaAccionProcesoPersonaController;
