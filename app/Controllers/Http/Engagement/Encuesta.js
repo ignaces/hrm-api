@@ -11,7 +11,8 @@ class Encuesta {
         var encuesta = request.input("encuesta")
         const cliente =request.input('cliente') ;
         
-        const query = `call engagement_addAplicacion('${encuesta.idEncuesta}','${encuesta.idEncuesta}','${encuesta.desde}','${encuesta.hasta}')`;
+        const query = `call engagement_addAplicacionEncuesta('${encuesta.idEncuesta}','${encuesta.idEmpresaProceso}','${encuesta.desde}','${encuesta.hasta}')`;
+        
         var result=null;
         try {
             const result_temp   = await data.execQuery(cliente,query);
