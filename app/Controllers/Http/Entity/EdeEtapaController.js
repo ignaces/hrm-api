@@ -27,8 +27,8 @@ class EdeEtapaController {
         var result = null;
         try {
             const cliente = request.input('cliente') ;
-            var edeproceso_id = request.input('edeproceso_id');
-            const query = `SELECT * FROM EdeEtapa WHERE activo = 1 AND idEdeProceso = '${edeproceso_id}'`;
+            var ede_proceso_id = request.input('ede_proceso_id');
+            const query = `SELECT * FROM EdeEtapa WHERE activo = 1 AND idEdeProceso = '${ede_proceso_id}'`;
             const result_temp = await data.execQuery(cliente, query);
             result = response_builder.success(result_temp, 'No se registran Etapas para Proceso.');
         } catch (e) {

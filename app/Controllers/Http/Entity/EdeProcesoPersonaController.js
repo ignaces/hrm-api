@@ -13,7 +13,8 @@ class EdeProcesoPersonaController {
             const cliente = request.input('cliente') ;
             const ede_proceso_id = request.input('ede_proceso_id') ;
             const persona_id = request.input('persona_id') ;
-
+            console.log('api / Entity / EdeProcesoPersonaController / getByPersonaIdEdeProcesoId / params / ede_proceso_id =' + ede_proceso_id);
+            console.log('api / Entity / EdeProcesoPersonaController / getByPersonaIdEdeProcesoId / params / persona_id =' + persona_id);
             var query = [];
             query.push("SELECT * ");
             query.push("FROM EdeProcesoPersona ");
@@ -22,9 +23,9 @@ class EdeProcesoPersonaController {
             query.push("AND idPersona = '" + persona_id + "' ");
 
             const result_temp = await data.execQuery(cliente, query.join(""));
-            result = response_builder.success(result_temp, 'No se registra Persona en Proceso.');
+            result = response_builder.success(result_temp, 'No existe relacion entre Persona y Proceso.');
         } catch (e) {
-            result = response_builder.technical_exception('Error al consultar Persona en Proceso.', e);
+            result = response_builder.technical_exception('Error al consultar relacion entre Persona y Proceso.', e);
         }
         //console.log('api / Entity / EdeProcesoPersonaController / getByPersonaIdEdeProcesoId / result =' + JSON.stringify(result));
         return result;
