@@ -85,12 +85,12 @@ class Persona {
     
                 if (Object.keys(result[0][0]).length === 0) {
                     response.json({
-                        "status": { "code": "0000", "message": "" },
+                        "status": { "code": "0000", "message": null },
                         "data": null
                     });
                 } else {
                     response.json({
-                        "status": { "code": "0000", "message": "" },
+                        "status": { "code": "0000", "message": null },
                         "data": result[0][0]
                     });
                 }

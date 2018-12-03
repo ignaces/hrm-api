@@ -74,7 +74,28 @@ class Logging {
       console.log(error);
     }
 
-    await next();
+    
+    
+    
+      await next().then(() => {
+        console.log("SUCCESS");
+      }).catch((error) => {
+        console.log("ERROR")
+        //console.log(codigo);
+        //console.log(response.response.statusCode);
+        console.error(error);
+      });
+   
+     /*
+
+    response.response.on('finish', () => {
+      console.log(codigo+":"+"FIN");
+      console.log(response.response)
+      //console.log(response.response.statusCode)
+    })
+    */
+
+    //console.log(response.response.statusCode)
     
 
   }
