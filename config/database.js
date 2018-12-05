@@ -49,10 +49,10 @@ module.exports = {
  msprod: {
   client: 'mssql',
   connection: {
-    host: Env.get('DB_HOST_MS', '192.168.3.3'),
+    host: Env.get('DB_HOST_MS', '192.168.3.25'),
     port: Env.get('DB_PORT_MS', '1433'),
     user: Env.get('DB_USER_MS', 'sa'),
-    password: Env.get('DB_PASSWORD_MS', 'Qwerty123'),
+    password: Env.get('DB_PASSWORD_MS', 'GGB4mNuB65YagJvS'),
     database: Env.get('DB_DATABASE_MS', 'bci')
   }
 },

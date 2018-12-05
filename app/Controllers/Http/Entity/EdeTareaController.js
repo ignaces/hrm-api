@@ -1,26 +1,25 @@
 'use strict'
-const data = use('App/Utils/Data')
+const data = use('App/Utils/Data');
+const response_builder = use('App/Utils/ResponseBuilderUtil');
 
+//20181116 / fretamal / vectoritcgroup
 class EdeTareaController {
 
-    //>20181116-fretamal-vectoritcgroup
+    //20181116 / fretamal / vectoritcgroup
     async getAll({request, response}) {
-        const cliente = request.input('cliente') ;
-        const query = `SELECT * FROM EdeTarea WHERE activo = 1`;
+        console.log('api / Entity / EdeTareaController / getAll / access');
+        var result = null;
         try {
-            const result = await data.execQuery(cliente, query);
-            response.json({
-                "estado": { "codigo": "0000", "mensaje": null },
-                "data": result[0]
-            });
+            const cliente = request.input('cliente') ;
+            const query = `SELECT * FROM EdeTarea WHERE activo = 1`;
+            const result_temp = await data.execQuery(cliente, query);
+            result = response_builder.success(result_temp, 'No se registran Tareas.');
         } catch (e) {
-            response.json({
-                "estado": { "codigo": "0001", "mensaje": e },
-                "data": null
-            });
+            result = response_builder.technical_exception('Error al consultar Tareas.', e);
         }
+        //console.log('api / Entity / EdeTareaController / getAll / result =' + JSON.stringify(result));
+        return result;
     }
-    //<
 }
 
-module.exports = EdeTareaController
+module.exports = EdeTareaController;

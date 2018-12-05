@@ -1,18 +1,28 @@
 'use strict'
 
-//20181128-fretamal-vectoritcgroup
+//20181128 / fretamal / vectoritcgroup
 class ResponseBuilderUtil {
 
   /*
-  code 0000 = process successful
-  code 0001 = process successful without result
+  code 0000 = successful process
+  code 0001 = successful process without results
   code 0002 = technical exception
   code 0003 = business exception
   */
 
+  response_structure () {
+    return {
+        status: {
+          code : null,
+          message : null,
+          detail : null
+        },
+        data: null
+      };
+  }
+
   success (result, message_if_empty) {
-    //console.log('ResponseBuilderUtil > success =[' + JSON.stringify(original_result) + ']');
-    var response = { status: { code : null, message : null, detail : null }, data: null};
+    var response = this.response_structure();
     try {
       if ( (result == null) || (typeof result === 'undefined') || (Object.keys(result[0]).length === 0) ) {
         response.status.code = '0001';
@@ -28,8 +38,7 @@ class ResponseBuilderUtil {
   }
   
   technical_exception (message_for_user, exception) {
-    //console.log('ResponseBuilderUtil > success =[' + exception + ']');
-    var response = { status: { code : null, message : null, detail : null }, data: null};
+    var response = this.response_structure();
     try {
       response.status.code = '0002';
       response.status.message = message_for_user;
@@ -44,8 +53,7 @@ class ResponseBuilderUtil {
   }
 
   business_exception (message_for_user, message_for_support) {
-    //console.log('ResponseBuilderUtil > business_exception =[' + message_for_user + ']');
-    var response = { status: { code : null, message : null, detail : null }, data: null};
+    var response = this.response_structure();
     try {
       response.status.code = '0003';
       response.status.message = message_for_user;
