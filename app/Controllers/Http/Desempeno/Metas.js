@@ -22,6 +22,27 @@ class Metas {
             "data": respuesta[0][0]
         });
     }
+    async saveCumplimiento({request,response}){
+        var idMeta= request.input("idMeta");
+        var valor= request.input("valor");
+        var idOpinante= request.input("idOpinante");
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_saveCumplimiento('${idMeta}',${valor})`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        const queryEstado = `call ede_saveEstadoEvaluacionMetas('${idOpinante}', 'EVALMETAENPROCESO')`;
+
+        const result   = await data.execQuery(cliente,queryEstado);
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
 
 
     async getMetasColaborador({request,response}){
@@ -31,6 +52,7 @@ class Metas {
         var eliminada=request.input('eliminada')
         const cliente =request.input('cliente') ;
         const query =  `call ede_getMetasColaborador('${idProceso}','${idPerfilMeta}','${idProcesoPersona}','${eliminada}')`;
+        
         const respuesta   = await data.execQuery(cliente,query);
                    
        
@@ -58,7 +80,9 @@ class Metas {
             for(var dimension in dimensiones){
                 
                 const metas = Enumerable.from(respuesta[0][0]).where(`$.id == "${dimensiones[dimension].id}"`).select(function(meta){
+                    
                     return{
+                        
                         meta
                     }
                 }).toArray();
@@ -151,7 +175,32 @@ class Metas {
                   
         //response.json(dimensiones);
     }
+    async finalizar({request, response}){
+        try{
+            var idOpinante = request.input('idOpinante')
+            
+    
+            const cliente =request.input('cliente') ;
+        
+            const query = `call ede_saveEstadoEvaluacionMetas('${idOpinante}', 'EVALMETAFINALIZADO')`;
 
+            const result   = await data.execQuery(cliente,query);
+            
+            const body = 
+            {
+            estado: {
+                codigo: "OK",
+                mensaje: ""
+            }
+            
+            }
+            response.json(body);
+
+        }catch(ex){
+            console.log(ex)
+        }
+        
+    }
     async putRespuesta({request,response}){
 
         var idOpinante = request.input("idOpinante");
