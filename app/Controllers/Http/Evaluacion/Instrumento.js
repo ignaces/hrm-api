@@ -487,6 +487,41 @@ class Instrumento {
         }); 
     }
 
+    //getNivelPromedioCompetencia = function (idOpinante, cliente, resultado){
+    //    const q =`call ede_getNivelPromedioCompetencia('${idOpinante}', '${resultado}')`;
+    //    console.log(q)
+    //    return "";
+    //}
+    
+    async getNivelPromedioCompetencia({request,response})
+    {
+        var idOpinante = request.input("idOpinante");
+        const cliente =request.input('cliente') ;
+        const resultado =request.input('resultado') ;
+    
+        if(!isNaN(resultado)){
+            try{
+                const q =`call ede_getNivelPromedioCompetencia('${idOpinante}', '${resultado}')`;
+                const r   = await data.execQuery(cliente,q);
+
+                response.json({
+                    "estado": {
+                        "codigo": "OK",
+                        "mensaje": ""
+                    },
+                    "paginacion": "",
+                    "data": r[0][0]
+                });
+            }
+            catch(e)
+            {
+                console.log("error " + e)
+            }
+        }
+
+    }
+
+
     async getPromedioGeneral({request,response}){
 
         
@@ -504,7 +539,7 @@ class Instrumento {
 
         const rQuery   = await data.execQuery(cliente,query);
         
-        Logger.debug(`query:${query},mensaje:OK`);
+        //Logger.debug(`query:${query},mensaje:OK`);
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(c){
                 return{
                     id: c.idCompetencia,
@@ -532,8 +567,27 @@ class Instrumento {
                         valorFunc: c.valorFunc
                     }
                 }).toArray()
+                var sumValoresAuto = 0;
+                var cantCriteriosAuto = 0;
+
+                var sumValoresSup = 0;
+                var cantCriteriosSup = 0;
+
+                var sumValoresFunc = 0;
+                var cantCriteriosFunc = 0;
+
+
                 Logger.debug(`linea:528,mensaje:OK`);
                 competencias.forEach(e => {
+                    sumValoresAuto = 0;
+                    cantCriteriosAuto = 0;
+
+                    sumValoresSup = 0;
+                    cantCriteriosSup = 0;
+
+                    sumValoresFunc = 0;
+                    cantCriteriosFunc = 0;
+
                     competenciasSalida.forEach(c => {
                         
                         if(e.id == c.id && c.nivelAuto != "No Disponible"){
@@ -549,23 +603,35 @@ class Instrumento {
                         }
     
                         if(e.id == c.id && c.valorAuto != null){
-                            e.valorAuto = c.valorAuto;
+                            sumValoresAuto = sumValoresAuto + c.valorAuto;
+                            cantCriteriosAuto++;
+                            e.valorAuto = sumValoresAuto/cantCriteriosAuto;
+                            e.nivelAuto = sumValoresAuto/cantCriteriosAuto;
                         }
     
                         if(e.id == c.id && c.valorSup != null){
-                            e.valorSup = c.valorSup;
+                           // e.valorSup = c.valorSup;
+                            sumValoresSup = sumValoresSup + c.valorSup;
+                            cantCriteriosSup++;
+                            e.valorSup = sumValoresSup/cantCriteriosSup;
+                            e.nivelSup = sumValoresSup/cantCriteriosSup;
+
                         }
                         
                         if(e.id == c.id && c.valorFunc != null){
                             e.valorFunc = c.valorFunc;
+                            sumValoresFunc = sumValoresFunc + c.valorFunc;
+                            cantCriteriosFunc++;
+                            e.valorFunc = sumValoresFunc/cantCriteriosFunc;
+                            e.nivelFunc = sumValoresFunc/cantCriteriosFunc;
+
                         }
                     });
+                    
                 });
     
                 Logger.debug(`linea:558,mensaje:OK`);
-    
                 
-            
             if(typeof competencias == "undefined" || competencias == null || competencias.length == null || competencias.length == 0)
             {
                 const competenciasVacias = Enumerable.from(rQuery[0][0]).select(function(c){
@@ -591,7 +657,8 @@ class Instrumento {
                 response.json(competencias); 
             }
         }catch(ex){
-            Logger.debug(`query:${query},mensaje:${ex.message}`);
+            //Logger.debug(`query:${query},mensaje:${ex.message}`);
+            console.log(ex)
         }
         
     }

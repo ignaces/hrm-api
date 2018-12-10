@@ -78,9 +78,9 @@ class Logging {
     
     
       await next().then(() => {
-        console.log("SUCCESS");
+        //console.log("SUCCESS");
       }).catch((error) => {
-        console.log("ERROR")
+        //console.log("ERROR")
         //console.log(codigo);
         //console.log(response.response.statusCode);
         console.error(error);
