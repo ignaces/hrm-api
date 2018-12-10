@@ -165,7 +165,34 @@ console.log(tipoEncuestas[i].estaActivo);
        // return(body);
     } 
 
+    async getEstadoOpinantes({request,response}){
+      try{
+        const cliente =request.input('cliente');
+        const idProceso =request.input('idProceso');
+        const idPersona =request.input('idPersona');
+         
+        const query = `call sp_obtenerEstadoOpinantes('${idProceso}','${idPersona}')`;
+         
+        const result   = await data.execQuery(cliente,query);
+         
+        var opinantes = result[0][0]
 
+        var body = 
+        {
+          estado: {
+            codigo: "",
+            mensaje: ""
+          },
+          data: {opinante: opinantes}
+           
+        }
+        //console.log(body);
+        response.json(body);
+      }catch(e){
+        console.log(e);
+        return null;
+      }
+    }
     
 
     async getOpinantes({request,response}){
