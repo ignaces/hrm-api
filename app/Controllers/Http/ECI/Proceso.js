@@ -171,7 +171,7 @@ console.log(tipoEncuestas[i].estaActivo);
         const idProceso =request.input('idProceso');
         const idPersona =request.input('idPersona');
          
-        const query = `call sp_obtenerEstadoOpinantes('${idProceso}','${idPersona}')`;
+        const query = `call eci_getEstadoOpinantes('${idProceso}','${idPersona}')`;
          
         const result   = await data.execQuery(cliente,query);
          
