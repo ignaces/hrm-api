@@ -52,7 +52,7 @@ class Metas {
         var eliminada=request.input('eliminada')
         const cliente =request.input('cliente') ;
         const query =  `call ede_getMetasColaborador('${idProceso}','${idPerfilMeta}','${idProcesoPersona}','${eliminada}')`;
-        
+      
         const respuesta   = await data.execQuery(cliente,query);
                    
        
@@ -107,6 +107,7 @@ class Metas {
         var idProceso=request.input('idProceso')
         const cliente =request.input('cliente') ;
         const query =  `call ede_getMetasColumnas('${idProceso}')`;
+
         const respuesta   = await data.execQuery(cliente,query);
         
         response.json({
@@ -129,7 +130,6 @@ class Metas {
         const query =  `call ede_getUnaMetaColaborador('${idProceso}','${idProcesoEtapa}','${idPerfilMeta}','${idProcesoPersona}','${idMeta}')`;
         const respuesta   = await data.execQuery(cliente,query);
                    
-       
         const metas = Enumerable.from(respuesta[0][0]).distinct("$.idMeta").select(function(meta){
        
             return{
