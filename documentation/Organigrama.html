@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>API Class: Data</title>
+	<title>API Class: Organigrama</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,14 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Data</h1>
+	<h1 class="page-title">Class: Organigrama</h1>
 <section>
 
 <header>
     
         <h2>
-        Data
+        Organigrama
         </h2>
+        
+            <div class="class-description">/Talento/Organigrama</div>
         
     
 </header>
@@ -91,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Data"><span class="type-signature"></span>new Data()</h4>
+    <h4 class="name" id="Organigrama"><span class="type-signature"></span>new Organigrama()</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Esta clase está encargada de manejar las llamadas a la base de datos
-    </div>
     
 
     
@@ -187,7 +185,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="execQuery"><span class="type-signature">&lt;async> </span>execQuery(client, query)</h4>
+    <h4 class="name" id="delSucesor"><span class="type-signature">&lt;async> </span>delSucesor()</h4>
     
     
 </dt>
@@ -195,7 +193,7 @@
 
     
     <div class="description">
-        Ejecuta consulta en BD
+        Elimina sucesor de una posición
     </div>
     
 
@@ -204,80 +202,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>client</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Es el nombre de dominio del cliente</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consulta a la base de datoss</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -306,15 +230,6 @@
     
 
 	
-	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
-	
-    <dd>
-        <ul class="dummy">
-            <li>since version 2.0</li>
-        </ul>
-    </dd>
-    
-    
 
 	
 
@@ -347,12 +262,38 @@
     
 
     
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    respuesta
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">string</span>
+
+
+
+    </dd>
+</dl>
+
+
+        
 
     
         <h5>Example</h5>
         
-    <pre class="sunlight-highlight-javascript">// returns 2
-globalNS.method1(5, 10);</pre>
+    <pre class="sunlight-highlight-bash">
+curl -i -H &quot;Accept: application/json&quot; &quot;localhost:3334/Talento/Organigrama/delSucesor&quot; -d &quot;cliente=cs,idSucesion=2222&quot;
+
+var message OK </pre>
 
 
     
@@ -362,7 +303,7 @@ globalNS.method1(5, 10);</pre>
             
 <hr>
 <dt>
-    <h4 class="name" id="execQueryMS"><span class="type-signature">&lt;async> </span>execQueryMS(client, query)</h4>
+    <h4 class="name" id="setSucesor"><span class="type-signature">&lt;async> </span>setSucesor()</h4>
     
     
 </dt>
@@ -370,7 +311,7 @@ globalNS.method1(5, 10);</pre>
 
     
     <div class="description">
-        Ejecuta consulta en BD
+        Setea sucesor de una posición
     </div>
     
 
@@ -379,80 +320,6 @@ globalNS.method1(5, 10);</pre>
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>client</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Es el nombre de dominio del cliente</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consulta a la base de datoss</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -481,15 +348,6 @@ globalNS.method1(5, 10);</pre>
     
 
 	
-	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
-	
-    <dd>
-        <ul class="dummy">
-            <li>since version 2.0</li>
-        </ul>
-    </dd>
-    
-    
 
 	
 
@@ -522,137 +380,38 @@ globalNS.method1(5, 10);</pre>
     
 
     
-
+    <h5>Returns:</h5>
     
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">// returns 2
-globalNS.method1(5, 10);</pre>
-
-
-    
-</dd>
-
-        
             
-<hr>
-<dt>
-    <h4 class="name" id="getConeccionCliente"><span class="type-signature">&lt;async> </span>getConeccionCliente(client)</h4>
-    
-    
-</dt>
-<dd>
+<div class="param-desc">
+    respuesta
+</div>
 
-    
 
-    
 
-    
-
-    
-    
-        <h5>Parameters:</h5>
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
         
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>client</code></td>
-            
-
-            <td class="type">
-            
-                
 <span class="param-type">string</span>
 
 
 
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Es el nombre de dominio del cliente</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
+    </dd>
 </dl>
 
 
-    
+        
 
     
+        <h5>Example</h5>
+        
+    <pre class="sunlight-highlight-javascript">curl -i -H &quot;Accept: application/json&quot; &quot;localhost:3334/Talento/Organigrama/setSucesor&quot; -d &quot;cliente=cs,idPosicion=2222,idPersonaProceso=12222&quot;
 
-    
+message OK </pre>
 
-    
-
-    
-
-    
 
     
 </dd>

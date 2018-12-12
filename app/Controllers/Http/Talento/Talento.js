@@ -3,7 +3,10 @@
 var Enumerable = require('linq')
 const data = use('App/Utils/Data')
 const dateformat = require('dateformat');
-
+/**
+ *  /Talento/Talento
+ * @class
+ */
 class Talento {
 
 
@@ -444,16 +447,81 @@ class Talento {
     }
 
 
-    
+     /**
+     * @version 1.0.0
+     * @description
+     * Entrega organigrama basado en idTalentoProcesoPersona
+     * @example
+     * {@lang bash}
+     * curl -i -H "Accept: application/json" "localhost:3334/Talento/Talento/organigrama" -d "cliente=csdev,idProceso=6b4071d1-0ff1-11e8-bf12-bc764e100f2b,idPersonaProceso=88d488ca-a1a0-11e8-80db-bc764e10787e"
+     * @example
+     * response
+     * {@lang json}
+     * [
+    {
+        "idPosicion": "01fe0bc8-a5c6-11e8-80db-bc764e10787e",
+        "nombre": "Gerente Regional de Formación y Desarrollo",
+        "codigo": "PC_1",
+        "critico": 0,
+        "nivel": 1,
+        "idPersona": "e5429228-7efd-11e8-80db-bc764e10787e",
+        "idPadre": "4d6c3b25-7b5f-11e8-80db-bc764e10787e",
+        "nombresPersona": "Julieta Lorena Greblo ",
+        "apellidoPaterno": "",
+        "apellidoMaterno": "",
+        "fotoPersona": "http://hrmassets.enovum.cl/cs/assets/images/users/403411JulietaGreblo.jpg",
+        "colorPosicion": null,
+        "nombreCuadrante": null,
+        "valor": null,
+        "edd": null,
+        "idCuadranteEq": null,
+        "valorEdeEq": null,
+        "idCuadrante": null,
+        "atributos": [
+            {
+                "atributo": null,
+                "colorAtributo": null,
+                "iconoAtributo": null,
+                "tooltipAtributo": null
+            }
+        ]
+    },
+    {
+        "idPosicion": "S_01fe0bc8-a5c6-11e8-80db-bc764e10787e",
+        "nombre": "Sucesor",
+        "codigo": "PC_1",
+        "critico": 0,
+        "nivel": 1,
+        "idSucede": "01fe0bc8-a5c6-11e8-80db-bc764e10787e",
+        "idPersona": "e5429228-7efd-11e8-80db-bc764e10787e",
+        "idPadre": "4d6c3b25-7b5f-11e8-80db-bc764e10787e",
+        "nombresPersona": "",
+        "apellidoPaterno": "",
+        "apellidoMaterno": "",
+        "fotoPersona": "",
+        "colorPosicion": "neutralgrey",
+        "nombreCuadrante": null,
+        "valor": null,
+        "edd": null,
+        "idCuadranteEq": null,
+        "valorEdeEq": null,
+        "idCuadrante": null,
+        "atributos": []
+    }
+]
+     * 
+     * @function
+     * @return {string} respuesta
+    */
     async organigrama({request,response}){
 
         var procesoOrganigrama = request.input("idProceso");
-        var idPersonaOpinante = request.input("idPersonaOpinante");
+        var idPersonaProceso = request.input("idPersonaProceso");
         const cliente = request.input('cliente');
         
       
-        const query = `call tale_getPosiciones('${procesoOrganigrama}','${idPersonaOpinante}')`;
-        
+        const query = `call tale_getPosiciones('${procesoOrganigrama}','${idPersonaProceso}')`;
+        console.log(query)
         const result   = await data.execQuery(cliente,query);
         const posiciones = Enumerable.from(result[0][0]).distinct("$.idPosicion").select(function(posicion){
          
@@ -542,7 +610,7 @@ class Talento {
                 });
             }
         }
-        
+        console.log(JSON.stringify(posicionesSalida));
         response.json(posicionesSalida);
         
      
