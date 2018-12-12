@@ -23,3 +23,9 @@ adonis serve --dev
 ## Coneccion a BD
 Las conecciones se encuentran en config/database.js
 en .env se deben quitar todas las variables DB_* en caso de que existan de lo contrario la aplicación siempre elijirá la configuración de .env por sobre database.js.
+
+## Documentación
+Para generar la documentación ejecuta lo siguiente 
+```bash
+grunt jsdoc
+```

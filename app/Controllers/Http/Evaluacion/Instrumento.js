@@ -382,10 +382,8 @@ class Instrumento {
                 }
             }
             
-
-            
             const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
-
+            console.log(queryResultado)
             const resultado  = await data.execQuery(cliente,queryResultado);
             instrumento.resultadoCompetencias={nivel:"No Disponible"};
             instrumento.resultadoMetas = {nivel:"No Disponible"};
@@ -397,10 +395,23 @@ class Instrumento {
             if(resultado[0][1][0]!=null){
                 instrumento.resultadoMetas = resultado[0][1][0];
             }
+
             if(instrumento.resultadoMetas.nivel!="No Disponible" && instrumento.resultadoCompetencias.nivel!="No Disponible"){
                 instrumento.resultadoGlobal = {nivel:`${instrumento.resultadoCompetencias.nivel}${instrumento.resultadoMetas.nivel}`};
             }
 
+            //console.log(instrumento.resultadoCompetencias.promedio)
+            //console.log(instrumento.resultadoMetas.promedioResultado)
+            const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
+            const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
+            var final = resultadoFinal[0][0];
+            final = final[0].nivel;
+            if(final != null || final != "")
+            {
+                instrumento.resultadoGlobal = {nivel:` ${final}`};
+            }
+            //console.log(final[0].nivel)
+            //console.log(final)
         response.json(instrumento);
     }
 
@@ -502,6 +513,7 @@ class Instrumento {
         if(!isNaN(resultado)){
             try{
                 const q =`call ede_getNivelPromedioCompetencia('${idOpinante}', '${resultado}')`;
+                console.log(q);
                 const r   = await data.execQuery(cliente,q);
 
                 response.json({
@@ -631,7 +643,7 @@ class Instrumento {
                 });
     
                 Logger.debug(`linea:558,mensaje:OK`);
-                
+
             if(typeof competencias == "undefined" || competencias == null || competencias.length == null || competencias.length == 0)
             {
                 const competenciasVacias = Enumerable.from(rQuery[0][0]).select(function(c){
