@@ -52,7 +52,8 @@ class Metas {
         var eliminada=request.input('eliminada')
         const cliente =request.input('cliente') ;
         const query =  `call ede_getMetasColaborador('${idProceso}','${idPerfilMeta}','${idProcesoPersona}','${eliminada}')`;
-      
+        
+        console.log(query)
         const respuesta   = await data.execQuery(cliente,query);
                    
        
@@ -183,7 +184,7 @@ class Metas {
             const cliente =request.input('cliente') ;
         
             const query = `call ede_saveEstadoEvaluacionMetas('${idOpinante}', 'EVALMETAFINALIZADO')`;
-
+            
             const result   = await data.execQuery(cliente,query);
             
             const body = 
