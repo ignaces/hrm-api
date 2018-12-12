@@ -4,7 +4,7 @@ var Enumerable = require('linq')
 const data = use('App/Utils/Data')
 const permisos = use('App/Controllers/Http/Core/Permisos')
 /**
- *Esta clase ....
+ * /ECI/Instrumento
  * @constructor
  */
 class Instrumento {

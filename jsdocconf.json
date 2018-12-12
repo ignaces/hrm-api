@@ -13,11 +13,11 @@
         "default": {
             "outputSourceFiles": true
         },
-        "systemName"      : "HRM API",
+        "systemName"      : "API",
         "footer"          : "",
         "copyright"       : "... a la grande le puse Cuca",
         "navType"         : "vertical",
-        "theme"           : "superhero",
+        "theme"           : "spacelab",
         "linenums"        : true,
         "collapseSymbols" : false,
         "inverseNav"      : true
