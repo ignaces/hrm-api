@@ -10,7 +10,7 @@ module.exports = function(grunt) {
                 ],
               jsdoc: './node_modules/.bin/jsdoc',
               options: {
-                  destination: 'public/doc',
+                  destination: './documentation',
                   configure: './jsdocconf.json',
                   template: './node_modules/ink-docstrap/template'
               }
@@ -20,4 +20,4 @@ module.exports = function(grunt) {
   
     grunt.loadNpmTasks('grunt-jsdoc');
   
-  };
+};

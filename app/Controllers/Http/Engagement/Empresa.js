@@ -5,7 +5,15 @@ const mailgun = use('App/Utils/Mail')
 var Enumerable = require('linq');
 
 class Empresa {
-
+    /**
+     * Ejecuta consulta en BD a engagement_getEmpresasPeriodo
+     * @version 1.0.0
+     * @example
+     * returns json array [{id:"",pregunta:""}]
+     * GET /Redes/Instrumento 
+     * @param  {string} cliente Es el nombre de dominio del cliente
+     * @param  {string} idRedesPersona identificador de persona en redes
+     */
     async list({request,response}){
         var idEngagementProceso = request.input("idPeriodo")
         
