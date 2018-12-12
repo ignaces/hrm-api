@@ -4,7 +4,7 @@ const data = use('App/Utils/Data')
 const mailgun = use('App/Utils/Mail') 
 var Enumerable = require('linq');
 /**
- * Instrumento
+ * /Encuesta/Instrumento
  * @class
  */
 class Instrumento {

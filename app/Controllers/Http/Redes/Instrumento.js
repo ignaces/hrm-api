@@ -4,14 +4,20 @@ const got = use('got')
 const data = use('App/Utils/Data')
 const Env = use('Env')
 /**
- * asdasdadasdadasda
+ * /Redes/Instrumento
  * @class
  */
 class Instrumento {
 
    
-    /**
-     * @param  cliente
+   /**
+     * Ejecuta consulta en BD a redes_getPreguntas
+     * @version 1.0.0
+     * @example
+     * // returns json array [{id:"",pregunta:""}]
+     * GET /Redes/Instrumento 
+     * @param  {string} cliente Es el nombre de dominio del cliente
+     * @param  {string} idRedesPersona identificador de persona en redes
      */
     async preguntas({request,response}){
       const idRedesPersona = request.input("idRedesPersona");
