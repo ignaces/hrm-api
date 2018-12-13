@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width">
-	<title>API Class: Data</title>
+	<title>API Class: Talento</title>
 
 	<!--[if lt IE 9]>
 	<script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -72,14 +72,16 @@
 		<div id="main">
 			
 
-	<h1 class="page-title">Class: Data</h1>
+	<h1 class="page-title">Class: Talento</h1>
 <section>
 
 <header>
     
         <h2>
-        Data
+        Talento
         </h2>
+        
+            <div class="class-description">/Talento/Talento</div>
         
     
 </header>
@@ -91,16 +93,12 @@
         
 <hr>
 <dt>
-    <h4 class="name" id="Data"><span class="type-signature"></span>new Data()</h4>
+    <h4 class="name" id="Talento"><span class="type-signature"></span>new Talento()</h4>
     
     
 </dt>
 <dd>
 
-    
-    <div class="description">
-        Esta clase está encargada de manejar las llamadas a la base de datos
-    </div>
     
 
     
@@ -187,7 +185,7 @@
             
 <hr>
 <dt>
-    <h4 class="name" id="execQuery"><span class="type-signature">&lt;async> </span>execQuery(client, query)</h4>
+    <h4 class="name" id="organigrama"><span class="type-signature">&lt;async> </span>organigrama()</h4>
     
     
 </dt>
@@ -195,7 +193,7 @@
 
     
     <div class="description">
-        Ejecuta consulta en BD
+        Entrega organigrama basado en idTalentoProcesoPersona
     </div>
     
 
@@ -204,80 +202,6 @@
     
 
     
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>client</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Es el nombre de dominio del cliente</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consulta a la base de datoss</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
     
 
     
@@ -306,353 +230,124 @@
     
 
 	
-	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
+
 	
+
+	
+
+	
+
+	
+
+
+
+	
+
+	
+
+	
+
+	
+</dl>
+
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <h5>Returns:</h5>
+    
+            
+<div class="param-desc">
+    respuesta
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
     <dd>
-        <ul class="dummy">
-            <li>since version 2.0</li>
-        </ul>
+        
+<span class="param-type">string</span>
+
+
+
     </dd>
-    
-    
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
 </dl>
 
 
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">// returns 2
-globalNS.method1(5, 10);</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="execQueryMS"><span class="type-signature">&lt;async> </span>execQueryMS(client, query)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-    <div class="description">
-        Ejecuta consulta en BD
-    </div>
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
         
 
-<table class="params table table-striped">
-    <thead>
-    <tr>
+    
+        <h5>Examples</h5>
         
-        <th>Name</th>
-        
+    <pre class="sunlight-highlight-bash">
+curl -i -H &quot;Accept: application/json&quot; &quot;localhost:3334/Talento/Talento/organigrama&quot; -d &quot;cliente=csdev,idProceso=6b4071d1-0ff1-11e8-bf12-bc764e100f2b,idPersonaProceso=88d488ca-a1a0-11e8-80db-bc764e10787e&quot;</pre>
+
+    <pre class="sunlight-highlight-json">response
+
+[
+    {
+        &quot;idPosicion&quot;: &quot;01fe0bc8-a5c6-11e8-80db-bc764e10787e&quot;,
+        &quot;nombre&quot;: &quot;Gerente Regional de Formación y Desarrollo&quot;,
+        &quot;codigo&quot;: &quot;PC_1&quot;,
+        &quot;critico&quot;: 0,
+        &quot;nivel&quot;: 1,
+        &quot;idPersona&quot;: &quot;e5429228-7efd-11e8-80db-bc764e10787e&quot;,
+        &quot;idPadre&quot;: &quot;4d6c3b25-7b5f-11e8-80db-bc764e10787e&quot;,
+        &quot;nombresPersona&quot;: &quot;Julieta Lorena Greblo &quot;,
+        &quot;apellidoPaterno&quot;: &quot;&quot;,
+        &quot;apellidoMaterno&quot;: &quot;&quot;,
+        &quot;fotoPersona&quot;: &quot;http://hrmassets.enovum.cl/cs/assets/images/users/403411JulietaGreblo.jpg&quot;,
+        &quot;colorPosicion&quot;: null,
+        &quot;nombreCuadrante&quot;: null,
+        &quot;valor&quot;: null,
+        &quot;edd&quot;: null,
+        &quot;idCuadranteEq&quot;: null,
+        &quot;valorEdeEq&quot;: null,
+        &quot;idCuadrante&quot;: null,
+        &quot;atributos&quot;: [
+            {
+                &quot;atributo&quot;: null,
+                &quot;colorAtributo&quot;: null,
+                &quot;iconoAtributo&quot;: null,
+                &quot;tooltipAtributo&quot;: null
+            }
+        ]
+    },
+    {
+        &quot;idPosicion&quot;: &quot;S_01fe0bc8-a5c6-11e8-80db-bc764e10787e&quot;,
+        &quot;nombre&quot;: &quot;Sucesor&quot;,
+        &quot;codigo&quot;: &quot;PC_1&quot;,
+        &quot;critico&quot;: 0,
+        &quot;nivel&quot;: 1,
+        &quot;idSucede&quot;: &quot;01fe0bc8-a5c6-11e8-80db-bc764e10787e&quot;,
+        &quot;idPersona&quot;: &quot;e5429228-7efd-11e8-80db-bc764e10787e&quot;,
+        &quot;idPadre&quot;: &quot;4d6c3b25-7b5f-11e8-80db-bc764e10787e&quot;,
+        &quot;nombresPersona&quot;: &quot;&quot;,
+        &quot;apellidoPaterno&quot;: &quot;&quot;,
+        &quot;apellidoMaterno&quot;: &quot;&quot;,
+        &quot;fotoPersona&quot;: &quot;&quot;,
+        &quot;colorPosicion&quot;: &quot;neutralgrey&quot;,
+        &quot;nombreCuadrante&quot;: null,
+        &quot;valor&quot;: null,
+        &quot;edd&quot;: null,
+        &quot;idCuadranteEq&quot;: null,
+        &quot;valorEdeEq&quot;: null,
+        &quot;idCuadrante&quot;: null,
+        &quot;atributos&quot;: []
+    }
+]</pre>
 
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>client</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Es el nombre de dominio del cliente</td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>query</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Consulta a la base de datoss</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-	<dt class="tag-version method-doc-label method-doc-details-label">Version:</dt>
-	<dd class="tag-version">
-		<ul class="dummy">
-			<li>1.0.0</li>
-		</ul>
-	</dd>
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-	<dt class="important tag-deprecated method-doc-label method-doc-details-label">Deprecated:</dt>
-	
-    <dd>
-        <ul class="dummy">
-            <li>since version 2.0</li>
-        </ul>
-    </dd>
-    
-    
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <h5>Example</h5>
-        
-    <pre class="sunlight-highlight-javascript">// returns 2
-globalNS.method1(5, 10);</pre>
-
-
-    
-</dd>
-
-        
-            
-<hr>
-<dt>
-    <h4 class="name" id="getConeccionCliente"><span class="type-signature">&lt;async> </span>getConeccionCliente(client)</h4>
-    
-    
-</dt>
-<dd>
-
-    
-
-    
-
-    
-
-    
-    
-        <h5>Parameters:</h5>
-        
-
-<table class="params table table-striped">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>client</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last">Es el nombre de dominio del cliente</td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-    
-
-    
-<dl class="details">
-    
-
-	
-
-	
-
-	
-
-    
-
-    
-
-    
-
-    
-
-	
-
-	
-
-	
-
-	
-
-	
-
-
-
-	
-
-	
-
-	
-
-	
-</dl>
-
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
 
     
 </dd>
