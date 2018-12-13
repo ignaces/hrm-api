@@ -404,11 +404,15 @@ class Instrumento {
             //console.log(instrumento.resultadoMetas.promedioResultado)
             const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
             const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
-            var final = resultadoFinal[0][0];
-            final = final[0].nivel;
-            if(final != null || final != "")
+            //console.log(resultadoFinal[0][0])
+            if(resultadoFinal[0][0]!=null)
             {
-                instrumento.resultadoGlobal = {nivel:` ${final}`};
+                var final = resultadoFinal[0][0];
+                final = final[0].nivel;
+                if(final != null)
+                {
+                    instrumento.resultadoGlobal = {nivel:` ${final}`};
+                }
             }
             //console.log(final[0].nivel)
             //console.log(final)
@@ -513,7 +517,6 @@ class Instrumento {
         if(!isNaN(resultado)){
             try{
                 const q =`call ede_getNivelPromedioCompetencia('${idOpinante}', '${resultado}')`;
-                console.log(q);
                 const r   = await data.execQuery(cliente,q);
 
                 response.json({
@@ -546,7 +549,6 @@ class Instrumento {
         const cliente =request.input('cliente') ;
 
         const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}','${idProceso}')`;
-        
         try{
 
         const rQuery   = await data.execQuery(cliente,query);
