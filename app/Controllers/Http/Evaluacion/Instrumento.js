@@ -235,7 +235,7 @@ class Instrumento {
             }
             
             const query =`call ede_getInstrumento('${idOpinante}')`;
-            
+            console.log(query)
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -403,8 +403,9 @@ class Instrumento {
             //console.log(instrumento.resultadoCompetencias.promedio)
             //console.log(instrumento.resultadoMetas.promedioResultado)
             const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
+            console.log(queryResultadoFinal)
             const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
-            //console.log(resultadoFinal[0][0])
+            console.log(resultadoFinal[0][0])
             if(resultadoFinal[0][0]!=null)
             {
                 var final = resultadoFinal[0][0];
@@ -419,6 +420,210 @@ class Instrumento {
         response.json(instrumento);
     }
 
+    async getInstrumentoEdeReporteCriterio({request,response}){
+        var id = request.input("hostname");
+        var idOpinante = request.input("idOpinante");
+        var instrumento = [];
+        const cliente =request.input('cliente') ;
+        
+            const queryObs = `call ede_getObservacion('${idOpinante}')`;
+            const respuestaObs   = await data.execQuery(cliente,queryObs);
+
+            const observacion    = respuestaObs[0][0];
+            
+            //console.log(queryObs);
+            const queryResultados = `call ede_getResultadoGlobal('${idOpinante}')`;
+            const resultadosCalibracion   = await data.execQuery(cliente,queryResultados);
+            var resultadoCalibracion = "No Disponible";
+            if(resultadosCalibracion[0][0][0]!=null){
+                resultadoCalibracion = resultadosCalibracion[0][0][0].resultadoCalibracion;
+            }
+            
+            const query =`call ede_getInstrumentoReporteCriterio('${idOpinante}')`;
+            console.log(query)
+            const rQuery   = await data.execQuery(cliente,query);
+            
+            const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
+                return{
+                    id:competencia.idCompetencia,
+                    codigo:competencia.competenciaCodigo,
+                    nombre:competencia.competencia,
+                    descripcion:competencia.competenciaDescripcion
+
+                }
+            })
+
+            const queryMet =`call ede_getInstrumentoMeta('${idOpinante}')`;
+            //console.log(query);
+            const rQueryMet   = await data.execQuery(cliente,queryMet);
+            //console.log(rQueryMet[0][0]);
+            
+            const metas = Enumerable.from(rQueryMet[0][0]).distinct("$.idMeta").select(function(meta){
+                return{
+                    id:meta.idMeta,
+                    codigo:meta.metaCodigo,
+                    nombre:meta.nombre,
+                    descripcion:meta.metaDescripcion
+
+                }
+            });
+            //console.log("competencias")
+            try{
+                
+                instrumento = {
+                    nombre:"",
+                    tipoInstrumento:"DES",
+                    observacion: observacion[0].observacion,
+                    competencias:competencias.toArray(),
+                    metas:metas.toArray()
+                }
+            }
+            catch(e)
+            {
+                instrumento = {
+                    nombre:"",
+                    tipoInstrumento:"DES",
+                    observacion: "",
+                    competencias:competencias.toArray(),
+                    metas:metas.toArray()
+                }
+            }
+            
+            //console.log("instrumento")
+            for(var competencia in instrumento.competencias){
+                var idCompetencia = instrumento.competencias[competencia].id
+                
+                const actividadesClave = Enumerable.from(rQuery[0][0]).where(`$.idCompetencia == "${idCompetencia}"`).distinct("$.idActividadClave").select(function(ac){
+                    return{
+                        id:ac.idActividadClave,
+                        nombre:ac.actividad,
+                        visible:ac.actividadVisible,
+                        orden:ac.actividadOrden
+                    }
+                }).toArray()
+                instrumento.competencias[competencia].actividadesClave = actividadesClave
+
+                for(var actividadClave in actividadesClave){
+                    var idActividadClave = actividadesClave[actividadClave].id
+                    
+                    const criterios = Enumerable.from(rQuery[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
+                        return{
+                            id:criterio.idCriterio,
+                            nombre:criterio.criterio,
+                            orden:criterio.criterioOrden
+                        }
+                    }).toArray()
+                    instrumento.competencias[competencia].actividadesClave[actividadClave].criterios = criterios
+
+                    for(var criterio in criterios){
+                        var idCriterio = criterios[criterio].id
+                        
+                        const escala = Enumerable.from(rQuery[0][0]).where(`$.idCriterio == "${idCriterio}"`).select(function(e){
+                            return{
+                                id:e.idEscalaNivel,
+                                nombre:e.nivelEscala,
+                                orden:e.ordenEscala,
+                                valor:e.valorEscala,
+                                requiereJustificacion:e.requiereJustificacion,
+                                indicador:e.indicador,
+                                estaSeleccionada:e.estaSeleccionada,                                
+                                justificacion: e.justificacion,
+                                nivel: e.nivel,
+                                mostrarNivel:e.mostrarNivel
+                            }
+                        }).toArray()
+                        instrumento.competencias[competencia].actividadesClave[actividadClave].criterios[criterio].escala = escala
+                    }
+                }
+            }
+
+            
+            //console.log("instrumento")
+            for(var meta in instrumento.metas){
+                var idMeta = instrumento.metas[meta].id
+                //console.log(idMeta);
+                const actividadesClave = Enumerable.from(rQueryMet[0][0]).where(`$.idMeta == "${idMeta}"`).distinct("$.idActividadClave").select(function(ac){
+                    return{
+                        id:ac.idActividadClave,
+                        nombre:ac.actividad,
+                        visible:ac.actividadVisible,
+                        orden:ac.actividadOrden
+                    }
+                }).toArray()
+                instrumento.metas[meta].actividadesClave = actividadesClave
+
+                for(var actividadClave in actividadesClave){
+                    var idActividadClave = actividadesClave[actividadClave].id
+                    
+                    const criterios = Enumerable.from(rQueryMet[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
+                        return{
+                            id:criterio.idCriterio,
+                            nombre:criterio.criterio,
+                            orden:criterio.criterioOrden
+                        }
+                    }).toArray()
+                    //console.log(meta, actividadClave, criterios);
+                    instrumento.metas[meta].actividadesClave[actividadClave].criterios = criterios
+                    
+                    for(var criterio in criterios){
+                        var idCriterio = criterios[criterio].id
+                        
+                        const escala = Enumerable.from(rQueryMet[0][0]).where(`$.idCriterio == "${idCriterio}"`).select(function(e){
+                            return{
+                                id:e.idEscalaNivel,
+                                nombre:e.nivelEscala,
+                                orden:e.ordenEscala,
+                                valor:e.valorEscala,
+                                requiereJustificacion:e.requiereJustificacion,
+                                indicador:e.indicador,
+                                estaSeleccionada:e.estaSeleccionada,                                
+                                justificacion: e.justificacion,
+                                nivel: e.nivel,
+                                mostrarNivel:e.mostrarNivel
+                            }
+                        }).toArray()
+                        instrumento.metas[meta].actividadesClave[actividadClave].criterios[criterio].escala = escala
+                    }
+                }
+            }
+            
+            const queryResultado = `call ede_calculaEvaluacion('${idOpinante}')`;
+            console.log(queryResultado)
+            const resultado  = await data.execQuery(cliente,queryResultado);
+            instrumento.resultadoCompetencias={nivel:"No Disponible"};
+            instrumento.resultadoMetas = {nivel:"No Disponible"};
+            instrumento.resultadoCalibracion = {nivel:resultadoCalibracion};
+            instrumento.resultadoGlobal = {nivel:"No Disponible"};
+            if(resultado[0][0][0]!=null){
+                instrumento.resultadoCompetencias = resultado[0][0][0];
+            }
+            if(resultado[0][1][0]!=null){
+                instrumento.resultadoMetas = resultado[0][1][0];
+            }
+
+            if(instrumento.resultadoMetas.nivel!="No Disponible" && instrumento.resultadoCompetencias.nivel!="No Disponible"){
+                instrumento.resultadoGlobal = {nivel:`${instrumento.resultadoCompetencias.nivel}${instrumento.resultadoMetas.nivel}`};
+            }
+
+            //console.log(instrumento.resultadoCompetencias.promedio)
+            //console.log(instrumento.resultadoMetas.promedioResultado)
+            const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
+            console.log(queryResultadoFinal)
+            const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
+            console.log(resultadoFinal[0][0])
+            if(resultadoFinal[0][0]!=null)
+            {
+                var final = resultadoFinal[0][0];
+                final = final[0].nivel;
+                if(final != null)
+                {
+                    instrumento.resultadoGlobal = {nivel:` ${final}`};
+                }
+            }
+            //console.log(final[0].nivel)
+            //console.log(final)
+        response.json(instrumento);
+    }
     async getParametrosValidacionEvaluacion({request,response}){
         const cliente =request.input('cliente') ;
         
