@@ -104,6 +104,62 @@ class Metas {
         //response.json(dimensiones);
     }
 
+    async getMetasColaboradorReporte({request,response}){
+        var idProceso=request.input('idProceso');
+        var idPersona = request.input('idPersona');
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getMetasColaboradorReporte('${idProceso}','${idPersona}')`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+                   
+       
+        const dimensiones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function(dimension){
+       
+            return{
+                    id:dimension.id,
+                    nombre:dimension.nombre,
+                    ponderacionTotal:dimension.ponderacionTotal,
+                    numeroMinimo:dimension.numeroMinimo,
+                    numeroMaximo:dimension.numeroMaximo,
+                    ponderacionMinima:dimension.ponderacionMinima,
+                    ponderacionMaxima:dimension.ponderacionMaxima,
+                    numeroMetas:dimension.numeroMetas,
+                    ponderacionMetas:dimension.ponderacionMetas,
+                    resPonderacionColor:dimension.resPonderacionColor,
+                    resPonderacionIcono:dimension.resPonderacionIcono,
+                    resNumeroColor:dimension.resNumeroColor,
+                    resNumeroIcono:dimension.resNumeroIcono,
+                    metas:[]
+
+                }
+            }).toArray();
+
+            for(var dimension in dimensiones){
+                
+                const metas = Enumerable.from(respuesta[0][0]).where(`$.id == "${dimensiones[dimension].id}"`).select(function(meta){
+                    
+                    return{
+                        
+                        meta
+                    }
+                }).toArray();
+
+
+              dimensiones[dimension].metas=metas;
+               
+            }
+            response.json({
+                "estado": {
+                    "codigo": "OK",
+                    "mensaje": ""
+                },
+                "paginacion": "",
+                "data": dimensiones
+            });
+                  
+        //response.json(dimensiones);
+    }
+
     async getMetasColumnas({request,response}){
         var idProceso=request.input('idProceso')
         const cliente =request.input('cliente') ;
