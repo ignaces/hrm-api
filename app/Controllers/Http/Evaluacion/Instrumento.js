@@ -607,21 +607,22 @@ class Instrumento {
 
             //console.log(instrumento.resultadoCompetencias.promedio)
             //console.log(instrumento.resultadoMetas.promedioResultado)
-            const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
-            console.log(queryResultadoFinal)
-            const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
-            console.log(resultadoFinal[0][0])
-            if(resultadoFinal[0][0]!=null)
-            {
-                var final = resultadoFinal[0][0];
-                final = final[0].nivel;
-                if(final != null)
+            if(typeof instrumento.resultadoCompetencias.promedio != "undefined" || typeof instrumento.resultadoCompetencias.promedioResultado != "undefined" ){
+
+                const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
+                console.log(queryResultadoFinal)
+                const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
+                console.log(resultadoFinal[0][0])
+                if(resultadoFinal[0][0]!=null)
                 {
-                    instrumento.resultadoGlobal = {nivel:` ${final}`};
+                    var final = resultadoFinal[0][0];
+                    final = final[0].nivel;
+                    if(final != null)
+                    {
+                        instrumento.resultadoGlobal = {nivel:` ${final}`};
+                    }
                 }
             }
-            //console.log(final[0].nivel)
-            //console.log(final)
         response.json(instrumento);
     }
     async getParametrosValidacionEvaluacion({request,response}){
