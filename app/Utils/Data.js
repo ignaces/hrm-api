@@ -20,6 +20,39 @@ class Data  {
      * @param  {string} client Es el nombre de dominio del cliente
      * @param  {string} query Consulta a la base de datoss
      */
+    async execQueryMaster(query){
+        
+        
+        const coneccion = await this.getConeccionCliente("");
+
+        Database.Config._config.database.default=coneccion;
+        try{
+            const result = await Database.connection('default').schema.raw(query);
+        
+            Database.close(['default'])
+            Database.close()
+            return result;
+        }catch(ex){
+            Database.close(['default'])
+            Database.close()
+            return ex;
+        }
+        
+        
+        
+        
+        
+    }
+    /**
+     * Ejecuta consulta en BD
+     * @version 1.0.0
+     * @deprecated since version 2.0
+     * @example
+     * // returns 2
+     * globalNS.method1(5, 10);
+     * @param  {string} client Es el nombre de dominio del cliente
+     * @param  {string} query Consulta a la base de datoss
+     */
     async execQuery(client,query){
         
         
@@ -82,6 +115,18 @@ class Data  {
      * @param  {string} client Es el nombre de dominio del cliente
      */
     async getConeccionCliente (client){ 
+        
+        if(client==""){
+            const coneccion ={client:'mysql',connection:{
+                host: Env.get('DB_HOST', '192.168.3.18'),
+                port: Env.get('DB_PORT', '3306'),
+                user: Env.get('DB_USER', 'root'),
+                //password: Env.get('DB_PASSWORD', 'QazQwerty123_'),
+                password: Env.get('DB_PASSWORD', 'Qwerty123'),
+                database:"KH"
+            }};
+            return coneccion;
+        }
         if(client == "localhost" || client=="hrmdev"){
             client = "hrm";
         }
