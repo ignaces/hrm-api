@@ -194,6 +194,24 @@ class Persona {
         });
     }
 
+    async finalizarPlan ({request,response}){
+       
+        var idFeedbackOpinante = request.input("idFeedbackOpinante");
+
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_finalizarPlanFeedback('${idFeedbackOpinante}')`;
+        
+        const respuesta = await data.execQuery(cliente,query);
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
 
 
 }
