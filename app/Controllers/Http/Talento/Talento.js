@@ -51,7 +51,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_gestionTalentos('${idOpinante}','${idTalentoProceso}')`;
-        
+        //const query = `call tale_getArbolJerarquico('${idOpinante}','${idTalentoProceso}','')`;
         const result = await data.execQuery(cliente,query);        
         response.json(result[0][0]);
         
@@ -67,6 +67,7 @@ class Talento {
         const cliente = request.input('cliente');
 
         const query = `call tale_findProcesoTalento('${idTalentoProceso}','${idOpinante}')`;
+        //const query = `call tale_getJerarquiaTotal('${idOpinante}','${idTalentoProceso}','')`;
         const result   = await data.execQuery(cliente,query);
         
         response.json(result[0][0][0]);
