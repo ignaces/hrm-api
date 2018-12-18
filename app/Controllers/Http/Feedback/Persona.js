@@ -5,9 +5,6 @@ var Enumerable = require('linq')
 
 class Persona {
 
-
-    
-
     async list({request,response}){
        
         var idProceso=request.input('idProceso');
@@ -106,6 +103,26 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
+
+    async getEstadoPlan ({request,response}){
+       
+        var idFeedbackOpinante = request.input("idFeedbackOpinante");
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_getEstadoPlan('${idFeedbackOpinante}')`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
     async addAccion({request,response}){
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
@@ -129,6 +146,32 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
+
+    async updateAccion ({request,response}){
+       
+        var idFeedbackOpinante = request.input("idFeedbackOpinante");
+        var objAccion = request.input("objAccion");
+
+        var idAccion = objAccion.id;
+        var txtAccion = objAccion.accion;
+        var txtObjetivo = objAccion.objetivo;
+        var fechaTermino = objAccion.fechaTermino;
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_updateAccionFeedback('${idFeedbackOpinante}','${idAccion}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
     async deleteAccion ({request,response}){
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
