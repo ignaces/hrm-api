@@ -2,6 +2,7 @@
 const Database = use('Database')
 const data = use('App/Utils/Data')
 var Enumerable = require('linq')
+const dateformat = require('dateformat');
 
 class Persona {
 
@@ -72,6 +73,15 @@ class Persona {
         const query =  `call feedback_getAccionFeedback('${idFeedbackOpinante}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
+
+        const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
+            return {
+                id:acc.id,
+                accion:acc.accion,
+                objetivo:acc.objetivo,
+                plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
+            }
+        }).toArray();
         
         response.json({
             "estado": {
@@ -79,7 +89,7 @@ class Persona {
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": rAcciones
         });
     }
 
@@ -115,6 +125,15 @@ class Persona {
         const query =  `call feedback_saveAccionFeedback('${idFeedbackOpinante}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
+
+        const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
+            return {
+                id:acc.id,
+                accion:acc.accion,
+                objetivo:acc.objetivo,
+                plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
+            }
+        }).toArray();
         
         response.json({
             "estado": {
@@ -122,7 +141,7 @@ class Persona {
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": rAcciones
         });
     }
 
@@ -140,6 +159,15 @@ class Persona {
         const query =  `call feedback_updateAccionFeedback('${idFeedbackOpinante}','${idAccion}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
+
+        const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
+            return {
+                id:acc.id,
+                accion:acc.accion,
+                objetivo:acc.objetivo,
+                plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
+            }
+        }).toArray();
         
         response.json({
             "estado": {
@@ -147,7 +175,7 @@ class Persona {
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": rAcciones
         });
     }
 
@@ -163,13 +191,22 @@ class Persona {
         
         const respuesta = await data.execQuery(cliente,query);
 
+        const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
+            return {
+                id:acc.id,
+                accion:acc.accion,
+                objetivo:acc.objetivo,
+                plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
+            }
+        }).toArray();
+
         response.json({
             "estado": {
                 "codigo": "OK",
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": rAcciones
         });
     }
 
