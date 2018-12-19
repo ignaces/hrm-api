@@ -63,28 +63,7 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
-    async saveFeedback({request,response}){
-       
-        var idFeedbackOpinante = request.input("idFeedbackOpinante");
-        var txtNomPlan = request.input("txtNomPlan");
-        var txtAccion = request.input("txtAccion");
-        var txtObjetivo = request.input("txtObjetivo");
-        var fechaInicio = request.input("fechaInicio"); 
-        
-        const cliente =request.input('cliente') ;
-        const query =  `call feedback_savePlanFeedback('${idFeedbackOpinante}','${txtNomPlan}','${txtAccion}','${txtObjetivo}','${fechaInicio}')`;
-        
-        const respuesta   = await data.execQuery(cliente,query);
-        
-        response.json({
-            "estado": {
-                "codigo": "OK",
-                "mensaje": ""
-            },
-            "paginacion": "",
-            "data": respuesta[0][0]
-        });
-    }
+   
     async getAcciones({request,response}){
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
