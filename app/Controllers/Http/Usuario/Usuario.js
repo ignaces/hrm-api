@@ -57,7 +57,7 @@ class Usuario {
         const identificador =request.input('identificador') ;
         
         
-        const cliente = "app";
+        const cliente =request.input('cliente') ;
       
         const query =  `call setUsuarioSuplantador('${identificador}')`;
         
