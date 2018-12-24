@@ -42,7 +42,7 @@ class Persona {
         const cliente =request.input('cliente') ;
         
         const query = `call pers_getPersonaByIdUsuario('${idUser}')`;
-
+        
         const respuesta   = await data.execQuery(cliente,query);
         
         response.json({
