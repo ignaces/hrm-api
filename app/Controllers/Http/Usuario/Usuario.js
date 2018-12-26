@@ -52,6 +52,27 @@ class Usuario {
         
         
     }
+    async setSuplantador({request,response}){
+    
+        const identificador =request.input('identificador') ;
+        
+        
+        const cliente =request.input('cliente') ;
+      
+        const query =  `call setUsuarioSuplantador('${identificador}')`;
+        
+        
+      
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": "",
+            "paginacion": "",
+            "data": "{status:'OK'}"
+        });
+        
+        
+    }
 }
 
 module.exports = Usuario
