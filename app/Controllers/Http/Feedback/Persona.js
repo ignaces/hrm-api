@@ -48,10 +48,14 @@ class Persona {
        
         var idOpinante=request.input('idOpinante');
         var observacion=request.input('observacion');
+        var ipresencial=request.input('presencial');
+        var presencial=0;
         
-        
+        if(ipresencial=="true"){
+            presencial=1;
+        }
         const cliente =request.input('cliente') ;
-        const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}')`;
+        const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}',${presencial})`;
         
         const respuesta   = await data.execQuery(cliente,query);
         
