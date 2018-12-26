@@ -64,14 +64,32 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
-   
+    async getCompetenciasOpinante({request,response}){
+        var idFeedbackOpinante = request.input("idFeedbackOpinante");
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call pda_getCompetenciasOpinante('${idFeedbackOpinante}')`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+
+    const rCompetencias= respuesta[0][0];
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": rCompetencias
+        });     
+    }
     async getAcciones({request,response}){
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
         
         const cliente =request.input('cliente') ;
         const query =  `call feedback_getAccionFeedback('${idFeedbackOpinante}')`;
-        
+
         const respuesta   = await data.execQuery(cliente,query);
 
         const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
@@ -79,6 +97,8 @@ class Persona {
                 id:acc.id,
                 accion:acc.accion,
                 objetivo:acc.objetivo,
+                idComptetencia:acc.idCompetencia,
+                competencia:acc.competencia,
                 plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
             }
         }).toArray();
@@ -115,14 +135,15 @@ class Persona {
     async addAccion({request,response}){
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
+        
         var objAccion = request.input("objAccion");
-
+        var idCompetencia = objAccion.idCompetencia;
         var txtAccion = objAccion.accion;
         var txtObjetivo = objAccion.objetivo;
         var fechaTermino = objAccion.fechaTermino;
         
         const cliente =request.input('cliente') ;
-        const query =  `call feedback_saveAccionFeedback('${idFeedbackOpinante}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
+        const query =  `call feedback_saveAccionFeedback('${idFeedbackOpinante}','${idCompetencia}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
 
@@ -131,6 +152,8 @@ class Persona {
                 id:acc.id,
                 accion:acc.accion,
                 objetivo:acc.objetivo,
+                idCompetencia:acc.idCompetencia,
+                competencia:acc.competencia,
                 plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
             }
         }).toArray();
@@ -149,14 +172,14 @@ class Persona {
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
         var objAccion = request.input("objAccion");
-
+        var idCompetencia = request.input("idCompetencia");
         var idAccion = objAccion.id;
         var txtAccion = objAccion.accion;
         var txtObjetivo = objAccion.objetivo;
         var fechaTermino = objAccion.fechaTermino;
         
         const cliente =request.input('cliente') ;
-        const query =  `call feedback_updateAccionFeedback('${idFeedbackOpinante}','${idAccion}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
+        const query =  `call feedback_updateAccionFeedback('${idFeedbackOpinante}','${idCompetencia}','${idAccion}','${txtAccion}','${txtObjetivo}','${fechaTermino}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
 
@@ -165,6 +188,8 @@ class Persona {
                 id:acc.id,
                 accion:acc.accion,
                 objetivo:acc.objetivo,
+                idCompetencia:acc.idCompetencia,
+                competencia:acc.competencia,
                 plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
             }
         }).toArray();
