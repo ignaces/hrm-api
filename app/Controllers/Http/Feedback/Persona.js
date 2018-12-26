@@ -3,6 +3,7 @@ const Database = use('Database')
 const data = use('App/Utils/Data')
 var Enumerable = require('linq')
 const dateformat = require('dateformat');
+const mailgun = use('App/Utils/Mail') ;
 
 class Persona {
 
@@ -58,7 +59,12 @@ class Persona {
         const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}',${presencial})`;
         
         const respuesta   = await data.execQuery(cliente,query);
-        
+        if(presencial==1){
+            var persona = respuesta[0][0][0];
+            
+            var cuerpo = `<h2>Estimado(a) ${persona.nombres} ${persona.apellidoPaterno} ${persona.apellidoMaterno}</h2><p>Tu jefe ha confirmado feedback presencial, para continuar con el proceso por favor haz click <a href="http://${cliente}.enovum.cl/confirmarFeedback?iop=${idOpinante}">aquí</a>.</p>`;
+            const email = await mailgun.sendEmail(persona.email,"Confirmación de Feedback",cuerpo,"gibraltar_feedback");
+        }
         response.json({
             "estado": {
                 "codigo": "OK",
@@ -66,6 +72,34 @@ class Persona {
             },
             "paginacion": "",
             "data": respuesta[0][0]
+        });
+    }
+    async saveConfirmacion({request,response}){
+       
+        var idOpinante=request.input('idOpinante');
+        var iacuerdo=request.input('acuerdo');
+        var ipresencial=request.input('presencial');
+        var presencial=0;
+        var acuerdo=0;
+        
+        if(ipresencial=="true"){
+            presencial=1;
+        }
+        if(iacuerdo=="true"){
+            acuerdo=1;
+        }
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_saveConfirmacion('${idOpinante}',${acuerdo},${presencial})`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": ""
         });
     }
     async getCompetenciasOpinante({request,response}){
