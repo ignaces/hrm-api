@@ -447,7 +447,7 @@ class Instrumento {
             }
             
             const query =`call ede_getInstrumentoReporteCriterio('${idOpinante}')`;
-            console.log(query)
+            
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -474,7 +474,7 @@ class Instrumento {
 
                 }
             });
-            //console.log("competencias")
+            
             try{
                 
                 instrumento = {
@@ -496,8 +496,9 @@ class Instrumento {
                 }
             }
             
-            //console.log("instrumento")
+            
             for(var competencia in instrumento.competencias){
+                
                 var idCompetencia = instrumento.competencias[competencia].id
                 
                 const actividadesClave = Enumerable.from(rQuery[0][0]).where(`$.idCompetencia == "${idCompetencia}"`).distinct("$.idActividadClave").select(function(ac){
@@ -508,15 +509,18 @@ class Instrumento {
                         orden:ac.actividadOrden
                     }
                 }).toArray()
-                instrumento.competencias[competencia].actividadesClave = actividadesClave
+
+                instrumento.competencias[competencia].actividadesClave = actividadesClave;
 
                 for(var actividadClave in actividadesClave){
+                    
                     var idActividadClave = actividadesClave[actividadClave].id
                     
                     const criterios = Enumerable.from(rQuery[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
                         return{
                             id:criterio.idCriterio,
                             nombre:criterio.criterio,
+                            valor:criterio.valor,
                             orden:criterio.criterioOrden
                         }
                     }).toArray()
