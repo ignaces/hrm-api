@@ -13,7 +13,7 @@ class Calibracion {
         var idPersona=request.input('idPersona');
         
         const cliente =request.input('cliente') ;
-        const query =  `call ede_updateCalibracion('${idPersona}')`;
+        const query =  `call ede_updateCalibracionEquipo('${idPersona}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
         
