@@ -118,6 +118,34 @@ class Informe {
 
     }
 
+    async getEncuestasServiciosXLS({request,response}) {
+        const idEciProcesoCenco = request.input('idEciProcesoCenco');
+
+        const query =`call eci_getEncuestasServicios('${idEciProcesoCenco}')`;
+        const cliente =request.input('cliente');
+
+        const result = await data.execQuery(cliente,query);
+
+        const evaluacion = Enumerable.from(result[0][0]).where("$.total > 0").select(function (serv) {
+            return {
+                Servicio:serv.nombre,
+                Pregunta:serv.pregunta,
+                Igual_7:serv.igual7,
+                Igual_6:serv.igual6,
+                Igual_5:serv.igual5,
+                Igual_4:serv.igual4,
+                Igual_3:serv.igual3,
+                Igual_2:serv.igual2,
+                Igual_1:serv.igual1,
+                Total:serv.total,
+                SNEx:Math.round(100 *(((serv.igual7 + serv.igual6) - (serv.igual1 + serv.igual2 + serv.igual3 + serv.igual4)) / serv.total) * 100) / 100
+            }
+        }).toArray();
+
+        return {mensaje:evaluacion};
+
+    }
+
 }
 
 module.exports = Informe
