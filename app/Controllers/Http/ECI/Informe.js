@@ -55,10 +55,75 @@ class Informe {
 
     }
 
+    async getEncuestasServiciosxGerencia({request,response}) {
+        const idEciProcesoCenco = request.input('idEciProcesoCenco');
+
+        const query =`call eci_getEncuestasServiciosxGerencia('${idEciProcesoCenco}')`;
+        const cliente =request.input('cliente');
+
+        const result = await data.execQuery(cliente,query);
+
+        var servicios = Enumerable.from(result[0][0]).distinct("$.tipo").select(function (resultado) {
+            return {
+                tipo:resultado.tipo,
+                peso:resultado.peso,
+                totalTipo:0,
+                SNExXTipoEncuesta:0,
+                SNExXTipoEncuestaPonderado:0,    
+                servicios:Enumerable.from(result[0][0]).where(`$.tipo == "${resultado.tipo}"`).select(function(serv){
+                    return {
+                        id:serv.id,
+                        nombre:serv.nombre,                            
+                        mayor5:serv.mayor5,
+                        menor5:serv.menor5,
+                        total:serv.total,
+                        SNExXEncuesta:Math.round(100 *((serv.mayor5 - serv.menor5)/serv.total) * 100) / 100
+                    }
+                }).toArray()
+            }
+        }).toArray();
+
+        for(var c in servicios){
+            var tipo = servicios[c];
+            var vSNExXTipoEncuesta = 0;
+            var vtotal = 0;
+
+            for(var r in tipo.servicios){
+                var res = tipo.servicios[r];
+                vtotal = vtotal + res.total;
+            }
+            for(var r in tipo.servicios){
+                var res = tipo.servicios[r];
+
+                vSNExXTipoEncuesta = vSNExXTipoEncuesta + (res.total/vtotal * res.SNExXEncuesta);
+            }
+
+            servicios[c].totalTipo = vtotal;
+            servicios[c].SNExXTipoEncuesta = Math.round((vSNExXTipoEncuesta) * 100) / 100;
+            servicios[c].SNExXTipoEncuestaPonderado = Math.round((vSNExXTipoEncuesta/servicios[c].peso * 100) * 100) / 100;
+        }
+
+        var tPonderado =0;
+        var i=0;
+        for(var c in servicios){
+            var serv = servicios[c];
+            tPonderado = tPonderado +  serv.SNExXTipoEncuestaPonderado;
+            i++;
+        }
+
+        var serv = {
+            SNExPorUnidad:Math.round((tPonderado/i)* 100) / 100,
+            servicios:servicios
+        };
+
+        return {data:serv};
+
+    }
+
     async getEncuestasServiciosGraf({request,response}) {
         const idEciProcesoCenco = request.input('idEciProcesoCenco');
 
-        const query =`call eci_getEncuestasServiciosGraf('${idEciProcesoCenco}')`;
+        const query =`call eci_getEncuestasServicios('${idEciProcesoCenco}')`;
         const cliente =request.input('cliente');
 
         const result = await data.execQuery(cliente,query);
@@ -72,9 +137,9 @@ class Informe {
                         //nombre:Math.round(100 *(((serv.mayor5) - (serv.menor5)) / serv.total) * 100) / 100,
                         nombre:serv.pregunta,
                         data:[
-                            Math.round(100 * ((serv.mayor5 * 100) / serv.total)) / 100,
+                            Math.round(100 * (((serv.igual6 + serv.igual7) * 100) / serv.total)) / 100,
                             Math.round(100 * ((serv.igual5 * 100) / serv.total)) / 100,
-                            Math.round(100 * ((serv.menor5 * 100) / serv.total)) / 100
+                            Math.round(100 * (((serv.igual4 + serv.igual3 + serv.igual2 + serv.igual1 ) * 100) / serv.total)) / 100
                         ]
                     }
                 }).toArray()
@@ -98,17 +163,17 @@ class Informe {
             clasificaciones[i].estados = [];
             clasificaciones[i].estados.push({
                 preguntas:vpregunta,
-                nombre:"Excelencia (nota 7)",
+                nombre:"Satisfecho: Nota 6 y 7",
                 data:vmayor5
             });
             clasificaciones[i].estados.push({
                 preguntas:vpregunta,
-                nombre:"Nota 6",
+                nombre:"Nota 5",
                 data:vmenor5
             });
             clasificaciones[i].estados.push({
                 preguntas:vpregunta,
-                nombre:"Insuficiencia (notas 1-4)",
+                nombre:"Insatisfecho: de 1 a 4",
                 data:vtotal
             });
 
