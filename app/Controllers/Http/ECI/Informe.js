@@ -132,6 +132,8 @@ class Informe {
             return {
                 id:resultado.id,
                 nombre:resultado.nombre,
+                unidad:resultado.unidad,
+                estadosGen:[],
                 estados:Enumerable.from(result[0][0]).where(`$.id == "${resultado.id}" && $.total > 0`).select(function(serv){
                     return {
                         //nombre:Math.round(100 *(((serv.mayor5) - (serv.menor5)) / serv.total) * 100) / 100,
@@ -139,25 +141,34 @@ class Informe {
                         data:[
                             Math.round(100 * (((serv.igual6 + serv.igual7) * 100) / serv.total)) / 100,
                             Math.round(100 * ((serv.igual5 * 100) / serv.total)) / 100,
-                            Math.round(100 * (((serv.igual4 + serv.igual3 + serv.igual2 + serv.igual1 ) * 100) / serv.total)) / 100
+                            Math.round(100 * (((serv.igual4 + serv.igual3 + serv.igual2 + serv.igual1) * 100) / serv.total)) / 100
+                        ],
+                        dataGen:[
+                            (serv.igual6 + serv.igual7),
+                            serv.igual5,
+                            (serv.igual4 + serv.igual3 + serv.igual2 + serv.igual1),
+                            serv.total
                         ]
                     }
                 }).toArray()
             }
         }).toArray();
 
+        var mayor = 0; var menor = 0; var igual = 0; var total = 0;
         for(var i in clasificaciones){
             var estados = clasificaciones[i].estados;
-            var vmayor5 = [];
-            var vmenor5 = [];
-            var vtotal = [];
-            var vpregunta = [];
+            var vmayor5 = []; var vmenor5 = []; var vigual5 = []; var vpregunta = [];
 
             for(var e in estados){
                 vpregunta.push(estados[e].nombre);
                 vmayor5.push(estados[e].data[0]);
-                vmenor5.push(estados[e].data[1]);
-                vtotal.push(estados[e].data[2]);
+                vigual5.push(estados[e].data[1]);
+                vmenor5.push(estados[e].data[2]);
+
+                mayor+=estados[e].dataGen[0];
+                igual+=estados[e].dataGen[1];
+                menor+=estados[e].dataGen[2];
+                total+=estados[e].dataGen[3];
             }
 
             clasificaciones[i].estados = [];
@@ -169,15 +180,31 @@ class Informe {
             clasificaciones[i].estados.push({
                 preguntas:vpregunta,
                 nombre:"Nota 5",
-                data:vmenor5
+                data:vigual5
             });
             clasificaciones[i].estados.push({
                 preguntas:vpregunta,
                 nombre:"Insatisfecho: de 1 a 4",
-                data:vtotal
+                data:vmenor5
             });
 
-        }
+        }        
+
+        clasificaciones[0].estadosGen.push({
+            preguntas:[clasificaciones[0].unidad],
+            nombre:"Satisfecho: Nota 6 y 7",
+            data:[Math.round(100 * ((mayor * 100) / total)) / 100]
+        });
+        clasificaciones[0].estadosGen.push({
+            preguntas:[clasificaciones[0].unidad],
+            nombre:"Nota 5",
+            data:[Math.round(100 * ((igual * 100) / total)) / 100]
+        });
+        clasificaciones[0].estadosGen.push({
+            preguntas:[clasificaciones[0].unidad],
+            nombre:"Insatisfecho: de 1 a 4",
+            data:[Math.round(100 * ((menor * 100) / total)) / 100]
+        });
 
         return {mensaje:clasificaciones};
 
