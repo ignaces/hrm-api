@@ -67,7 +67,8 @@ class Informe {
             return {
                 tipo:resultado.tipo,
                 peso:resultado.peso,
-                totalTipo:0,
+                total:0,
+                unidad:resultado.unidad,
                 SNExXTipoEncuesta:0,
                 SNExXTipoEncuestaPonderado:0,    
                 servicios:Enumerable.from(result[0][0]).where(`$.tipo == "${resultado.tipo}"`).select(function(serv){
@@ -83,6 +84,7 @@ class Informe {
             }
         }).toArray();
 
+        var total = 0;
         for(var c in servicios){
             var tipo = servicios[c];
             var vSNExXTipoEncuesta = 0;
@@ -90,7 +92,7 @@ class Informe {
 
             for(var r in tipo.servicios){
                 var res = tipo.servicios[r];
-                vtotal = vtotal + res.total;
+                vtotal+= res.total;
             }
             for(var r in tipo.servicios){
                 var res = tipo.servicios[r];
@@ -98,7 +100,8 @@ class Informe {
                 vSNExXTipoEncuesta = vSNExXTipoEncuesta + (res.total/vtotal * res.SNExXEncuesta);
             }
 
-            servicios[c].totalTipo = vtotal;
+            total+=vtotal;
+            //servicios[c].totalTipo = vtotal;
             servicios[c].SNExXTipoEncuesta = Math.round((vSNExXTipoEncuesta) * 100) / 100;
             servicios[c].SNExXTipoEncuestaPonderado = Math.round((vSNExXTipoEncuesta/servicios[c].peso * 100) * 100) / 100;
         }
@@ -107,7 +110,9 @@ class Informe {
         var i=0;
         for(var c in servicios){
             var serv = servicios[c];
-            tPonderado = tPonderado +  serv.SNExXTipoEncuestaPonderado;
+            servicios[c].totalTipo = total;
+            //tPonderado+=  serv.SNExXTipoEncuestaPonderado;
+            tPonderado+=  serv.SNExXTipoEncuesta;
             i++;
         }
 
