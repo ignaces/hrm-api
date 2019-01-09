@@ -1385,6 +1385,25 @@ class Proceso {
         });
     }
 
+    async getRangoCompetencia({request,response}){
+        var idCompetenciaPerfil=request.input('idCompetenciaPerfil')
+       
+        const cliente =request.input('cliente') ;
+        const query =  `call ede_getRangoCompetencia('${idCompetenciaPerfil}')`;
+
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
     
 }
 module.exports=Proceso
