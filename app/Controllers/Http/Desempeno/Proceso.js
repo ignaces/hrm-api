@@ -1393,6 +1393,25 @@ class Proceso {
 
         
         const respuesta   = await data.execQuery(cliente,query);
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }    
+
+        
+    async getInformeAvanceCalibracion({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        const query       =  `call ede_InformeAvanceCalibracion('${idProceso}');`;
+        
+        const respuesta   =  await data.execQuery(cliente,query);
         
         response.json({
             "estado": {
@@ -1401,8 +1420,9 @@ class Proceso {
             },
             "paginacion": "",
             "data": respuesta[0][0]
+            
         });
-    }
+    }    
 
     
 }

@@ -400,20 +400,27 @@ class Instrumento {
                 instrumento.resultadoGlobal = {nivel:`${instrumento.resultadoCompetencias.nivel}${instrumento.resultadoMetas.nivel}`};
             }
 
-            //console.log(instrumento.resultadoCompetencias.promedio)
-            //console.log(instrumento.resultadoMetas.promedioResultado)
-            const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
-            console.log(queryResultadoFinal)
-            const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
-            console.log(resultadoFinal[0][0])
-            if(resultadoFinal[0][0]!=null)
-            {
-                var final = resultadoFinal[0][0];
-                final = final[0].nivel;
-                if(final != null)
-                {
-                    instrumento.resultadoGlobal = {nivel:` ${final}`};
+            console.log(instrumento.resultadoCompetencias.nivel)
+            console.log(instrumento.resultadoMetas.nivel)
+            try{
+                if(typeof instrumento.resultadoCompetencias.promedio != "undefined" || typeof instrumento.resultadoCompetencias.promedioResultado != "undefined" ){
+
+                    const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
+                    const resultadoFinal  = await data.execQuery(cliente,queryResultadoFinal);
+                    if(resultadoFinal[0][0]!=null)
+                    {
+                        var final = resultadoFinal[0][0];
+                        final = final[0].nivel;
+                        if(final != null)
+                        {
+                            instrumento.resultadoGlobal = {nivel:` ${final}`};
+                        }
+                    }
                 }
+            }
+            catch(e)
+            {
+
             }
             //console.log(final[0].nivel)
             //console.log(final)
@@ -440,7 +447,7 @@ class Instrumento {
             }
             
             const query =`call ede_getInstrumentoReporteCriterio('${idOpinante}')`;
-            console.log(query)
+            
             const rQuery   = await data.execQuery(cliente,query);
             
             const competencias = Enumerable.from(rQuery[0][0]).distinct("$.idCompetencia").select(function(competencia){
@@ -467,7 +474,7 @@ class Instrumento {
 
                 }
             });
-            //console.log("competencias")
+            
             try{
                 
                 instrumento = {
@@ -489,8 +496,9 @@ class Instrumento {
                 }
             }
             
-            //console.log("instrumento")
+            
             for(var competencia in instrumento.competencias){
+                
                 var idCompetencia = instrumento.competencias[competencia].id
                 
                 const actividadesClave = Enumerable.from(rQuery[0][0]).where(`$.idCompetencia == "${idCompetencia}"`).distinct("$.idActividadClave").select(function(ac){
@@ -501,15 +509,18 @@ class Instrumento {
                         orden:ac.actividadOrden
                     }
                 }).toArray()
-                instrumento.competencias[competencia].actividadesClave = actividadesClave
+
+                instrumento.competencias[competencia].actividadesClave = actividadesClave;
 
                 for(var actividadClave in actividadesClave){
+                    
                     var idActividadClave = actividadesClave[actividadClave].id
                     
                     const criterios = Enumerable.from(rQuery[0][0]).where(`$.idActividadClave == "${idActividadClave}"`).distinct("$.idCriterio").select(function(criterio){
                         return{
                             id:criterio.idCriterio,
                             nombre:criterio.criterio,
+                            valor:criterio.valor,
                             orden:criterio.criterioOrden
                         }
                     }).toArray()
@@ -605,8 +616,9 @@ class Instrumento {
                 instrumento.resultadoGlobal = {nivel:`${instrumento.resultadoCompetencias.nivel}${instrumento.resultadoMetas.nivel}`};
             }
 
-            //console.log(instrumento.resultadoCompetencias.promedio)
-            //console.log(instrumento.resultadoMetas.promedioResultado)
+            instrumento.resultadoCompetencias.promedio = parseFloat(instrumento.resultadoCompetencias.promedio).toFixed(2);
+            instrumento.resultadoMetas.promedioResultado = parseFloat(instrumento.resultadoMetas.promedioResultado).toFixed(2);
+
             if(typeof instrumento.resultadoCompetencias.promedio != "undefined" || typeof instrumento.resultadoCompetencias.promedioResultado != "undefined" ){
 
                 const queryResultadoFinal = `call ede_getResultadoGlobalPonderado('${idOpinante}', '${instrumento.resultadoCompetencias.promedio}', '${instrumento.resultadoMetas.promedioResultado}')`;
@@ -617,9 +629,16 @@ class Instrumento {
                 {
                     var final = resultadoFinal[0][0];
                     final = final[0].nivel;
+                    //console.log(final[0].resultadoTotal)
+
+                    var resultTotal = resultadoFinal[0][0];
+                    resultTotal = resultTotal[0].resultadoTotal;
+                    //console.log(resultTotal[0].resultadoTotal)
+
+
                     if(final != null)
                     {
-                        instrumento.resultadoGlobal = {nivel:` ${final}`};
+                        instrumento.resultadoGlobal = {nivel:` ${final}`, total:` ${resultTotal}`};
                     }
                 }
             }
@@ -755,6 +774,7 @@ class Instrumento {
         const cliente =request.input('cliente') ;
 
         const query =`call ede_getPromedioGeneral('${idOpinante}','${codigo}','${idProceso}')`;
+        console.log(query)
         try{
 
         const rQuery   = await data.execQuery(cliente,query);
@@ -827,6 +847,8 @@ class Instrumento {
                             cantCriteriosAuto++;
                             e.valorAuto = sumValoresAuto/cantCriteriosAuto;
                             e.nivelAuto = sumValoresAuto/cantCriteriosAuto;
+                            e.valorAuto = parseFloat(e.valorAuto).toFixed(2);
+                            e.nivelAuto = parseFloat(e.nivelAuto).toFixed(2);
                         }
     
                         if(e.id == c.id && c.valorSup != null){
@@ -835,7 +857,8 @@ class Instrumento {
                             cantCriteriosSup++;
                             e.valorSup = sumValoresSup/cantCriteriosSup;
                             e.nivelSup = sumValoresSup/cantCriteriosSup;
-
+                            e.valorSup = parseFloat(e.valorSup).toFixed(2);
+                            e.nivelSup = parseFloat(e.nivelSup).toFixed(2);    
                         }
                         
                         if(e.id == c.id && c.valorFunc != null){
@@ -844,7 +867,8 @@ class Instrumento {
                             cantCriteriosFunc++;
                             e.valorFunc = sumValoresFunc/cantCriteriosFunc;
                             e.nivelFunc = sumValoresFunc/cantCriteriosFunc;
-
+                            e.valorFunc = parseFloat(e.valorFunc).toFixed(2);
+                            e.nivelFunc = parseFloat(e.nivelFunc).toFixed(2);        
                         }
                     });
                     
