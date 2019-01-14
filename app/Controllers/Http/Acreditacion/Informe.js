@@ -291,26 +291,34 @@ class Informe {
                 {
                     var nombrePregunta = preguntas[pregunta].actividadClave
 
-                    const criterios = Enumerable.from(result[0][0]).where(`$.actividadClave == "${nombrePregunta}"`).where(`$.competencia == "${nombreCompetencia}" `).distinct("$.criterio").select(function(criterio){
-                        return{
-                            criterio:criterio.criterio,
-                            
-                        }
-                    }).toArray()
+                    const criterios = Enumerable.from(result[0][0])
+                                            .where(`$.actividadClave == "${nombrePregunta}"`)
+                                            .where(`$.competencia == "${nombreCompetencia}" `)
+                                            .distinct("$.criterio")
+                                            .select(function(criterio){
+                                                return{
+                                                    criterio:criterio.criterio,
+                                                    
+                                                }
+                                            }).toArray()
                     instrumentos[instrumento].competencias[competencia].preguntas[pregunta].criterios = criterios
 
                     for(var criterio in criterios)
                 {
                     var nombreCriterio = criterios[criterio].criterio
 
-                    const alternativas = Enumerable.from(result[0][0]).where(`$.criterio == "${nombreCriterio}"`).select(function(alternativa){
-                        return{
-                            nivel:alternativa.nivel,
-                            estaSeleccionada:alternativa.estaSeleccionado,
-                            justificacion:alternativa.justificacion
-                            
-                        }
-                    }).toArray()
+                    const alternativas = Enumerable.from(result[0][0])
+                                            .where(`$.criterio == "${nombreCriterio}"`)
+                                            .where(`$.actividadClave == "${nombrePregunta}"`)
+                                            .where(`$.competencia == "${nombreCompetencia}" `)
+                                            .select(function(alternativa){
+                                                return{
+                                                    nivel:alternativa.nivel,
+                                                    estaSeleccionada:alternativa.estaSeleccionado,
+                                                    justificacion:alternativa.justificacion
+                                                    
+                                                }
+                                            }).toArray()
                     instrumentos[instrumento].competencias[competencia].preguntas[pregunta].criterios[criterio].alternativas = alternativas
    
                 }
