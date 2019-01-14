@@ -26,6 +26,27 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
+
+    async getEncuestaFeedback({request,response}){
+       
+        var idProceso=request.input('idProceso');
+        var idPersona=request.input('idPersona');
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_getEncuestaFeedback('${idProceso}','${idPersona}')`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+        });
+    }
+
     async getFeedback({request,response}){
        
         var idOpinante=request.input('idOpinante');
@@ -50,16 +71,27 @@ class Persona {
         var idOpinante=request.input('idOpinante');
         var observacion=request.input('observacion');
         var ipresencial=request.input('presencial');
+        var idOpinado=request.input('idOpinado');
         var presencial=0;
         
         if(ipresencial=="true"){
             presencial=1;
+
+            //const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
+        
+            //const resp   = await data.execQuery(cliente,qEncuesta);
+
         }
         const cliente =request.input('cliente') ;
         const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}',${presencial})`;
         
         const respuesta   = await data.execQuery(cliente,query);
-        if(presencial==1){
+
+        const queryEmail =  `call feedback_enviarEmailFeedback()`;
+        const respEmail   = await data.execQuery(cliente,queryEmail);
+        
+        /* Validar envio de Email */
+        if(presencial==1 && respEmail[0][0][0].activo == '1'){
             var persona = respuesta[0][0][0];
             
             var cuerpo = `<h2>Estimado(a) ${persona.nombres} ${persona.apellidoPaterno} ${persona.apellidoMaterno}</h2><p>Tu jefe ha confirmado feedback presencial, para continuar con el proceso por favor haz click <a href="http://${cliente}.enovum.cl/confirmarFeedback?iop=${idOpinante}">aquí</a>.</p>`;
