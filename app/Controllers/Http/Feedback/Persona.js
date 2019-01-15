@@ -33,17 +33,32 @@ class Persona {
         var idPersona=request.input('idPersona');
         
         const cliente =request.input('cliente') ;
-        const query =  `call feedback_getEncuestaFeedback('${idProceso}','${idPersona}')`;
+        const query =  `call feedback_getInstrumento('${idPersona}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
-        
+
+        var registros = respuesta[0][0];
+
+        var encuesta = Enumerable.from(registros).distinct("$.IdPregruntaFacsimil").select(function (resultado) {
+            return {
+                IdPregruntaFacsimil:resultado.IdPregruntaFacsimil,
+                enunciado:resultado.enunciado,
+                alternativas: Enumerable.from(registros).where(`$.IdPregruntaFacsimil == "${resultado.IdPregruntaFacsimil}"`).select(function (alt) {
+                    return {
+                        idAlternativa:alt.idAlternativa,
+                        textoAlternativa:alt.textoAlternativa                        
+                    }
+                }).toArray()
+            }
+        }).toArray();
+
         response.json({
             "estado": {
                 "codigo": "OK",
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": encuesta
         });
     }
 
@@ -142,7 +157,7 @@ class Persona {
         
         const respuesta   = await data.execQuery(cliente,query);
 
-    const rCompetencias= respuesta[0][0];
+        const rCompetencias= respuesta[0][0];
         
         response.json({
             "estado": {
