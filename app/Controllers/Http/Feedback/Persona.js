@@ -62,6 +62,35 @@ class Persona {
         });
     }
 
+    async putRespuesta({request,response}){
+        var idPersona = request.input("idPersona");
+        var idPregunta = request.input("idPregunta");
+        var idAlternativa = request.input("idAlternativa");
+        var justificacion = request.input("justificacion");
+
+        const cliente = request.input('cliente') ;
+        if(idAlternativa==""){
+            idAlternativa="null";
+        }else{
+            idAlternativa =`'${idAlternativa}'`;
+        }
+        const query = `call evaluacion_putRespuesta('${idPregunta}',${idAlternativa}, '${justificacion}',1)`;
+        const result   = await data.execQuery(cliente,query);
+
+        const qEstado = `call feedback_setEstadoEncuesta('${idPersona}')`;
+        const rEstado   = await data.execQuery(cliente,qEstado);
+
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
+    }
+
     async getFeedback({request,response}){
        
         var idOpinante=request.input('idOpinante');
@@ -91,13 +120,13 @@ class Persona {
         
         if(ipresencial=="true"){
             presencial=1;
-
-            //const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
-        
-            //const resp   = await data.execQuery(cliente,qEncuesta);
-
         }
+
         const cliente =request.input('cliente') ;
+
+        const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
+        const resp   = await data.execQuery(cliente,qEncuesta);
+       
         const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}',${presencial})`;
         
         const respuesta   = await data.execQuery(cliente,query);
@@ -121,6 +150,11 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
+
+    async saveRespColaborador({request,response}){
+        var idOpinado=request.input('idOpinado');
+    }
+
     async saveConfirmacion({request,response}){
        
         var idOpinante=request.input('idOpinante');
