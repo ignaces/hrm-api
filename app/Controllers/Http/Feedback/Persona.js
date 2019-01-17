@@ -33,18 +33,62 @@ class Persona {
         var idPersona=request.input('idPersona');
         
         const cliente =request.input('cliente') ;
-        const query =  `call feedback_getEncuestaFeedback('${idProceso}','${idPersona}')`;
+        const query =  `call feedback_getInstrumento('${idPersona}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
-        
+
+        var registros = respuesta[0][0];
+
+        var encuesta = Enumerable.from(registros).distinct("$.IdPregruntaFacsimil").select(function (resultado) {
+            return {
+                IdPregruntaFacsimil:resultado.IdPregruntaFacsimil,
+                enunciado:resultado.enunciado,
+                alternativas: Enumerable.from(registros).where(`$.IdPregruntaFacsimil == "${resultado.IdPregruntaFacsimil}"`).select(function (alt) {
+                    return {
+                        idAlternativa:alt.idAlternativa,
+                        textoAlternativa:alt.textoAlternativa                        
+                    }
+                }).toArray()
+            }
+        }).toArray();
+
         response.json({
             "estado": {
                 "codigo": "OK",
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": respuesta[0][0]
+            "data": encuesta
         });
+    }
+
+    async putRespuesta({request,response}){
+        var idPersona = request.input("idPersona");
+        var idPregunta = request.input("idPregunta");
+        var idAlternativa = request.input("idAlternativa");
+        var justificacion = request.input("justificacion");
+
+        const cliente = request.input('cliente') ;
+        if(idAlternativa==""){
+            idAlternativa="null";
+        }else{
+            idAlternativa =`'${idAlternativa}'`;
+        }
+        const query = `call evaluacion_putRespuesta('${idPregunta}',${idAlternativa}, '${justificacion}',1)`;
+        const result   = await data.execQuery(cliente,query);
+
+        const qEstado = `call feedback_setEstadoEncuesta('${idPersona}')`;
+        const rEstado   = await data.execQuery(cliente,qEstado);
+
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
     }
 
     async getFeedback({request,response}){
@@ -76,13 +120,10 @@ class Persona {
         
         if(ipresencial=="true"){
             presencial=1;
-
-            //const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
-        
-            //const resp   = await data.execQuery(cliente,qEncuesta);
-
         }
+
         const cliente =request.input('cliente') ;
+
         const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}',${presencial})`;
         
         const respuesta   = await data.execQuery(cliente,query);
@@ -96,6 +137,10 @@ class Persona {
             
             var cuerpo = `<h2>Estimado(a) ${persona.nombres} ${persona.apellidoPaterno} ${persona.apellidoMaterno}</h2><p>Tu jefe ha confirmado feedback presencial, para continuar con el proceso por favor haz click <a href="http://${cliente}.enovum.cl/confirmarFeedback?iop=${idOpinante}">aquí</a>.</p>`;
             const email = await mailgun.sendEmail(persona.email,"Confirmación de Feedback",cuerpo,"gibraltar_feedback");
+        } 
+        if(respEmail[0][0][0].activo == '0') {
+            const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
+            const resp   = await data.execQuery(cliente,qEncuesta);       
         }
         response.json({
             "estado": {
@@ -106,6 +151,11 @@ class Persona {
             "data": respuesta[0][0]
         });
     }
+
+    async saveRespColaborador({request,response}){
+        var idOpinado=request.input('idOpinado');
+    }
+
     async saveConfirmacion({request,response}){
        
         var idOpinante=request.input('idOpinante');
@@ -142,7 +192,7 @@ class Persona {
         
         const respuesta   = await data.execQuery(cliente,query);
 
-    const rCompetencias= respuesta[0][0];
+        const rCompetencias= respuesta[0][0];
         
         response.json({
             "estado": {
