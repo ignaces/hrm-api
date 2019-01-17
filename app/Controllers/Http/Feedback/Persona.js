@@ -16,6 +16,26 @@ class Persona {
         const query =  `call feedback_getByIdOpinante('${idProceso}','${idPersona}')`;
         
         const respuesta   = await data.execQuery(cliente,query);
+
+        var lista = respuesta[0][0];
+
+        for(var list in lista){
+            var l = lista[list];
+
+            switch(l.checkOpinado) {
+                case 1:
+                    lista[list].checkOpinado = 'SI';
+                  break;
+                case 2:
+                    lista[list].checkOpinado = 'NO';
+                  break;
+                case 3:
+                    lista[list].checkOpinado = 'NO';
+                  break;
+                default:
+                    lista[list].checkOpinado = '-';
+              } 
+        }
         
         response.json({
             "estado": {
@@ -68,8 +88,6 @@ class Persona {
 
         const qEstado = `call feedback_setEstadoEncuesta('${idPersona}')`;
         const rEstado   = await data.execQuery(cliente,qEstado);
-
-        console.log(qEstado)
 
         const body = 
         {
