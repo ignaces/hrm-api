@@ -124,9 +124,6 @@ class Persona {
 
         const cliente =request.input('cliente') ;
 
-        const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
-        const resp   = await data.execQuery(cliente,qEncuesta);
-       
         const query =  `call feedback_saveFeedback('${idOpinante}','${observacion}',${presencial})`;
         
         const respuesta   = await data.execQuery(cliente,query);
@@ -140,6 +137,10 @@ class Persona {
             
             var cuerpo = `<h2>Estimado(a) ${persona.nombres} ${persona.apellidoPaterno} ${persona.apellidoMaterno}</h2><p>Tu jefe ha confirmado feedback presencial, para continuar con el proceso por favor haz click <a href="http://${cliente}.enovum.cl/confirmarFeedback?iop=${idOpinante}">aquí</a>.</p>`;
             const email = await mailgun.sendEmail(persona.email,"Confirmación de Feedback",cuerpo,"gibraltar_feedback");
+        } 
+        if(respEmail[0][0][0].activo == '0') {
+            const qEncuesta =  `call feedback_addPersonaEncuesta('${idOpinado}')`;
+            const resp   = await data.execQuery(cliente,qEncuesta);       
         }
         response.json({
             "estado": {
