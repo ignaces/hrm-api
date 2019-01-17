@@ -62,6 +62,27 @@ class Persona {
         });
     }
 
+    async setEstadoEncuesta({request,response}){
+        var idPersona = request.input("idPersona");
+        const cliente = request.input('cliente') ;
+
+        const qEstado = `call feedback_setEstadoEncuesta('${idPersona}')`;
+        const rEstado   = await data.execQuery(cliente,qEstado);
+
+        console.log(qEstado)
+
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
+
+    }
+
     async putRespuesta({request,response}){
         var idPersona = request.input("idPersona");
         var idPregunta = request.input("idPregunta");
@@ -76,9 +97,6 @@ class Persona {
         }
         const query = `call evaluacion_putRespuesta('${idPregunta}',${idAlternativa}, '${justificacion}',1)`;
         const result   = await data.execQuery(cliente,query);
-
-        const qEstado = `call feedback_setEstadoEncuesta('${idPersona}')`;
-        const rEstado   = await data.execQuery(cliente,qEstado);
 
         const body = 
         {
@@ -154,6 +172,23 @@ class Persona {
 
     async saveRespColaborador({request,response}){
         var idOpinado=request.input('idOpinado');
+        var estado =request.input('estado');
+
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_saveRespColaborador('${idOpinado}',${estado})`;
+        
+        const respuesta   = await data.execQuery(cliente,query);
+
+        const body = 
+        {
+          estado: {
+            codigo: "OK",
+            mensaje: ""
+          }
+          
+        }
+        response.json(body);
+
     }
 
     async saveConfirmacion({request,response}){
