@@ -248,7 +248,7 @@ class Persona {
 
         const rCompetencias= respuesta[0][0];
 
-        var qcomp =  `call feedback_calculoEvaluacionxMeta('${idEtapaTareaActor}')`;
+        var qcomp =  `call feedback_calculoEvaluacionxCompetencia('${idEtapaTareaActor}')`;
         var r = await data.execQuery(cliente,qcomp);
 
         var res = r[0][0];
@@ -274,6 +274,37 @@ class Persona {
             "data": rCompetencias
         });     
     }
+
+    async consultarAcciones({request,response}){
+       
+        var idPersona = request.input("idPersona");
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call feedback_consultarAcciones('${idPersona}')`;
+
+        const respuesta   = await data.execQuery(cliente,query);
+
+        const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
+            return {
+                id:acc.id,
+                accion:acc.accion,
+                objetivo:acc.objetivo,
+                idComptetencia:acc.idCompetencia,
+                competencia:acc.competencia,
+                plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
+            }
+        }).toArray();
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": rAcciones
+        });
+    }
+
     async getAcciones({request,response}){
        
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
