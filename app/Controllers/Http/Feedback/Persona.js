@@ -239,6 +239,7 @@ class Persona {
     }
     async getCompetenciasOpinante({request,response}){
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
+        var idEtapaTareaActor= request.input("idEtapaTareaActor");
         
         const cliente =request.input('cliente') ;
         const query =  `call pda_getCompetenciasOpinante('${idFeedbackOpinante}')`;
@@ -246,7 +247,24 @@ class Persona {
         const respuesta   = await data.execQuery(cliente,query);
 
         const rCompetencias= respuesta[0][0];
-        
+
+        var qcomp =  `call feedback_calculoEvaluacionxMeta('${idEtapaTareaActor}')`;
+        var r = await data.execQuery(cliente,qcomp);
+
+        var res = r[0][0];
+
+        for(var comp in rCompetencias){
+            var c = rCompetencias[comp];
+
+            for (var r in res){
+                var v = res[r];
+
+                if(c.id == v.idCompetencia){
+                    rCompetencias[comp].nombre = '(' + v.nivelSup + ') ' + rCompetencias[comp].nombre;
+                }
+            }
+        }
+
         response.json({
             "estado": {
                 "codigo": "OK",
