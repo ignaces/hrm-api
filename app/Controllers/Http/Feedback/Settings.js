@@ -10,11 +10,12 @@ class Settings {
     async getParametro({request,response}){
        
         const param =request.input('param') ;
+        const idEtapa =request.input('idEtapa') ;
         const cliente =request.input('cliente') ;
         var where ="";
         
         if(param!=null && param!=""){
-            where = `where codigo='${param}'`;
+            where = `where codigo='${param}' and idEtapa='${idEtapa}'`;
         }
         const query =  `select codigo,nombre,valor from FeedbackParametros ${where} ;`;
         
