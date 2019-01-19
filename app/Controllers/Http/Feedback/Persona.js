@@ -278,13 +278,14 @@ class Persona {
     async consultarAcciones({request,response}){
        
         var idPersona = request.input("idPersona");
+        var idProceso = request.input("idProceso");
         
         const cliente =request.input('cliente') ;
-        const query =  `call feedback_consultarAcciones('${idPersona}')`;
+        const query =  `call feedback_consultarAcciones('${idPersona}','${idProceso}')`;
 
         const respuesta   = await data.execQuery(cliente,query);
 
-        const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
+        /*const rAcciones = Enumerable.from(respuesta[0][0]).distinct("$.id").select(function (acc) {
             return {
                 id:acc.id,
                 accion:acc.accion,
@@ -293,7 +294,7 @@ class Persona {
                 competencia:acc.competencia,
                 plazo:dateformat(acc.plazo, 'dd-mm-yyyy')
             }
-        }).toArray();
+        }).toArray();*/
         
         response.json({
             "estado": {
@@ -301,7 +302,7 @@ class Persona {
                 "mensaje": ""
             },
             "paginacion": "",
-            "data": rAcciones
+            "data": respuesta[0][0]
         });
     }
 
