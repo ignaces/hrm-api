@@ -259,7 +259,7 @@ class Persona {
             for (var r in res){
                 var v = res[r];
 
-                if(c.id == v.idCompetencia){
+                if(c.id.split('_')[0] == v.idCompetencia.split('_')[0]){
                     rCompetencias[comp].nombre = '(' + v.nivelSup + ') ' + rCompetencias[comp].nombre;
                 }
             }
