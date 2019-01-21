@@ -240,6 +240,7 @@ class Persona {
     async getCompetenciasOpinante({request,response}){
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
         var idEtapaTareaActor= request.input("idEtapaTareaActor");
+        var param= request.input("param");
         
         const cliente =request.input('cliente') ;
         const query =  `call pda_getCompetenciasOpinante('${idFeedbackOpinante}')`;
@@ -253,14 +254,16 @@ class Persona {
 
         var res = r[0][0];
 
-        for(var comp in rCompetencias){
-            var c = rCompetencias[comp];
+        if (param == '1') {
+            for(var comp in rCompetencias){
+                var c = rCompetencias[comp];
 
-            for (var r in res){
-                var v = res[r];
+                for (var r in res){
+                    var v = res[r];
 
-                if(c.id.split('_')[0] == v.idCompetencia.split('_')[0]){
-                    rCompetencias[comp].nombre = '(' + v.nivelSup + ') ' + rCompetencias[comp].nombre;
+                    if(c.id.split('_')[0] == v.idCompetencia.split('_')[0]){
+                        rCompetencias[comp].nombre = '(' + v.nivelSup + ') ' + rCompetencias[comp].nombre;
+                    }
                 }
             }
         }
