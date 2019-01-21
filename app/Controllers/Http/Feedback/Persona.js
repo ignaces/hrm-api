@@ -24,13 +24,13 @@ class Persona {
 
             switch(l.checkOpinado) {
                 case 1:
-                    lista[list].checkOpinado = 'SI';
+                    lista[list].checkOpinado = 'Si';
                   break;
                 case 2:
-                    lista[list].checkOpinado = 'NO';
+                    lista[list].checkOpinado = 'No';
                   break;
                 case 3:
-                    lista[list].checkOpinado = 'NO';
+                    lista[list].checkOpinado = 'No';
                   break;
                 default:
                     lista[list].checkOpinado = '-';
