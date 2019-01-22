@@ -13,12 +13,13 @@ class Persona {
         var idPersona=request.input('idPersona');
         
         const cliente =request.input('cliente') ;
+
         const query =  `call feedback_getByIdOpinante('${idProceso}','${idPersona}')`;
-        
+                
         const respuesta   = await data.execQuery(cliente,query);
 
         var lista = respuesta[0][0];
-
+        
         for(var list in lista){
             var l = lista[list];
 
