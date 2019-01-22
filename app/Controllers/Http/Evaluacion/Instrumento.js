@@ -218,6 +218,8 @@ class Instrumento {
     async getInstrumentoEde({request,response}){
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
+        var idPersona = request.input("idPersona");
+        var idProceso = request.input("idProceso");
         var instrumento = [];
         const cliente =request.input('cliente') ;
         
@@ -227,7 +229,7 @@ class Instrumento {
             const observacion    = respuestaObs[0][0];
             
             //console.log(queryObs);
-            const queryResultados = `call ede_getResultadoGlobal('${idOpinante}')`;
+            const queryResultados = `call ede_getResultadoGlobal('${idPersona}','${idProceso}')`;
             const resultadosCalibracion   = await data.execQuery(cliente,queryResultados);
             var resultadoCalibracion = "No Disponible";
             if(resultadosCalibracion[0][0][0]!=null){
@@ -430,6 +432,8 @@ class Instrumento {
     async getInstrumentoEdeReporteCriterio({request,response}){
         var id = request.input("hostname");
         var idOpinante = request.input("idOpinante");
+        var idPersona = request.input("idPersona");
+        var idProceso = request.input("idProceso");
         var instrumento = [];
         const cliente =request.input('cliente') ;
         
@@ -439,7 +443,7 @@ class Instrumento {
             const observacion    = respuestaObs[0][0];
             
             //console.log(queryObs);
-            const queryResultados = `call ede_getResultadoGlobal('${idOpinante}')`;
+            const queryResultados = `call ede_getResultadoGlobal('${idPersona}','${idProceso}')`;
             const resultadosCalibracion   = await data.execQuery(cliente,queryResultados);
             var resultadoCalibracion = "No Disponible";
             if(resultadosCalibracion[0][0][0]!=null){

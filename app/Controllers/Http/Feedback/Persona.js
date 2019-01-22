@@ -25,13 +25,13 @@ class Persona {
 
             switch(l.checkOpinado) {
                 case 1:
-                    lista[list].checkOpinado = 'SI';
+                    lista[list].checkOpinado = 'Si';
                   break;
                 case 2:
-                    lista[list].checkOpinado = 'NO';
+                    lista[list].checkOpinado = 'No';
                   break;
                 case 3:
-                    lista[list].checkOpinado = 'NO';
+                    lista[list].checkOpinado = 'No';
                   break;
                 default:
                     lista[list].checkOpinado = '-';
@@ -241,6 +241,7 @@ class Persona {
     async getCompetenciasOpinante({request,response}){
         var idFeedbackOpinante = request.input("idFeedbackOpinante");
         var idEtapaTareaActor= request.input("idEtapaTareaActor");
+        var param= request.input("param");
         
         const cliente =request.input('cliente') ;
         const query =  `call pda_getCompetenciasOpinante('${idFeedbackOpinante}')`;
@@ -254,14 +255,16 @@ class Persona {
 
         var res = r[0][0];
 
-        for(var comp in rCompetencias){
-            var c = rCompetencias[comp];
+        if (param == '1') {
+            for(var comp in rCompetencias){
+                var c = rCompetencias[comp];
 
-            for (var r in res){
-                var v = res[r];
+                for (var r in res){
+                    var v = res[r];
 
-                if(c.id.split('_')[0] == v.idCompetencia.split('_')[0]){
-                    rCompetencias[comp].nombre = '(' + v.nivelSup + ') ' + rCompetencias[comp].nombre;
+                    if(c.id.split('_')[0] == v.idCompetencia.split('_')[0]){
+                        rCompetencias[comp].nombre = '(' + v.nivelSup + ') ' + rCompetencias[comp].nombre;
+                    }
                 }
             }
         }
