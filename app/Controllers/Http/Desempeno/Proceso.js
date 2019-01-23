@@ -1231,9 +1231,10 @@ class Proceso {
         const cliente   =   request.input('cliente');
         var idProceso   =   request.input('idProceso');
         var idPersona   =   request.input('idPersona');
+        var idEtapa     =   request.input('idEtapa');
         var tipo        =   request.input('tipo');
 
-        const query       =  `call pers_getReporteAvanceEde('${idProceso}','${idPersona}','${tipo}');`;
+        const query       =  `call pers_getReporteAvanceEdeEtapa('${idProceso}', '${idEtapa}', '${idPersona}','${tipo}');`;
         console.log(query);
         const respuesta   =  await data.execQuery(cliente,query);
         
@@ -1422,8 +1423,46 @@ class Proceso {
             "data": respuesta[0][0]
             
         });
-    }    
-
+    }
     
+    async getEtapasProcesos({request,response}){
+       
+        const cliente   =   request.input('cliente');
+
+        const query       =  `call pers_admGetEtapas();`;
+        
+        const respuesta   =  await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }
+
+    async getDatosProcesoEtapa({request,response}){
+       
+        const cliente   =   request.input('cliente');
+        var idProceso   =   request.input('idProceso');
+        var idEtapa   =   request.input('idEtapa');
+        
+        const query       =  `call pers_admGetDatosProcesoEtapa('${idProceso}','${idEtapa}');`;
+        
+        const respuesta   =  await data.execQuery(cliente,query);
+        
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            },
+            "paginacion": "",
+            "data": respuesta[0][0]
+            
+        });
+    }    
 }
 module.exports=Proceso
