@@ -157,7 +157,7 @@ class Aplicacion {
         const cliente =request.input('cliente') ;
         
         const query = `call engagement_getResultadosPeriodo('${idProceso}')`;
-        console.log(query)
+        
         const result   = await data.execQuery(cliente,query);
         var cabeceras =Object.keys(result[0][0][0]);
         var keyClasificaciones = [];
@@ -176,8 +176,9 @@ class Aplicacion {
                 fechaNacimiento:persona.fechaNacimiento,
                 fechaIngreso:persona.fechaIngreso,
                 perfil:persona.perfil,
-                cargo:persona.cargo
-                
+                cargo:persona.cargo,
+                genero:persona.genero,
+                tipoContrato:persona.tipoContrato
             }
             
             for(var i in keyClasificaciones){
