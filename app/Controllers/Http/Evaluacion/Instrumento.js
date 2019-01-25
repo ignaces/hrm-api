@@ -877,6 +877,41 @@ class Instrumento {
                     });
                     
                 });
+
+                const qRango =`call ede_getNivelRangos('${idOpinante}')`;
+                const rR = await data.execQuery(cliente,qRango);
+
+                const rRango = Enumerable.from(rR[0][0]).select(function(c){
+                    return{
+                        inferior: c.inferior*1,
+                        superior: c.superior*1,
+                        nivel: c.nivel,
+                    }
+                }).toArray();
+                
+                competencias.forEach(e => {
+                    rRango.forEach(r=>{
+
+                        if(r.inferior <= e.nivelAuto && e.nivelAuto <= r.superior){
+                            e.nivelAuto = r.nivel;
+                        };
+                        if(r.inferior <= e.nivelSup && e.nivelSup <= r.superior){
+                            e.nivelSup = r.nivel;
+                        };
+                        if(r.inferior <= e.nivelFunc && e.nivelFunc <= r.superior){
+                            e.nivelFunc = r.nivel;
+                        };
+                        if(r.inferior <= e.valorAuto && e.valorAuto <= r.superior){
+                            e.valorAuto = r.nivel;
+                        };
+                        if(r.inferior <= e.valorSup && r.superior <= e.valorSup){
+                            e.valorSup = r.nivel;
+                        };
+                        if(r.inferior <= e.valorFunc && r.superior <= e.valorFunc){
+                            e.valorFunc = r.nivel;
+                        };
+                    });
+                });
     
                 Logger.debug(`linea:558,mensaje:OK`);
 
