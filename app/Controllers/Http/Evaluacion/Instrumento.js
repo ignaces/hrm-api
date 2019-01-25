@@ -901,7 +901,7 @@ class Instrumento {
                         if(r.inferior <= e.nivelFunc && e.nivelFunc <= r.superior){
                             e.nivelFunc = r.nivel;
                         };
-                        if(r.inferior <= e.valorAuto && e.valorAuto <= r.superior){
+                        /*if(r.inferior <= e.valorAuto && e.valorAuto <= r.superior){
                             e.valorAuto = r.nivel;
                         };
                         if(r.inferior <= e.valorSup && r.superior <= e.valorSup){
@@ -909,7 +909,7 @@ class Instrumento {
                         };
                         if(r.inferior <= e.valorFunc && r.superior <= e.valorFunc){
                             e.valorFunc = r.nivel;
-                        };
+                        };*/
                     });
                 });
     
