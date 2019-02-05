@@ -25,6 +25,9 @@ class Ficha {
                 codigoIdioma:per.codigoIdioma,
                 idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${per.idPersona}"`).select(function (i) {
                     return {
+                        idIdiomaPerfil:i.idIdiomaPerfil,
+                        idIdioma:i.idIdioma,
+                        idNivel:i.idNivel,
                         nombre:i.idioma,
                         banderaIdioma:i.banderaIdioma,
                         nivelIdioma:i.nivelIdioma
@@ -34,7 +37,21 @@ class Ficha {
                 nombreNacionalidad:per.nombreNacionalidad,
                 iconoPais:per.iconoPais,
                 fechaNacimiento:per.fechaNacimiento,
-                cargo:per.cargo
+                cargo:per.cargo,
+                lisIdiomas:Enumerable.from(result[0][1]).distinct("$.id").select(function (idi) {
+                    return {
+                        id:idi.id,
+                        codigo:idi.codigo,
+                        nombre:idi.nombre
+                    }
+                }).toArray(),
+                listNiveles:Enumerable.from(result[0][2]).distinct("$.id").select(function (niv) {
+                    return {
+                        id:niv.id,
+                        codigo:niv.codigo,
+                        nombre:niv.nombre
+                    }
+                }).toArray()
             }
         }).toArray();
 
@@ -88,33 +105,47 @@ class Ficha {
         const query =  `call pers_updateCvPersona('${idPersona}','${idCv}','${titulo}','${desde}','${hasta}','${descripcion}','${ente}')`;
         const result = await data.execQuery(cliente, query);
 
-        var curriculum = Enumerable.from(result[0][1]).distinct("$.codigo").select(function (cv) {
-            return {
-                id:cv.id,
-                codigo:cv.codigo,
-                tipo:cv.tipo,
-                //idPersona:cv.idPersona,
-                registros:Enumerable.from(result[0][0]).where(`$.codigo == "${cv.codigo}"`).select(function (reg) {
-                    return {
-                        id:reg.id,
-                        codigo:cv.codigo,
-                        titulo:reg.titulo,
-                        desde:reg.desde,
-                        hasta:reg.hasta,
-                        descripcion:reg.descripcion,
-                        ente:reg.bajada
-                    }
-                }).toArray()
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
             }
-        }).toArray();
+        });
+    }
+
+    async updateIdioma ({request,response}){
+        var objIdioma = request.input("objIdioma");
+        var idIdiomaPerfil = objIdioma.idIdiomaPerfil;
+        var idIdioma = objIdioma.idIdioma;
+        var idNivel = objIdioma.idNivel;
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call pers_updateIdiomaPersona('${idIdiomaPerfil}','${idIdioma}','${idNivel}')`;
+        const result = await data.execQuery(cliente, query);
 
         response.json({
             "estado": {
                 "codigo": "OK",
                 "mensaje": ""
-            },
-            "paginacion": "",
-            "data": curriculum
+            }
+        });
+    }
+
+    async addIdioma ({request,response}){
+        var objIdioma = request.input("objIdioma");
+        var idPersona = request.input("idPersona");
+        var idIdioma = objIdioma.idIdioma;
+        var idNivel = objIdioma.idNivel;
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call pers_addIdiomaPersona('${idPersona}','${idIdioma}','${idNivel}')`;
+        const result = await data.execQuery(cliente, query);
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            }
         });
     }
 
@@ -122,7 +153,6 @@ class Ficha {
        
         var objCv = request.input("objCv");
         var idPersona = request.input("idPersona");
-        var idCv = objCv.id;
         var titulo = objCv.titulo;
         var codigo = objCv.codigo;
         var desde = objCv.desde;
@@ -131,76 +161,47 @@ class Ficha {
         var ente = objCv.ente;
         
         const cliente =request.input('cliente') ;
-        const query =  `call pers_addCvPersona('${idPersona}','${idCv}','${titulo}','${desde}','${hasta}','${descripcion}','${ente}','${codigo}')`;
+        const query =  `call pers_addCvPersona('${idPersona}','${titulo}','${desde}','${hasta}','${descripcion}','${ente}','${codigo}')`;
         const result = await data.execQuery(cliente, query);
-
-        var curriculum = Enumerable.from(result[0][1]).distinct("$.codigo").select(function (cv) {
-            return {
-                id:cv.id,
-                codigo:cv.codigo,
-                tipo:cv.tipo,
-                //idPersona:cv.idPersona,
-                registros:Enumerable.from(result[0][0]).where(`$.codigo == "${cv.codigo}"`).select(function (reg) {
-                    return {
-                        id:reg.id,
-                        codigo:cv.codigo,
-                        titulo:reg.titulo,
-                        desde:reg.desde,
-                        hasta:reg.hasta,
-                        descripcion:reg.descripcion,
-                        ente:reg.bajada
-                    }
-                }).toArray()
-            }
-        }).toArray();
 
         response.json({
             "estado": {
                 "codigo": "OK",
                 "mensaje": ""
-            },
-            "paginacion": "",
-            "data": curriculum
+            }
+        });
+    }
+
+    async deleteIdioma ({request,response}){
+        var objIdioma = request.input("objIdioma");
+        var idIdiomaPerfil = objIdioma.idIdiomaPerfil;
+        
+        const cliente =request.input('cliente') ;
+        const query =  `call pers_deleteIdiomaPersona('${idIdiomaPerfil}')`;
+        const result = await data.execQuery(cliente, query);
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            }
         });
     }
 
     async deleteCv ({request,response}){
        
         var objCv = request.input("objCv");
-        var idPersona = request.input("idPersona");
         var idCv = objCv.id;
         
         const cliente =request.input('cliente') ;
-        const query =  `call pers_deleteCvPersona('${idPersona}','${idCv}')`;
+        const query =  `call pers_deleteCvPersona('${idCv}')`;
         const result = await data.execQuery(cliente, query);
-
-        var curriculum = Enumerable.from(result[0][1]).distinct("$.codigo").select(function (cv) {
-            return {
-                id:cv.id,
-                codigo:cv.codigo,
-                tipo:cv.tipo,
-                //idPersona:cv.idPersona,
-                registros:Enumerable.from(result[0][0]).where(`$.codigo == "${cv.codigo}"`).select(function (reg) {
-                    return {
-                        id:reg.id,
-                        codigo:cv.codigo,
-                        titulo:reg.titulo,
-                        desde:reg.desde,
-                        hasta:reg.hasta,
-                        descripcion:reg.descripcion,
-                        ente:reg.bajada
-                    }
-                }).toArray()
-            }
-        }).toArray();
 
         response.json({
             "estado": {
                 "codigo": "OK",
                 "mensaje": ""
-            },
-            "paginacion": "",
-            "data": curriculum
+            }
         });
     }
 
