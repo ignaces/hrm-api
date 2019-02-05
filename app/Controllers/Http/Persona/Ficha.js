@@ -20,6 +20,7 @@ class Ficha {
                 nombres:per.nombres,
                 apellidoPaterno:per.apellidoPaterno,
                 apellidoMaterno:per.apellidoMaterno,
+                telefono:per.telefono,
                 email:per.email,
                 imageUser:per.imageUser,
                 codigoIdioma:per.codigoIdioma,
@@ -88,6 +89,35 @@ class Ficha {
         }).toArray();
 
         response.json(curriculum);
+    }
+
+    async getEquipoPersona({request,response}) {
+        var idPersona = request.input('idPersona');
+        const cliente = request.input('cliente');
+
+        const query = `call pers_getEquipoPersona('${idPersona}')`;
+        const result = await data.execQuery(cliente, query);
+
+        response.json(result[0][0]);
+    }
+
+    async editInfo({request,response}) {
+        var inf = request.input('inf');
+        var idPersona = inf.id;
+        var telefono = inf.telefono
+        var email = inf.email;
+
+        const cliente = request.input('cliente');
+        const query =  `call pers_editInfoPersona('${idPersona}','${telefono}','${email}')`;
+        const result = await data.execQuery(cliente, query);
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            }
+        });
+
     }
 
     async updateCv ({request,response}){
