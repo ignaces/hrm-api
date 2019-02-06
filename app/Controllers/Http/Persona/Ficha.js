@@ -24,7 +24,7 @@ class Ficha {
                 email:per.email,
                 imageUser:per.imageUser,
                 codigoIdioma:per.codigoIdioma,
-                idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${per.idPersona}"`).select(function (i) {
+                idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${per.idPersona}" && $.idIdiomaPerfil != null`).select(function (i) {
                     return {
                         idIdiomaPerfil:i.idIdiomaPerfil,
                         idIdioma:i.idIdioma,
