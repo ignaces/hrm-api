@@ -113,7 +113,9 @@ class Informe {
             servicios[c].totalTipo = total;
             tPonderado+=  serv.SNExXTipoEncuestaPonderado;
             //tPonderado+=  serv.SNExXTipoEncuesta;
-            i++;
+            for(var d in serv.servicios){
+                i++;
+            }
         }
 
         var serv = {
