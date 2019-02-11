@@ -23,6 +23,7 @@ class Ficha {
                 telefono:per.telefono,
                 email:per.email,
                 imageUser:per.imageUser,
+                background_img:per.background_img,
                 codigoIdioma:per.codigoIdioma,
                 idiomas:Enumerable.from(result[0][0]).where(`$.idPersona == "${per.idPersona}" && $.idIdiomaPerfil != null`).select(function (i) {
                     return {
@@ -99,6 +100,22 @@ class Ficha {
         const result = await data.execQuery(cliente, query);
 
         response.json(result[0][0]);
+    }
+
+    async editBackgroundImg({request,response}) {
+        var idPersona = request.input('idPersona');
+        var url = request.input('url');
+        const cliente = request.input('cliente');
+
+        const query = `call pers_editBackgroundImg('${idPersona}','${url}')`;
+        const result = await data.execQuery(cliente, query);
+
+        response.json({
+            "estado": {
+                "codigo": "OK",
+                "mensaje": ""
+            }
+        });
     }
 
     async editInfo({request,response}) {
