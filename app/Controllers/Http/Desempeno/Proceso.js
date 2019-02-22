@@ -372,7 +372,7 @@ class Proceso {
                 cuentaAngulos:0,
                 angulos:Enumerable.from(registros).distinct("$.Angulo").select(function(angulo){
                     return {
-                        codigo:evaluacion.codigo,
+                        codigo:angulo.codigo,
                         tipo:angulo.Angulo,
                         feedback:[]
                     }
