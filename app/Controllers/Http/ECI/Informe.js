@@ -208,10 +208,11 @@ class Informe {
             var en = Enumerable.from(servicios).where(`$.posPadre == "${s.pos}"`).select(function(res){
                 /*if(res.SNExXEncuesta > 0){*/
                     if(res.total == 0) {
-                        res.SNExXEncuesta = 0
+                        count++; 
+                    }else {
+                        sum+=res.SNExXEncuesta;
+                        count++; 
                     }
-                    sum+=res.SNExXEncuesta;
-                    count++; 
                 /*}*/                
                 return {
                     SNExXEncuesta:res.SNExXEncuesta
