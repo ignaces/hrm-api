@@ -367,12 +367,12 @@ class Proceso {
         var evaluaciones = Enumerable.from(registros).distinct("$.dimension").select(function(evaluacion){
             return {
                 idEvaluado:evaluacion.idEvaluado,
-                codigo:evaluacion.codigo,
                 conducta:evaluacion.dimensionNombre,
                 codconducta:evaluacion.dimension,
                 cuentaAngulos:0,
                 angulos:Enumerable.from(registros).distinct("$.Angulo").select(function(angulo){
                     return {
+                        codigo:evaluacion.codigo,
                         tipo:angulo.Angulo,
                         feedback:[]
                     }
