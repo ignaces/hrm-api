@@ -103,7 +103,7 @@ class Informe {
             total+=vtotal;
             //servicios[c].totalTipo = vtotal;
             servicios[c].SNExXTipoEncuesta = Math.round((vSNExXTipoEncuesta) * 100) / 100;
-            servicios[c].SNExXTipoEncuestaPonderado = Math.round((vSNExXTipoEncuesta/servicios[c].peso * 100) * 100) / 100;
+            servicios[c].SNExXTipoEncuestaPonderado = Math.round((vSNExXTipoEncuesta) * 100) / 100;
         }
 
         var tPonderado =0;
@@ -113,16 +113,122 @@ class Informe {
             servicios[c].totalTipo = total;
             tPonderado+=  serv.SNExXTipoEncuestaPonderado;
             //tPonderado+=  serv.SNExXTipoEncuesta;
-            i++;
+            for(var d in serv.servicios){
+                i++;
+            }
         }
 
         var serv = {
-            SNExPorUnidad:Math.round((tPonderado/i)* 100) / 100,
+            SNExPorUnidad:Math.round((tPonderado)* 100) / 100,
             servicios:servicios
         };
 
         return {data:serv};
 
+    }
+
+    async getComentariosyAdicionalesXCenco({request,response}) {
+        const idEciProcesoCenco = request.input('idEciProcesoCenco');
+
+        const query =`call eci_getComentariosyAdicionalesXCenco('')`;
+        const cliente =request.input('cliente');
+
+        const result = await data.execQuery(cliente,query);
+
+        var com = Enumerable.from(result[0][0]).distinct("$.Grupo").select(function (resultado) {
+            return {
+                Grupo:resultado.Grupo,
+                listServ:Enumerable.from(result[0][0]).where(`$.Grupo == "${resultado.Grupo}"`).distinct("$.servicio").select(function(res){
+                    return {
+                        servicio:res.servicio,
+                        list:Enumerable.from(result[0][0]).where(`$.servicio == "${res.servicio}" && $.Grupo == "${res.Grupo}"`).select(function(list){
+                            return {
+                                valor:list.valor
+                            }
+                        }).toArray()
+                    }
+                }).toArray()
+            }
+        }).toArray();
+
+        return {data:com};
+    }
+
+    async getListadoServiciosGeneral({request,response}) {
+        const idEciProcesoCenco = request.input('idEciProcesoCenco');
+
+        const query =`call eci_getCencoJerarquia('')`;
+        const cliente =request.input('cliente');
+
+        const result = await data.execQuery(cliente,query);
+
+        var json = [];
+
+        for(var i in result[0][0]){
+            var a = result[0][0][i]
+            json.push(a.codigo)
+        }
+
+        const queryJson =`call eci_getValoresArbol('${JSON.stringify(json)}')`;
+        const resultJson = await data.execQuery(cliente,queryJson);
+
+        var servicios = Enumerable.from(resultJson[0][0]).select(function (resultado) {
+            return {
+                pos:resultado.pos,
+                posPadre:resultado.posPadre,
+                codigo:resultado.codigo,
+                nivel:resultado.nivel,
+                nombre:resultado.Nombre,                            
+                mayor5:resultado.mayor5,
+                menor5:resultado.menor5,
+                total:resultado.total,
+                SNExXHijos:0,
+                SNExXEncuesta:Math.round(100 *((resultado.mayor5 - resultado.menor5)/resultado.total) * 100) / 100,
+                listHijos:Enumerable.from(resultJson[0][0]).where(`$.posPadre == "${resultado.pos}"`).select(function(res){
+                    return {
+                        SNExXEncuesta:Math.round(100 *((res.mayor5 - res.menor5)/res.total) * 100) / 100
+                    }
+                }).toArray()
+            }
+        }).toArray();
+
+        servicios.reverse();
+        for(var serv in servicios){
+            var s = servicios[serv];
+            var count = 0;
+            var sum = 0;
+
+            /*for(var h in s.listHijos){
+                if (s.listHijos[h].SNExXEncuesta > 0){
+                    sum+=s.listHijos[h].SNExXEncuesta;
+                    count++;                 
+                }
+            }*/
+
+            var en = Enumerable.from(servicios).where(`$.posPadre == "${s.pos}"`).select(function(res){
+                if(res.total > 0 || res.SNExXEncuesta > 0){
+                    sum+=res.SNExXEncuesta;
+                    count++; 
+                }                
+                return {
+                    SNExXEncuesta:res.SNExXEncuesta
+                }
+            }).toArray();
+
+            if (count > 0){
+                if (servicios[serv].SNExXEncuesta > 0){
+                    sum+=servicios[serv].SNExXEncuesta;
+                    count++;
+                }
+                if ((Math.round((sum/count)* 100) / 100) > 0){
+                    servicios[serv].SNExXEncuesta = Math.round((sum/count)* 100) / 100;
+                }
+                servicios[serv].SNExXHijos = Math.round((sum/count)* 100) / 100;
+            }
+        }
+        servicios.reverse();
+
+        return {data:servicios};
     }
 
     async getEncuestasServiciosGraf({request,response}) {
