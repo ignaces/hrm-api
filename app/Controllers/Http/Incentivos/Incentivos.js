@@ -352,8 +352,164 @@ class Incentivos {
       response.json(1);
     }
 
-    
-    
+
+    async getProductos2_CG({request,response}){
+
+      const offset = request.input("offset") ? request.input("offset") : 0;
+      const limit = request.input("limit") ? request.input("limit") : 1000;
+      const query = `call GetProductos('dt_cre',${offset},${limit})`;
+
+      const usp   = await data.execQueryMaster(query) ;
+      //response.json(1);
+      try
+      {
+        response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        response.json(e);
+      }
+
+    }
+
+
+    async getProductos_CG({request,response}){
+
+      const idProducto = request.input("idProducto") ? request.input("idProducto") : '';
+
+      const query = `call consulta_producto('${idProducto}')`;
+
+      const usp   = await data.execQueryMaster(query) ;
+      //response.json(1);
+      try
+      {
+        response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        response.json(1);
+      }
+
+    }
+
+    async getAttrProductos_CG({request,response}){
+
+      const idProducto = request.input("idProducto") ? request.input("idProducto") : '';
+
+      const query = `call busca_producto('${idProducto}');`;
+
+      const usp   = await data.execQueryMaster(query) ;
+      //response.json(1);
+      try
+      {
+        return response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        return response.json(1);
+      }
+
+    }
+
+     async getParams_CG({request,response}){
+
+      const param = request.input("param") ? request.input("param") : '';
+      const query = (param == "MAR") ? `call getMarca()` : `call consulta('''${param}''')`;
+
+      const usp   = await data.execQueryMaster(query) ;
+      //response.json(1);
+      try
+      {
+        return response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        return response.json(1);
+      }
+
+    }
+
+     async addProduct_CG({request,response}){
+
+      const nombre = request.input('product-name');
+      const codigo = request.input('product-code');
+      const precio = request.input('product-price');
+      const marca = request.input('product-brand');
+      const familia = request.input('product-fam');
+      const envase = request.input('product-env');
+      const rubro = request.input('product-rub');
+      const variedad = request.input('product-var');
+
+      const query = `call insertproducto('${nombre}', null, '${codigo}', '${precio}', '${marca}', '${familia}', '${envase}', '${rubro}', '${variedad}')`;
+
+      const usp   = await data.execQueryMaster(query) ;
+      //response.json(1);
+      try
+      {
+        return response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        return response.json(1);
+      }
+
+    }
+
+
+    async getMetas_CG({request,response}){
+
+      const offset = request.input("offset") ? request.input("offset") : 0;
+      const limit = request.input("limit") ? request.input("limit") : 1000;
+      const query = `call GetMetas('dt_cre',${offset},${limit})`;
+
+      const usp   = await data.execQueryMaster(query) ;
+      //response.json(1);
+      try
+      {
+        response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        response.json(e);
+      }
+
+    }
+
+
+     async getMetasAttr_CG({request,response}){
+
+      const param =  request.input("param");
+      var qs = '';
+
+      switch (param) {
+        case "PER":
+          qs = "PvPeriodo";
+          break;
+        case "TAB":
+          qs = "PvTipoTabla";
+          break;
+        case "TIP":
+          qs = "PvTipoMeta";
+          break;
+        default:
+          return response.json(1);
+      }
+
+      const query = `call getTipos('${qs}')`;
+      const usp   = await data.execQueryMaster(query);
+
+      try
+      {
+        return response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        return response.json(1);
+      }
+
+    }
+
+
 }
 module.exports = Incentivos
 
