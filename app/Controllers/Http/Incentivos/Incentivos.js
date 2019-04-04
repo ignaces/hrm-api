@@ -355,11 +355,12 @@ class Incentivos {
 
     async getProductos2_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const offset = request.input("offset") ? request.input("offset") : 0;
       const limit = request.input("limit") ? request.input("limit") : 1000;
       const query = `call GetProductos('dt_cre',${offset},${limit})`;
 
-      const usp   = await data.execQueryMaster(query) ;
+      const usp   = await data.execQuery(cliente, query) ;
       //response.json(1);
       try
       {
@@ -375,11 +376,12 @@ class Incentivos {
 
     async getProductos_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const idProducto = request.input("idProducto") ? request.input("idProducto") : '';
 
       const query = `call consulta_producto('${idProducto}')`;
 
-      const usp   = await data.execQueryMaster(query) ;
+      const usp   = await data.execQuery(cliente, query) ;
       //response.json(1);
       try
       {
@@ -394,11 +396,12 @@ class Incentivos {
 
     async getAttrProductos_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const idProducto = request.input("idProducto") ? request.input("idProducto") : '';
 
       const query = `call busca_producto('${idProducto}');`;
 
-      const usp   = await data.execQueryMaster(query) ;
+      const usp   = await data.execQuery(cliente, query) ;
       //response.json(1);
       try
       {
@@ -411,12 +414,13 @@ class Incentivos {
 
     }
 
-     async getParams_CG({request,response}){
+    async getParams_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const param = request.input("param") ? request.input("param") : '';
       const query = (param == "MAR") ? `call getMarca()` : `call consulta('''${param}''')`;
 
-      const usp   = await data.execQueryMaster(query) ;
+      const usp   = await data.execQuery(cliente, query) ;
       //response.json(1);
       try
       {
@@ -429,8 +433,9 @@ class Incentivos {
 
     }
 
-     async addProduct_CG({request,response}){
+    async addProduct_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const nombre = request.input('product-name');
       const codigo = request.input('product-code');
       const precio = request.input('product-price');
@@ -442,7 +447,7 @@ class Incentivos {
 
       const query = `call insertproducto('${nombre}', null, '${codigo}', '${precio}', '${marca}', '${familia}', '${envase}', '${rubro}', '${variedad}')`;
 
-      const usp   = await data.execQueryMaster(query) ;
+      const usp   = await data.execQuery(cliente, query) ;
       //response.json(1);
       try
       {
@@ -458,11 +463,12 @@ class Incentivos {
 
     async getMetas_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const offset = request.input("offset") ? request.input("offset") : 0;
       const limit = request.input("limit") ? request.input("limit") : 1000;
       const query = `call GetMetas('dt_cre',${offset},${limit})`;
 
-      const usp   = await data.execQueryMaster(query) ;
+      const usp   = await data.execQuery(cliente, query) ;
       //response.json(1);
       try
       {
@@ -476,8 +482,9 @@ class Incentivos {
     }
 
 
-     async getMetasAttr_CG({request,response}){
+    async getMetasAttr_CG({request,response}){
 
+      const cliente =request.input('cliente');
       const param =  request.input("param");
       var qs = '';
 
@@ -496,7 +503,7 @@ class Incentivos {
       }
 
       const query = `call getTipos('${qs}')`;
-      const usp   = await data.execQueryMaster(query);
+      const usp   = await data.execQuery(cliente, query);
 
       try
       {
