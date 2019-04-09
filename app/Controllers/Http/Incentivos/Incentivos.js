@@ -496,8 +496,6 @@ class Incentivos {
           return response.json(1);
       }
 
-      const cliente =request.input('cliente') ;
-
       const query = `call getTipos('${qs}')`;
 
       const usp   = await data.execQuery(cliente,query);
@@ -521,8 +519,8 @@ class Incentivos {
       const query = `call meta_cargaMetaVolumen('${accion.cargaVolumen}','${accion.identificador}','${accion.per}','${accion.tip}','${accion.tab}')`;
       const result   = await data.execQuery(cliente,query);
 
-      console.log(query)
-      console.log(result[0][0])
+      const query2 = `call meta_cargaMetaMix('${accion.cargaMix}','${accion.identificador}','${accion.per}','${accion.tip}','${accion.tab}')`;
+      const result2  = await data.execQuery(cliente,query2);
 
       return response.json('');
      
