@@ -499,14 +499,9 @@ class Incentivos {
       const cliente =request.input('cliente') ;
 
       const query = `call getTipos('${qs}')`;
-<<<<<<< HEAD
+
       const usp   = await data.execQuery(cliente,query);
 
-=======
-      
-      const usp   = await data.execQuery(cliente,query);
-      
->>>>>>> fe1daabc72617604a3dfc1eda1346fec181553e1
       try
       {
         return response.json(usp[0][0]);
