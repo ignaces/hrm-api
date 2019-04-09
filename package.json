@@ -38,7 +38,9 @@
   },
   "devDependencies": {
     "grunt": "^1.0.1",
-    "grunt-jsdoc": "^2.2.1"
+    "grunt-jsdoc": "^2.2.1",
+    "gulp": "^4.0.0",
+    "webpack": "^4.29.6"
   },
   "autoload": {
     "App": "./app"
