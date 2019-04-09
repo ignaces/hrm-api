@@ -511,6 +511,26 @@ class Incentivos {
 
     }
 
+    async getMetasDetalles({request,response}){
+      const idPeriodo = request.input("idPeriodo");  
+      const cliente =request.input('cliente');
+
+      const query = `call meta_getMetasDetalles('${idPeriodo}')`;
+      const result   = await data.execQuery(cliente,query);
+
+      console.log(result[0][0])
+
+      response.json({
+          "estado": {
+              "codigo": "OK",
+              "mensaje": ""
+          },
+          "paginacion": "",
+          "data": result[0][0]
+      });
+
+    }
+
     async cargaMetas({request,response}){
 
       const accion = request.input("accion");
