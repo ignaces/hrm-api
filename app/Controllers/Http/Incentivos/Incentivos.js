@@ -397,6 +397,7 @@ class Incentivos {
       const idProducto = request.input("idProducto") ? request.input("idProducto") : '';
 
       const query = `call busca_producto('${idProducto}');`;
+
       const cliente = request.input('cliente');
       const usp   = await data.execQuery(cliente,query) ;
       //response.json(1);
@@ -429,21 +430,20 @@ class Incentivos {
 
     }
 
-     async addProduct_CG({request,response}){
+     async saveProducto({request,response}){
 
-      const nombre = request.input('product-name');
-      const codigo = request.input('product-code');
-      const precio = request.input('product-price');
-      const marca = request.input('product-brand');
-      const familia = request.input('product-fam');
-      const envase = request.input('product-env');
-      const rubro = request.input('product-rub');
-      const variedad = request.input('product-var');
+      const producto =request.input('producto'); 
+      const edit =request.input('edit'); 
+      
       const cliente = request.input('cliente');
-      const query = `call insertproducto('${nombre}', null, '${codigo}', '${precio}', '${marca}', '${familia}', '${envase}', '${rubro}', '${variedad}')`;
-
+      var query = `call insertproducto('${producto.nombre}', '${producto.sku}', '${producto.sku}', '${producto.precio}', '${producto.idMarca}', '${producto.idFamilia}', '${producto.idEnvase}', '${producto.idRubro}', '${producto.idVariedad}')`;
+      
+      if(edit==true){
+        query = `update`
+      }
+      
       const usp   = await data.execQuery(cliente,query) ;
-      //response.json(1);
+      
       try
       {
         return response.json(usp[0][0]);
@@ -461,6 +461,7 @@ class Incentivos {
       const offset = request.input("offset") ? request.input("offset") : 0;
       const limit = request.input("limit") ? request.input("limit") : 1000;
       const query = `call GetMetas('dt_cre',${offset},${limit})`;
+      console.log(query)
       const cliente = request.input('cliente');
       const usp   = await data.execQuery(cliente,query) ;
       //response.json(1);
