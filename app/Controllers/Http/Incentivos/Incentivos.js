@@ -545,6 +545,16 @@ class Incentivos {
       });
     }
 
+    async cargaMeta({request,response}){
+      const meta = request.input("meta");
+      const cliente =request.input('cliente') ;
+
+      const query = `call meta_cargaMeta('${meta.idMd}','${meta.per}','${meta.tip}','${meta.tab}','${meta.punto}','${meta.marca}','${meta.dia}','${meta.valor}')`;
+      const result   = await data.execQuery(cliente,query);
+
+      return response.json('');
+    }
+
     async cargaMetas({request,response}){
 
       const accion = request.input("accion");
