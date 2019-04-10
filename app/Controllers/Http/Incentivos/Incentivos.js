@@ -130,7 +130,7 @@ class Incentivos {
     async getPuntosDeVenta({request,response})
     {
       const cliente   = request.input('cliente');
-      const idPersona = request.input('idPersona');
+      //const idPersona = request.input('idPersona');
       const query = `call inc_getPuntosDeVenta()`;
       //console.log(query);
       try{
@@ -511,14 +511,12 @@ class Incentivos {
 
     }
 
-    async getMetasDetalles({request,response}){
-      const idPeriodo = request.input("idPeriodo");  
-      const cliente =request.input('cliente');
+    async getdataMetaDetalle({request,response}){
+      const idMetaDetalle = request.input("idMetaDetalle");  
+      const cliente = request.input('cliente');
 
-      const query = `call meta_getMetasDetalles('${idPeriodo}')`;
+      const query = `call meta_getdataMetaDetalle('${idMetaDetalle}')`;
       const result   = await data.execQuery(cliente,query);
-
-      console.log(result[0][0])
 
       response.json({
           "estado": {
@@ -528,7 +526,23 @@ class Incentivos {
           "paginacion": "",
           "data": result[0][0]
       });
+    }
 
+    async getMetasDetalles({request,response}){
+      const idPeriodo = request.input("idPeriodo");  
+      const cliente = request.input('cliente');
+
+      const query = `call meta_getMetasDetalles('${idPeriodo}')`;
+      const result   = await data.execQuery(cliente,query);
+
+      response.json({
+          "estado": {
+              "codigo": "OK",
+              "mensaje": ""
+          },
+          "paginacion": "",
+          "data": result[0][0]
+      });
     }
 
     async cargaMetas({request,response}){
