@@ -430,6 +430,17 @@ class Incentivos {
 
     }
 
+    async saveMarca({request,response}){
+      const cliente = request.input('cliente');
+      const marca =request.input('marca'); 
+
+      const query = `call inc_saveMarca('${marca.id}','${marca.codigo}','${marca.nombre}')`;
+
+      const result = await data.execQuery(cliente,query) ;
+
+      return response.json('');
+    }
+
      async saveProducto({request,response}){
 
       const producto =request.input('producto'); 
