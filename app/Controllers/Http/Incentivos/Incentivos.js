@@ -7,17 +7,17 @@ var Enumerable = require('linq')
 /**
  * asdasdadasdadasda
  * @class
- */ 
+ */
 class Incentivos {
 
     async getProducto({request,response}){
         const idProducto = request.input("idProducto");
         //const query = `call redes_getPersonas('${idRedesPersona}')`;
-        
-        const cliente =request.input('cliente');
-        
+
+        const cliente = request.input('cliente');
+
         //const usp   = await data.execQuery(cliente,query);
-        
+
         //const usp   = yield Database.schema.raw("SELECT * from users;");
         //response.json(usp[0]);
 
@@ -31,15 +31,15 @@ class Incentivos {
             }
             //console.log(arrProd[i]);
         }
-        
+
         response.json(salida);
     }
 
     async addCheckIn({request,response}){
       //const idProducto = request.input("idProducto");
       //const query = `call redes_getPersonas('${idRedesPersona}')`;
-      
-      const cliente =request.input('cliente');
+
+      const cliente = request.input('cliente');
       const idPersona = request.input('idPersona');
       const idPuntoDeVenta = request.input('idPuntoDeVenta');
       const lat = request.input('lat');
@@ -47,18 +47,18 @@ class Incentivos {
 
       const query = `call inc_addCheckIn('${idPersona}', '${idPuntoDeVenta}', '${lat}', '${lon}')`;
       const usp   = await data.execQuery(cliente,query);
-      
+
       response.json(1);
     }
 
     async getCheckIn({request,response}){
       //const idProducto = request.input("idProducto");
       //const query = `call redes_getPersonas('${idRedesPersona}')`;
-      
+
       const cliente =request.input('cliente');
       const idPersona = request.input('idPersona');
       const idPuntoDeVenta = request.input('idPuntoDeVenta');
-      
+
       const query = `call inc_getCheckIn('${idPersona}', '${idPuntoDeVenta}')`;
       //console.log(query);
       const usp   = await data.execQuery(cliente,query);
@@ -70,14 +70,14 @@ class Incentivos {
       catch(e)
       {
         response.json(1);
-      } 
-      
+      }
+
     }
 
     async getProductoPOS({request,response})
     {
       const cliente =request.input('cliente');
-      
+
       const idPuntoDeVenta = request.input('idPuntoDeVenta');
       const ean = request.input('ean');
       const nombre = request.input('nombre');
@@ -90,11 +90,10 @@ class Incentivos {
       response.json(usp[0][0]);
     }
 
-
     async addCliente({request,response})
     {
       const cliente =request.input('cliente');
-      
+
       const idPuntoDeVenta = request.input('idPuntoDeVenta');
       const idPersona = request.input('idPersona');
 
@@ -103,12 +102,12 @@ class Incentivos {
       const apellido = request.input('apellido');
       const email = request.input('email');
       const telefono = request.input('telefono');
-      
+
 
       const query = `call inc_addCliente('${idPersona}', '${identificador}', '${nombres}', '${apellido}', '${email}', '${telefono}' )`;
       //console.log(`call inc_addCliente('${identificador}', '${nombres}', '${apellido}', '${email}', '${telefono}' )`);
       const usp   = await data.execQuery(cliente,query);
-      
+
       response.json(1);
       //response.json(usp[0][0]);
     }
@@ -116,13 +115,13 @@ class Incentivos {
     async getCliente({request,response})
     {
       const cliente =request.input('cliente');
-      
+
       const identificador = request.input('identificador');
-      
+
       const query = `call inc_getCliente('${identificador}')`;
       console.log(query);
       const usp   = await data.execQuery(cliente,query);
-      
+
       //response.json(1);
       response.json(usp[0][0]);
     }
@@ -135,14 +134,14 @@ class Incentivos {
       //console.log(query);
       try{
         const usp   = await data.execQuery(cliente,query);
-          
+
         //response.json(1);
         response.json(usp[0][0]);
       }catch(error)
       {
         console.log(error);
       }
-      
+
     }
 
     async getPuntosDeVentaPersona({request,response})
@@ -153,21 +152,21 @@ class Incentivos {
       console.log(query);
       try{
         const usp   = await data.execQuery(cliente,query);
-          
+
         //response.json(1);
         response.json(usp[0][0]);
       }catch(error)
       {
         console.log(error);
       }
-      
+
     }
 
     async getCatalogoProductosPuntoDeVenta({request,response})
     {
       const cliente =request.input('cliente');
       const idPuntoDeVenta =request.input('idPuntoDeVenta');
-      
+
       const query = `call inc_getCatalogoProductosPuntoDeVenta('${idPuntoDeVenta}')`;
       const usp   = await data.execQuery(cliente,query);
       //console.log(query);
@@ -179,10 +178,10 @@ class Incentivos {
     {
       //console.log("AAA");
       const cliente =request.input('cliente');
-      
+
       var idPuntoDeVenta = '';
       var idPersona ='';
-      
+
       if(request.input('idPuntoDeVenta'))
       {
         idPuntoDeVenta = request.input('idPuntoDeVenta');
@@ -192,7 +191,7 @@ class Incentivos {
       {
         idPersona = request.input('idPersona');
       }
-      
+
       const query = `call inc_getValoresMetasDev('${idPersona}', '${idPuntoDeVenta}')`;
       const usp   = await data.execQuery(cliente,query);
       console.log(query);
@@ -203,10 +202,10 @@ class Incentivos {
     async getValoresMetaBonoMix({request,response})
     {
       const cliente =request.input('cliente');
-      
+
       var idPuntoDeVenta = '';
       var idPersona ='';
-      
+
       if(request.input('idPuntoDeVenta'))
       {
         idPuntoDeVenta = request.input('idPuntoDeVenta');
@@ -222,7 +221,7 @@ class Incentivos {
       //response.json(1);
       response.json(usp[0][0]);
     }
-    
+
 
     async addVenta({request,response})
     {
@@ -240,14 +239,14 @@ class Incentivos {
       const apellidoCliente =request.input('apellidoCliente');
       const emailCliente =request.input('emailCliente');
       const telefonoCliente =request.input('telefonoCliente');
-      
+
       const idPuntoDeVenta =request.input('idPuntoDeVenta');
-      
+
       //console.log(productos);
       //return false;
 
       const query = `call inc_addVenta('${idPersona}', '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidoCliente}', '${emailCliente}', '${telefonoCliente}' )`;
-      
+
       const usp   = await data.execQuery(cliente,query);
       console.log(query);
       //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
@@ -263,12 +262,12 @@ class Incentivos {
       //return false;
       const idPersona =request.input('idPersona');
       const idPuntoDeVenta =request.input('idPuntoDeVenta');
-      
+
       //console.log(productos);
       //return false;
 
       const query = `call inc_getDetalleVentas('${idPersona}', '${idPuntoDeVenta}')`;
-      
+
       const usp   = await data.execQuery(cliente,query);
       console.log(query);
       //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
@@ -277,7 +276,7 @@ class Incentivos {
       var obj = {};
       obj.cabeceras = usp[0][0];
       obj.detalles = usp[0][1];
-      
+
 
       response.json(obj);
     }
@@ -289,12 +288,12 @@ class Incentivos {
       //return false;
       const idPersona =request.input('idPersona');
       const idPuntoDeVenta =request.input('idPuntoDeVenta');
-      
+
       //console.log(productos);
       //return false;
 
       const query = `call inc_getKardex('${idPersona}', '${idPuntoDeVenta}')`;
-      
+
       const usp   = await data.execQuery(cliente,query);
       //console.log(query);
       //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
@@ -303,7 +302,7 @@ class Incentivos {
       var obj = {};
       obj.cabeceras = usp[0][0];
       obj.detalles = usp[0][1];
-      
+
 
       response.json(obj);
     }
@@ -313,15 +312,15 @@ class Incentivos {
       const cliente =request.input('cliente');
       //console.log(cliente);
       //return false;
-      
+
       //const idPersona =request.input('idPersona');
       //const idPuntoDeVenta =request.input('idPuntoDeVenta');
-      
+
       //console.log(productos);
       //return false;
 
       const query = `call inc_getPeriodos()`;
-      
+
       const usp   = await data.execQuery(cliente,query);
       //console.log(query);
       //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
@@ -339,12 +338,12 @@ class Incentivos {
       //console.log(cliente);
       //return false;
       const idVenta =request.input('idVenta');
-      
+
       //console.log(productos);
       //return false;
 
       const query = `call inc_deleteVenta('${idVenta}')`;
-      
+
       const usp   = await data.execQuery(cliente,query);
       //, '${urlFoto}', '${lat}', '${lon}', '${idPuntoDeVenta}', '${productos}', '${productos}', '${idCliente}', '${identificadorCliente}', '${nombreCliente}', '${apellidosCliente}', '${emailCliente}', '${telefonoCliente}' )`);
       //response.json(1);

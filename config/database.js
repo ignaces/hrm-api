@@ -34,7 +34,7 @@ module.exports = {
     useNullAsDefault: true,
     debug: Env.get('DB_DEBUG', false)
   },
-  
+
 
   /*
   |--------------------------------------------------------------------------
@@ -69,55 +69,55 @@ module.exports = {
   local: {
     client: 'mysql',
     connection: {
-      host: Env.get('DB_HOST', '192.168.3.18'),
+      host: Env.get('DB_HOST', 'hrm-test.ma9zh1lzo1hd.tdb.scl2.grid.toor.network'),
       port: Env.get('DB_PORT', ''),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', 'Qwerty123'),
-      database: Env.get('DB_DATABASE', 'KH')
+      user: Env.get('DB_USER', 't00r'),
+      password: Env.get('DB_PASSWORD', 'EP6kHAwP8fxeMudDvXXnzAQHDMu4c9Xh'),
+      database: Env.get('DB_DATABASE', 'brightstar')
     },
     debug: Env.get('DB_DEBUG', false)
   },
   dev: {
     client: 'mysql',
     connection: {
-      host: Env.get('DB_HOST', '192.168.3.18'),
+      host: Env.get('DB_HOST', 'hrm-test.ma9zh1lzo1hd.tdb.scl2.grid.toor.network'),
       port: Env.get('DB_PORT', '3306'),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', 'Qwerty123'),
-      database: Env.get('DB_DATABASE', 'KH')
+      user: Env.get('DB_USER', 't00r'),
+      password: Env.get('DB_PASSWORD', 'EP6kHAwP8fxeMudDvXXnzAQHDMu4c9Xh'),
+      database: Env.get('DB_DATABASE', 'brightstar')
     },
     debug: Env.get('DB_DEBUG', false)
   },
   prod: {
     client: 'mysql',
     connection: {
-      host: Env.get('DB_HOST', '192.168.3.13'),
+      host: Env.get('DB_HOST', 'hrm-test.ma9zh1lzo1hd.tdb.scl2.grid.toor.network'),
       port: Env.get('DB_PORT', '3306'),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', 'Qwerty123'),
-      database: Env.get('DB_DATABASE', 'KH')
+      user: Env.get('DB_USER', 't00r'),
+      password: Env.get('DB_PASSWORD', 'EP6kHAwP8fxeMudDvXXnzAQHDMu4c9Xh'),
+      database: Env.get('DB_DATABASE', 'brightstar')
     },
     debug: Env.get('DB_DEBUG', false)
   },
   app: {
     client: 'mysql',
     connection: {
-      host: Env.get('DB_HOST', '192.168.3.18'),
+      host: Env.get('DB_HOST', 'hrm-test.ma9zh1lzo1hd.tdb.scl2.grid.toor.network'),
       port: Env.get('DB_PORT', '3306'),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', 'Qwerty123'),
-      database: Env.get('DB_DATABASE', 'hrmapp')
+      user: Env.get('DB_USER', 't00r'),
+      password: Env.get('DB_PASSWORD', 'EP6kHAwP8fxeMudDvXXnzAQHDMu4c9Xh'),
+      database: Env.get('DB_DATABASE', 'brightstar')
     },
     debug: Env.get('DB_DEBUG', false)
   },
   default: {
     client: 'mysql',
     connection: {
-      host: Env.get('DB_HOST', '192.168.3.18'),
+      host: Env.get('DB_HOST', 'hrm-test.ma9zh1lzo1hd.tdb.scl2.grid.toor.network'),
       port: Env.get('DB_PORT', '3306'),
-      user: Env.get('DB_USER', 'root'),
-      password: Env.get('DB_PASSWORD', 'Qwerty123'),
-      database: Env.get('DB_DATABASE', 'KH')
+      user: Env.get('DB_USER', 't00r'),
+      password: Env.get('DB_PASSWORD', 'EP6kHAwP8fxeMudDvXXnzAQHDMu4c9Xh'),
+      database: Env.get('DB_DATABASE', 'brightstar')
     },
     debug: Env.get('DB_DEBUG', false)
   }
@@ -130,7 +130,7 @@ module.exports = {
   |
   | npm i --save pg
   |
-  
+
   pg: {
     client: 'pg',
     connection: {
