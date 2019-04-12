@@ -38,7 +38,7 @@ class Users {
 
         const cliente ="app";
         const query =`call user_getMenu('${idUser}')`;
-        console.log(query)
+        
         const respuesta   = await data.execQuery(cliente,query);
         var usuario = {
             roles:[],
@@ -54,7 +54,7 @@ class Users {
 
         usuario.roles = roles.toArray();
 
-        const paginas =Enumerable.from(respuesta[0][0]).distinct("$.idPagina").select(function(ruta){
+        const paginas =Enumerable.from(respuesta[0][0]).distinct("$.idPagina").where(`$.idPadre == null`).select(function(ruta){
             return{
                 id:ruta.idPagina,
                 label:ruta.texto,
@@ -62,9 +62,21 @@ class Users {
                 controller:ruta.controller,
                 accion:ruta.accion,
                 iconClass:ruta.iconClass,
-                orden:ruta.orden
+                idPadre:ruta.idPadre,
+                orden:ruta.orden,
+                hijos:Enumerable.from(respuesta[0][0]).where(`$.idPadre == "${ruta.idPagina}"`).select(function(rutaHijo){
+                    return{
+                        id:rutaHijo.idPagina,
+                        label:rutaHijo.texto,
+                        modulo:rutaHijo.modulo,
+                        controller:rutaHijo.controller,
+                        accion:rutaHijo.accion,
+                        iconClass:rutaHijo.iconClass,
+                        orden:rutaHijo.orden
+                    }}).toArray()
             }
         })
+        
        usuario.menu = paginas.toArray();
         response.json({
             "estado": {
