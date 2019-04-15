@@ -45,6 +45,25 @@ class PuntoVenta {
       }
     }
 
+    async getPersonasInPuntoVenta({request,response})
+    {
+      const cliente = request.input('cliente');
+      const id = request.input("idPOS");
+      const offset = request.input("offset") ? request.input("offset") : 0;
+      const limit = request.input("limit") ? request.input("limit") : 1000;
+
+      const query = `call pos_ObtenerPersonasPuntoVenta('${id}','dt_cre',${offset}, ${limit})`;
+      const usp   = await data.execQuery(cliente, query);
+      try
+      {
+        response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        response.json(e);
+      }
+    }
+
     // u
     async updatePuntoVenta({request,response})
     {
