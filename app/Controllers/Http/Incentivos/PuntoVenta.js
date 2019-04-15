@@ -24,6 +24,25 @@ class PuntoVenta {
       }
     }
 
+    async createPersonaInPuntoVenta({request,response})
+    {
+      const cliente = request.input('cliente');
+      const idPOS = request.input("idPOS");
+      const idPersona = request.input("idPersona");
+
+      var query = `call pos_CrearPersonaPuntoVenta('${idPOS}', '${idPersona}')`;
+      const usp = await data.execQuery(cliente, query);
+
+      try
+      {
+        return response.json(usp[0][0]);
+      }
+      catch(e)
+      {
+        return response.json(1);
+      }
+    }
+
     // r
     async getPuntoVenta({request,response})
     {
